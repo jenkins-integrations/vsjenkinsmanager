@@ -5,12 +5,12 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{61bc97dd-79b6-4121-9d4c-0f2ce293dca5}</ProjectGuid>
+    <ProjectGuid>{61BC97DD-79B6-4121-9D4C-0F2CE293DCA5}</ProjectGuid>
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -125,7 +125,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyControl.xaml.cs">
+    <Compile Include="Views\MyControl.xaml.cs">
       <DependentUpon>MyControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MyToolWindow.cs" />
@@ -138,7 +138,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="VSJenkinsManagerPackagePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-
     <Compile Include="PkgCmdID.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -168,15 +167,17 @@
   <ItemGroup>
     <None Include="Resources\Images.png" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
-    <ItemGroup>
-    <Page Include="MyControl.xaml">
+  <ItemGroup>
+    <Page Include="Views\MyControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
