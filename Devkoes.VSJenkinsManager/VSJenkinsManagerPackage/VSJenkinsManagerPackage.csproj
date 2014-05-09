@@ -125,9 +125,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Views\MyControl.xaml.cs">
-      <DependentUpon>MyControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MyToolWindow.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -152,6 +149,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -171,13 +169,10 @@
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\MyControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <ProjectReference Include="..\Devkoes.JenkinsManagerUI\Devkoes.JenkinsManagerUI.csproj">
+      <Project>{231e0194-b47f-456e-a54c-ce9114d17a6f}</Project>
+      <Name>Devkoes.JenkinsManagerUI</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

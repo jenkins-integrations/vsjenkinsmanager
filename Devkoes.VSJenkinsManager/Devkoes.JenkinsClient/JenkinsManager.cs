@@ -3,6 +3,7 @@ using Devkoes.JenkinsClient.Properties;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -13,6 +14,13 @@ namespace Devkoes.JenkinsClient
     {
         private const char URI_SEPERATOR = '|';
 
+        static JenkinsManager()
+        {
+            if(Settings.Default.JenkinsServers == null)
+            {
+                Settings.Default.JenkinsServers = new StringCollection();
+            }
+        }
         /// <summary>
         /// Loads all job information
         /// </summary>
@@ -46,17 +54,18 @@ namespace Devkoes.JenkinsClient
             return overview.Jobs;
         }
 
-        public void AddServer(JenkinsServer server)
+        public static void AddServer(JenkinsServer server)
         {
             // TODO: figure out how to save custom objects in an array through settings
             Settings.Default.JenkinsServers.Add(string.Concat(server.Name, URI_SEPERATOR, server.Url));
             Settings.Default.Save();
         }
 
-        public IEnumerable<JenkinsServer> GetServers()
+        public static IEnumerable<JenkinsServer> GetServers()
         {
             var savedServers = Settings.Default.JenkinsServers;
             List<JenkinsServer> servers = new List<JenkinsServer>();
+            savedServers = savedServers ?? new StringCollection();
             foreach (var server in savedServers)
             {
                 var parts = server.Split(URI_SEPERATOR);

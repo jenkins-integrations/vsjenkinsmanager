@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSJenkinsManagerPackage", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsClient", "Devkoes.JenkinsClient\Devkoes.JenkinsClient.csproj", "{55EF2883-E867-49CF-8EB0-E3F19E27A18F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsManagerUI", "Devkoes.JenkinsManagerUI\Devkoes.JenkinsManagerUI.csproj", "{231E0194-B47F-456E-A54C-CE9114D17A6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{55EF2883-E867-49CF-8EB0-E3F19E27A18F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55EF2883-E867-49CF-8EB0-E3F19E27A18F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55EF2883-E867-49CF-8EB0-E3F19E27A18F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{231E0194-B47F-456E-A54C-CE9114D17A6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{231E0194-B47F-456E-A54C-CE9114D17A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{231E0194-B47F-456E-A54C-CE9114D17A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{231E0194-B47F-456E-A54C-CE9114D17A6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
