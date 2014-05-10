@@ -14,9 +14,10 @@
 
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid Margin="3">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -25,13 +26,21 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ComboBox ItemsSource="{Binding JenkinsServers}" DisplayMemberPath="Name" 
+        <ComboBox VerticalAlignment="Center" ItemsSource="{Binding JenkinsServers}" DisplayMemberPath="Name" 
                 SelectedItem="{Binding SelectedJenkinsServer}"  />
-        <Button 
-            Content="add" 
+
+        <Button
+            Content="add"
             Grid.Column="1" Margin="5,0"
             VerticalAlignment="Center"
             Command="{Binding ShowAddJenkinsForm}"
+            Style="{StaticResource HyperlinkLikeButton}" />
+
+        <Button 
+            Content="del"
+            Grid.Column="2" Margin="5,0"
+            VerticalAlignment="Center"
+            Command="{Binding RemoveJenkinsServer}"
             Style="{StaticResource HyperlinkLikeButton}" />
 
         <StackPanel Grid.Row="1" Visibility="{Binding ShowAddJenkinsServer, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -39,22 +48,30 @@
             <AdornerDecorator>
                 <TextBox Margin="3" Text="{Binding AddServerUrl}">
                     <wmt:WatermarkService.Watermark>
-                        <TextBlock>Jenkins server url</TextBlock>
+                        <TextBlock VerticalAlignment="Center">Jenkins server url</TextBlock>
                     </wmt:WatermarkService.Watermark>
                 </TextBox>
             </AdornerDecorator>
-            <AdornerDecorator>
+            <AdornerDecorator Margin="3,0,0,0">
                 <TextBox Margin="3" Text="{Binding AddServerName}">
                     <wmt:WatermarkService.Watermark>
                         <TextBlock>Name</TextBlock>
                     </wmt:WatermarkService.Watermark>
                 </TextBox>
             </AdornerDecorator>
-            <Button 
-                Content="save" 
-                Grid.Column="1" Margin="5,0" HorizontalAlignment="Right"
-                Command="{Binding SaveJenkinsServer}"
-                Style="{StaticResource HyperlinkLikeButton}" />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button 
+                    Content="save" 
+                    Grid.Column="1" Margin="5,0" HorizontalAlignment="Right"
+                    Command="{Binding SaveJenkinsServer}"
+                    Style="{StaticResource HyperlinkLikeButton}" />
+                <Button 
+                    Content="cancel" 
+                    Grid.Column="1" Margin="5,0" HorizontalAlignment="Right"
+                    Command="{Binding CancelSaveJenkinsServer}"
+                    Style="{StaticResource HyperlinkLikeButton}" />
+            </StackPanel>
         </StackPanel>
         <ItemsControl ItemsSource="{Binding Jobs}" DisplayMemberPath="Name" Grid.Row="2" />
     </Grid>

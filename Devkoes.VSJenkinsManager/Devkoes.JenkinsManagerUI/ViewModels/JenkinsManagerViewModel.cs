@@ -12,6 +12,8 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
         public RelayCommand ShowAddJenkinsForm { get; private set; }
         public RelayCommand SaveJenkinsServer { get; private set; }
+        public RelayCommand RemoveJenkinsServer { get; private set; }
+        public RelayCommand CancelSaveJenkinsServer { get; private set; }
 
         public string AddServerUrl { get; set; }
         public string AddServerName { get; set; }
@@ -23,9 +25,25 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         {
             ShowAddJenkinsForm = new RelayCommand(HandleShowAddJenkinsServer);
             SaveJenkinsServer = new RelayCommand(HandleSaveJenkinsServer);
+            RemoveJenkinsServer = new RelayCommand(HandleRemoveJenkinsServer);
+            CancelSaveJenkinsServer = new RelayCommand(HandleCancelSaveJenkinsServer);
 
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             Jobs = new ObservableCollection<Job>();
+
+            LoadJenkinsServers();
+        }
+
+        private void HandleCancelSaveJenkinsServer()
+        {
+            ShowAddJenkinsServer = false;
+            AddServerName = null;
+            AddServerUrl = null;
+        }
+
+        private void HandleRemoveJenkinsServer()
+        {
+            JenkinsManager.RemoveServer(SelectedJenkinsServer);
             LoadJenkinsServers();
         }
 
@@ -56,9 +74,14 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
         private void LoadJenkinsServers()
         {
+            JenkinsServers.Clear();
             var servers = JenkinsManager.GetServers();
             foreach (var server in servers)
             {
+                if(SelectedJenkinsServer == null)
+                {
+                    SelectedJenkinsServer = server;
+                }
                 JenkinsServers.Add(server);
             }
         }
@@ -66,11 +89,13 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         private void HandleSaveJenkinsServer()
         {
             JenkinsManager.AddServer(new JenkinsServer() { Name = AddServerName, Url = AddServerUrl });
+            LoadJenkinsServers();
+            ShowAddJenkinsServer = false;
         }
 
         private void HandleShowAddJenkinsServer()
         {
-            ShowAddJenkinsServer = true;
+            ShowAddJenkinsServer = !ShowAddJenkinsServer;
         }
 
         public bool ShowAddJenkinsServer

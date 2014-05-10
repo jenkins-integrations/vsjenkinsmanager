@@ -16,11 +16,12 @@ namespace Devkoes.JenkinsClient
 
         static JenkinsManager()
         {
-            if(Settings.Default.JenkinsServers == null)
+            if (Settings.Default.JenkinsServers == null)
             {
                 Settings.Default.JenkinsServers = new StringCollection();
             }
         }
+
         /// <summary>
         /// Loads all job information
         /// </summary>
@@ -57,8 +58,13 @@ namespace Devkoes.JenkinsClient
         public static void AddServer(JenkinsServer server)
         {
             // TODO: figure out how to save custom objects in an array through settings
-            Settings.Default.JenkinsServers.Add(string.Concat(server.Name, URI_SEPERATOR, server.Url));
+            Settings.Default.JenkinsServers.Add(GetServerConfigName(server));
             Settings.Default.Save();
+        }
+
+        private static string GetServerConfigName(JenkinsServer server)
+        {
+            return string.Concat(server.Name, URI_SEPERATOR, server.Url);
         }
 
         public static IEnumerable<JenkinsServer> GetServers()
@@ -76,6 +82,12 @@ namespace Devkoes.JenkinsClient
             }
 
             return servers;
+        }
+
+        public static void RemoveServer(JenkinsServer server)
+        {
+            Settings.Default.JenkinsServers.Remove(GetServerConfigName(server));
+            Settings.Default.Save();
         }
     }
 }
