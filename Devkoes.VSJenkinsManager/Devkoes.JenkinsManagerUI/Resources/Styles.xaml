@@ -28,4 +28,19 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <!-- This storyboard will make the image grow to double its size in 0.2 seconds -->
+    <Storyboard x:Key="expandStoryboard">
+        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" 
+        To="1.1" Duration="0:0:0" />
+        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" 
+        To="1.1" Duration="0:0:0" />
+    </Storyboard>
+    <!-- This storyboard will make the image revert to its original size -->
+    <Storyboard x:Key="shrinkStoryboard">
+        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX" 
+        To="1" Duration="0:0:0" />
+        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY" 
+        To="1" Duration="0:0:0" />
+    </Storyboard>
 </ResourceDictionary>

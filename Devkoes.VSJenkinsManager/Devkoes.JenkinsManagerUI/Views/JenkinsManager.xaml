@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             Background="{DynamicResource VsBrush.Window}"
+             Foreground="{DynamicResource VsBrush.WindowText}"
              xmlns:wmt="clr-namespace:Devkoes.JenkinsManagerUI.WatermarkTextbox"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -46,14 +48,14 @@
         <StackPanel Grid.Row="1" Visibility="{Binding ShowAddJenkinsServer, Converter={StaticResource BooleanToVisibilityConverter}}">
 
             <AdornerDecorator>
-                <TextBox Margin="3" Text="{Binding AddServerUrl}">
+                <TextBox Margin="0,3" Text="{Binding AddServerUrl}">
                     <wmt:WatermarkService.Watermark>
                         <TextBlock VerticalAlignment="Center">Jenkins server url</TextBlock>
                     </wmt:WatermarkService.Watermark>
                 </TextBox>
             </AdornerDecorator>
-            <AdornerDecorator Margin="3,0,0,0">
-                <TextBox Margin="3" Text="{Binding AddServerName}">
+            <AdornerDecorator Margin="0,3">
+                <TextBox Text="{Binding AddServerName}">
                     <wmt:WatermarkService.Watermark>
                         <TextBlock>Name</TextBlock>
                     </wmt:WatermarkService.Watermark>
@@ -73,6 +75,39 @@
                     Style="{StaticResource HyperlinkLikeButton}" />
             </StackPanel>
         </StackPanel>
-        <ItemsControl ItemsSource="{Binding Jobs}" DisplayMemberPath="Name" Grid.Row="2" />
+        <ItemsControl Margin="0,5" ItemsSource="{Binding Jobs}" Grid.Row="2" Grid.ColumnSpan="3">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,3">
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Connect solution to this job" />
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Rectangle Margin="3,0" Fill="{Binding Color}" Width="16" Height="16" />
+                        <Image x:Name="buildIcon" Margin="5,0" Source="..\Resources\BuildNotificationIcon.ico" Grid.Column="1" ToolTip="Start/schedule this job">
+                            <Image.Triggers>
+                                <EventTrigger RoutedEvent="Image.MouseEnter">
+                                    <BeginStoryboard Storyboard="{StaticResource expandStoryboard}" />
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="Image.MouseLeave">
+                                    <BeginStoryboard Storyboard="{StaticResource shrinkStoryboard}" />
+                                </EventTrigger>
+                            </Image.Triggers>
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Image.RenderTransform>
+                        </Image>
+                        <TextBlock Margin="3,0" Text="{Binding Name}" Grid.Column="2" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -13,6 +14,8 @@ namespace Devkoes.JenkinsClient
     public class JenkinsManager
     {
         private const char URI_SEPERATOR = '|';
+        private static string JENKINS_BUILD_PREFIX_TEXT = "_anime";
+        private static Dictionary<string, string> _colorScheme;
 
         static JenkinsManager()
         {
@@ -20,6 +23,13 @@ namespace Devkoes.JenkinsClient
             {
                 Settings.Default.JenkinsServers = new StringCollection();
             }
+
+            _colorScheme = new Dictionary<string, string>() {
+                { "red"+JENKINS_BUILD_PREFIX_TEXT, "Firebrick" },
+                { "red", "Firebrick" },
+                { "blue"+JENKINS_BUILD_PREFIX_TEXT, "ForestGreen" },
+                { "blue", "ForestGreen" }
+            };
         }
 
         /// <summary>
@@ -52,7 +62,30 @@ namespace Devkoes.JenkinsClient
                 overview.Jobs = new List<Job>();
             }
 
+            overview.Jobs = ParseJobs(overview.Jobs);
+
             return overview.Jobs;
+        }
+
+        private static IEnumerable<Job> ParseJobs(IEnumerable<Job> jobs)
+        {
+            jobs = jobs.ToArray();
+            foreach (var job in jobs)
+            {
+                if (string.IsNullOrEmpty(job.Name) || string.IsNullOrEmpty(job.Color)) continue;
+
+                if (job.Name.Contains(JENKINS_BUILD_PREFIX_TEXT))
+                {
+                    job.Building = true;
+                }
+
+                if (_colorScheme.ContainsKey(job.Color))
+                {
+                    job.Color = _colorScheme[job.Color];
+                }
+            }
+
+            return jobs;
         }
 
         public static void AddServer(JenkinsServer server)

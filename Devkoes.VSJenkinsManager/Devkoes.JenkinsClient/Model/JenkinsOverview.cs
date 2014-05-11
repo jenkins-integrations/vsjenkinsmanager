@@ -7,10 +7,11 @@ namespace Devkoes.JenkinsClient.Model
         public string Name { get; set; }
         public string Url { get; set; }
         public string Color { get; set; }
+        public bool Building { get; set; }
     }
 
     public class JenkinsOverview
     {
-        public List<Job> Jobs { get; set; }
+        public IEnumerable<Job> Jobs { get; set; }
     }
 }
