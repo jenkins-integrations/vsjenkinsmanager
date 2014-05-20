@@ -13,42 +13,39 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Resources\Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Margin="3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <ComboBox VerticalAlignment="Center" ItemsSource="{Binding JenkinsServers}" DisplayMemberPath="Name" 
+
+        <ComboBox VerticalAlignment="Center" ItemsSource="{Binding JenkinsServers}" DisplayMemberPath="Name" 
                 SelectedItem="{Binding SelectedJenkinsServer}"  />
 
-            <Button
-                Content="add"
-                Grid.Column="1" Margin="5,0"
-                VerticalAlignment="Center"
-                Command="{Binding ShowAddJenkinsForm}"
-                Style="{StaticResource HyperlinkLikeButton}" />
+        <Button
+            Content="add"
+            Grid.Column="1" Margin="5,0"
+            VerticalAlignment="Center"
+            Command="{Binding ShowAddJenkinsForm}"
+            Style="{StaticResource HyperlinkLikeButton}" />
 
-            <Button 
-                Content="del"
-                Grid.Column="2" Margin="5,0"
-                VerticalAlignment="Center"
-                Command="{Binding RemoveJenkinsServer}"
-                Style="{StaticResource HyperlinkLikeButton}" />
-            <StackPanel Grid.Row="1" Visibility="{Binding ShowAddJenkinsServer, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Button 
+            Content="del"
+            Grid.Column="2" Margin="5,0"
+            VerticalAlignment="Center"
+            Command="{Binding RemoveJenkinsServer}"
+            Style="{StaticResource HyperlinkLikeButton}" />
+
+        <StackPanel Grid.Row="1" Visibility="{Binding ShowAddJenkinsServer, Converter={StaticResource BooleanToVisibilityConverter}}">
 
             <AdornerDecorator>
                 <TextBox Margin="0,3" Text="{Binding AddServerUrl}">
@@ -78,79 +75,39 @@
                     Style="{StaticResource HyperlinkLikeButton}" />
             </StackPanel>
         </StackPanel>
-        </Grid>
-
-
-        <ListBox
-            Margin="0,5"
-            ItemsSource="{Binding Jobs}" 
-            Grid.Row="1" Grid.ColumnSpan="3"
-            Background="{DynamicResource VsBrush.Window}"
-            Foreground="{DynamicResource VsBrush.WindowText}"
-            BorderThickness="0"
-            IsSynchronizedWithCurrentItem="True">
-            
+        <ItemsControl Margin="0,5" ItemsSource="{Binding Jobs}" Grid.Row="2" Grid.ColumnSpan="3">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,3">
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Connect solution to this job" />
+                            </ContextMenu>
+                        </Grid.ContextMenu>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
                         <Rectangle Margin="3,0" Fill="{Binding Color}" Width="16" Height="16" />
-                        <TextBlock Margin="3,0" Text="{Binding Name}" Grid.Column="1" />
+                        <Image x:Name="buildIcon" Margin="5,0" Source="..\Resources\BuildNotificationIcon.ico" Grid.Column="1" ToolTip="Start/schedule this job">
+                            <Image.Triggers>
+                                <EventTrigger RoutedEvent="Image.MouseEnter">
+                                    <BeginStoryboard Storyboard="{StaticResource expandStoryboard}" />
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="Image.MouseLeave">
+                                    <BeginStoryboard Storyboard="{StaticResource shrinkStoryboard}" />
+                                </EventTrigger>
+                            </Image.Triggers>
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Image.RenderTransform>
+                        </Image>
+                        <TextBlock Margin="3,0" Text="{Binding Name}" Grid.Column="2" />
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-        </ListBox>
-
-        <GridSplitter Grid.Row="2" 
-              HorizontalAlignment="Stretch" 
-              VerticalAlignment="Center"
-              ShowsPreview="true"
-              Background="Transparent"
-              Height="5"/>
-
-        <Grid Grid.Row="3" MinHeight="100">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <ToolBar VerticalAlignment="Top">
-                <Button>
-                    <Button.Content>
-                        <Image 
-                            Margin="5,0" 
-                            Source="..\Resources\BuildNotificationIcon.ico" 
-                            Height="16"
-                            ToolTip="Start/schedule this job">
-                        </Image>
-                    </Button.Content>
-                </Button>
-                <Button>
-                    <Button.Content>
-                        <Image 
-                            Margin="5,0" 
-                            Source="..\Resources\OnlineIcon.png" 
-                            Height="16"
-                            ToolTip="Go to jobs website">
-                        </Image>
-                    </Button.Content>
-                </Button>
-                <ToggleButton IsChecked="True">
-                    <ToggleButton.Content>
-                        <Image 
-                            Margin="5,0" 
-                            Source="..\Resources\ConnectIcon.png" 
-                            Height="16"
-                            ToolTip="Link to current solution">
-                        </Image>
-                    </ToggleButton.Content>
-                </ToggleButton>
-            </ToolBar>
-
-            <TextBlock Text="Job details" Grid.Row="1"/>
-        </Grid>
+        </ItemsControl>
     </Grid>
 </UserControl>
