@@ -125,7 +125,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyToolWindow.cs" />
+    <Compile Include="Helpers\SolutionHelper.cs" />
+    <Compile Include="JenkinsToolWindow.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

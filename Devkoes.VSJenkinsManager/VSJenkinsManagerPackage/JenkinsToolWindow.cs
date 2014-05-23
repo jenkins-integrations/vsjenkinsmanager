@@ -15,12 +15,12 @@ namespace Devkoes.VSJenkinsManagerPackage
     /// implementation of the IVsUIElementPane interface.
     /// </summary>
     [Guid("b36671ed-ec18-4269-ac6d-a0dcc11fec14")]
-    public class MyToolWindow : ToolWindowPane
+    public class JenkinsToolWindow : ToolWindowPane
     {
         /// <summary>
         /// Standard constructor for the tool window.
         /// </summary>
-        public MyToolWindow() :
+        public JenkinsToolWindow() :
             base(null)
         {
             // Set the window title reading it from the resources.
