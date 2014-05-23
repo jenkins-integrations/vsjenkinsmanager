@@ -122,5 +122,17 @@ namespace Devkoes.JenkinsClient
             Settings.Default.JenkinsServers.Remove(GetServerConfigName(server));
             Settings.Default.Save();
         }
+
+        public async static void StartBuild(string uri)
+        {
+            using (WebClient client = new WebClient())
+            {
+                byte[] response = await client.UploadValuesTaskAsync(Path.Combine(uri, "build"), new NameValueCollection()
+                   {
+                       { "delay", "0sec" }
+                   }
+                );
+            }
+        }
     }
 }

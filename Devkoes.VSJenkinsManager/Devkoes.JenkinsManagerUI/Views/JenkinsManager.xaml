@@ -18,11 +18,44 @@
     <Grid Margin="3">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid>
+
+        <ToolBar>
+            <Button>
+                <Button.Content>
+                    <Image 
+                            Margin="5,0" 
+                            Source="..\Resources\BuildNotificationIcon.ico" 
+                            Height="16"
+                            ToolTip="Start/schedule this job">
+                    </Image>
+                </Button.Content>
+            </Button>
+            <Button>
+                <Button.Content>
+                    <Image 
+                            Margin="5,0" 
+                            Source="..\Resources\OnlineIcon.png" 
+                            Height="16"
+                            ToolTip="Go to jobs website">
+                    </Image>
+                </Button.Content>
+            </Button>
+            <ToggleButton IsChecked="True">
+                <ToggleButton.Content>
+                    <Image 
+                            Margin="5,0" 
+                            Source="..\Resources\ConnectIcon.png" 
+                            Height="16"
+                            ToolTip="Link to current solution">
+                    </Image>
+                </ToggleButton.Content>
+            </ToggleButton>
+        </ToolBar>
+
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -80,11 +113,10 @@
         </StackPanel>
         </Grid>
 
-
         <ListBox
             Margin="0,5"
             ItemsSource="{Binding Jobs}" 
-            Grid.Row="1" Grid.ColumnSpan="3"
+            Grid.Row="2" Grid.ColumnSpan="3"
             Background="{DynamicResource VsBrush.Window}"
             Foreground="{DynamicResource VsBrush.WindowText}"
             BorderThickness="0"
@@ -104,53 +136,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
-
-        <GridSplitter Grid.Row="2" 
-              HorizontalAlignment="Stretch" 
-              VerticalAlignment="Center"
-              ShowsPreview="true"
-              Background="Transparent"
-              Height="5"/>
-
-        <Grid Grid.Row="3" MinHeight="100">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <ToolBar VerticalAlignment="Top">
-                <Button>
-                    <Button.Content>
-                        <Image 
-                            Margin="5,0" 
-                            Source="..\Resources\BuildNotificationIcon.ico" 
-                            Height="16"
-                            ToolTip="Start/schedule this job">
-                        </Image>
-                    </Button.Content>
-                </Button>
-                <Button>
-                    <Button.Content>
-                        <Image 
-                            Margin="5,0" 
-                            Source="..\Resources\OnlineIcon.png" 
-                            Height="16"
-                            ToolTip="Go to jobs website">
-                        </Image>
-                    </Button.Content>
-                </Button>
-                <ToggleButton IsChecked="True">
-                    <ToggleButton.Content>
-                        <Image 
-                            Margin="5,0" 
-                            Source="..\Resources\ConnectIcon.png" 
-                            Height="16"
-                            ToolTip="Link to current solution">
-                        </Image>
-                    </ToggleButton.Content>
-                </ToggleButton>
-            </ToolBar>
-
-            <TextBlock Text="Job details" Grid.Row="1"/>
-        </Grid>
     </Grid>
 </UserControl>
