@@ -1,8 +1,10 @@
 ﻿using Devkoes.JenkinsClient;
 using Devkoes.JenkinsClient.Model;
+using Devkoes.JenkinsManagerUI.Properties;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
+using System.Net;
 
 namespace Devkoes.JenkinsManagerUI.ViewModels
 {
@@ -14,6 +16,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         public RelayCommand SaveJenkinsServer { get; private set; }
         public RelayCommand RemoveJenkinsServer { get; private set; }
         public RelayCommand CancelSaveJenkinsServer { get; private set; }
+        public RelayCommand<Job> ScheduleJobCommand { get; private set; }
 
         public string AddServerUrl { get; set; }
         public string AddServerName { get; set; }
@@ -27,11 +30,31 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             SaveJenkinsServer = new RelayCommand(HandleSaveJenkinsServer);
             RemoveJenkinsServer = new RelayCommand(HandleRemoveJenkinsServer);
             CancelSaveJenkinsServer = new RelayCommand(HandleCancelSaveJenkinsServer);
-
+            ScheduleJobCommand = new RelayCommand<Job>(ScheduleJob);
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             Jobs = new ObservableCollection<Job>();
 
             LoadJenkinsServers();
+        }
+
+        private async void ScheduleJob(Job j)
+        {
+            try
+            {
+                await JenkinsManager.ScheduleJob(j);
+            }
+            catch (WebException ex)
+            {
+                var resp = ex.Response as HttpWebResponse;
+                if (resp != null)
+                {
+                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Schedule job", resp.StatusDescription);
+                }
+                else
+                {
+                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Schedule job", ex.Status);
+                }
+            }
         }
 
         private void HandleCancelSaveJenkinsServer()
@@ -48,6 +71,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         }
 
         private JenkinsServer _selectedJenkinsServer;
+        private string _statusMessage;
 
         public JenkinsServer SelectedJenkinsServer
         {
@@ -56,6 +80,15 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             {
                 _selectedJenkinsServer = value;
                 LoadJenkinsJobs();
+            }
+        }
+
+        public string StatusMessage
+        { get { return _statusMessage; }
+            set
+            {
+                _statusMessage = value;
+                RaisePropertyChanged(() => StatusMessage);
             }
         }
 
@@ -78,7 +111,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             var servers = JenkinsManager.GetServers();
             foreach (var server in servers)
             {
-                if(SelectedJenkinsServer == null)
+                if (SelectedJenkinsServer == null)
                 {
                     SelectedJenkinsServer = server;
                 }

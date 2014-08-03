@@ -123,11 +123,11 @@ namespace Devkoes.JenkinsClient
             Settings.Default.Save();
         }
 
-        public async static void StartBuild(string uri)
+        public async static Task ScheduleJob(Job j)
         {
             using (WebClient client = new WebClient())
             {
-                byte[] response = await client.UploadValuesTaskAsync(Path.Combine(uri, "build"), new NameValueCollection()
+                byte[] response = await client.UploadValuesTaskAsync(Path.Combine(j.Url, "build"), new NameValueCollection()
                    {
                        { "delay", "0sec" }
                    }

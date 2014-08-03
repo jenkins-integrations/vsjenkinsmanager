@@ -20,10 +20,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <ToolBar>
-            <Button>
+            <Button Command="{Binding ScheduleJobCommand}" CommandParameter="{Binding Jobs/}">
                 <Button.Content>
                     <Image 
                             Margin="5,0" 
@@ -136,5 +137,11 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>
+        
+        <TextBlock
+            Background="{DynamicResource VsBrush.Window}"
+            Foreground="{DynamicResource VsBrush.WindowText}"
+            Padding="5"
+            Grid.Row="3" Grid.ColumnSpan="3" Text="{Binding StatusMessage}" />
     </Grid>
 </UserControl>
