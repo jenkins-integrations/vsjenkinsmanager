@@ -11,6 +11,9 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
     internal class JenkinsManagerViewModel : ViewModelBase
     {
         private bool _showAddJenkinsServer;
+        private JenkinsServer _selectedJenkinsServer;
+        private string _statusMessage;
+        private Job _selectedJob;
 
         public RelayCommand ShowAddJenkinsForm { get; private set; }
         public RelayCommand SaveJenkinsServer { get; private set; }
@@ -30,7 +33,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             SaveJenkinsServer = new RelayCommand(HandleSaveJenkinsServer);
             RemoveJenkinsServer = new RelayCommand(HandleRemoveJenkinsServer);
             CancelSaveJenkinsServer = new RelayCommand(HandleCancelSaveJenkinsServer);
-            ScheduleJobCommand = new RelayCommand<Job>(ScheduleJob);
+            ScheduleJobCommand = new RelayCommand<Job>(ScheduleJob, CanScheduleJob);
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             Jobs = new ObservableCollection<Job>();
 
@@ -57,6 +60,25 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             }
         }
 
+        private bool CanScheduleJob(Job arg)
+        {
+            return SelectedJob != null;
+        }
+
+        public Job SelectedJob
+        {
+            get { return _selectedJob; }
+            set
+            {
+                if (_selectedJob != value)
+                {
+                    _selectedJob = value;
+                    RaisePropertyChanged(() => SelectedJob);
+                    ScheduleJobCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
+
         private void HandleCancelSaveJenkinsServer()
         {
             ShowAddJenkinsServer = false;
@@ -70,8 +92,6 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             LoadJenkinsServers();
         }
 
-        private JenkinsServer _selectedJenkinsServer;
-        private string _statusMessage;
 
         public JenkinsServer SelectedJenkinsServer
         {
@@ -84,7 +104,8 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         }
 
         public string StatusMessage
-        { get { return _statusMessage; }
+        {
+            get { return _statusMessage; }
             set
             {
                 _statusMessage = value;
