@@ -61,6 +61,15 @@ namespace Devkoes.JenkinsManagerUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You didn&apos;t open a solution to link to..
+        /// </summary>
+        internal static string SolutionNotLoaded {
+            get {
+                return ResourceManager.GetString("SolutionNotLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} failed with response &quot;{1}&quot;..
         /// </summary>
         internal static string WebExceptionMessage {

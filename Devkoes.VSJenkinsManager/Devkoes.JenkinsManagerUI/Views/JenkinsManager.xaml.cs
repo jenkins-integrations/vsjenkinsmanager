@@ -12,7 +12,7 @@ namespace Devkoes.JenkinsManagerUI.Views
         {
             InitializeComponent();
 
-            DataContext = new JenkinsManagerViewModel();
+            DataContext = ViewModelController.JenkinsManagerViewModel;
         }
     }
 }

@@ -71,8 +71,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Managers\SettingManager.cs" />
     <Compile Include="Managers\SolutionManager.cs" />
     <Compile Include="ViewModels\JenkinsManagerViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelController.cs" />
     <Compile Include="WatermarkTextbox\WatermarkAdorner.cs" />
     <Compile Include="WatermarkTextbox\WatermarkService.cs" />
     <Page Include="Resources\Styles.xaml">

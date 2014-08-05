@@ -1,15 +1,17 @@
 ﻿using Devkoes.JenkinsClient;
 using Devkoes.JenkinsClient.Model;
+using Devkoes.JenkinsManagerUI.Managers;
 using Devkoes.JenkinsManagerUI.Properties;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Devkoes.JenkinsManagerUI.ViewModels
 {
-    internal class JenkinsManagerViewModel : ViewModelBase
+    public class JenkinsManagerViewModel : ViewModelBase
     {
         private bool _showAddJenkinsServer;
         private JenkinsServer _selectedJenkinsServer;
@@ -22,6 +24,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         public RelayCommand CancelSaveJenkinsServer { get; private set; }
         public RelayCommand<Job> ScheduleJobCommand { get; private set; }
         public RelayCommand<Job> ShowJobsWebsite { get; private set; }
+        public RelayCommand<Job> LinkJobToCurrentSolution { get; private set; }
 
         public string AddServerUrl { get; set; }
         public string AddServerName { get; set; }
@@ -37,10 +40,22 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             CancelSaveJenkinsServer = new RelayCommand(HandleCancelSaveJenkinsServer);
             ScheduleJobCommand = new RelayCommand<Job>(ScheduleJob, CanDoJobAction);
             ShowJobsWebsite = new RelayCommand<Job>(ShowWebsite, CanDoJobAction);
+            LinkJobToCurrentSolution = new RelayCommand<Job>(LinkJobToSolution, CanDoJobAction);
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             Jobs = new ObservableCollection<Job>();
 
             LoadJenkinsServers();
+        }
+
+        private void LinkJobToSolution(Job j)
+        {
+            if (string.IsNullOrEmpty(SolutionManager.Instance.CurrentSolutionPath))
+            {
+                StatusMessage = Resources.SolutionNotLoaded;
+                return;
+            }
+
+            SettingManager.SaveJobForSolution(j.Url, SolutionManager.Instance.CurrentSolutionPath);
         }
 
         private void ShowWebsite(Job j)
@@ -50,9 +65,14 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
         private async void ScheduleJob(Job j)
         {
+            await ScheduleJob(j.Url);
+        }
+
+        public async Task ScheduleJob(string jobUrl)
+        {
             try
             {
-                await JenkinsManager.ScheduleJob(j);
+                await JenkinsManager.ScheduleJob(jobUrl);
             }
             catch (WebException ex)
             {
@@ -84,6 +104,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
                     RaisePropertyChanged(() => SelectedJob);
                     ScheduleJobCommand.RaiseCanExecuteChanged();
                     ShowJobsWebsite.RaiseCanExecuteChanged();
+                    LinkJobToCurrentSolution.RaiseCanExecuteChanged();
                 }
             }
         }

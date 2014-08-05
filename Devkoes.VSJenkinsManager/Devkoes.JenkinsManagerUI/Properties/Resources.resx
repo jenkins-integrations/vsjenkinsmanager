@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SolutionNotLoaded" xml:space="preserve">
+    <value>You didn't open a solution to link to.</value>
+  </data>
   <data name="WebExceptionMessage" xml:space="preserve">
     <value>{0} failed with response "{1}".</value>
   </data>

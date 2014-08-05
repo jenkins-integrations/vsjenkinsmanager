@@ -44,7 +44,7 @@
                     </Image>
                 </Button.Content>
             </Button>
-            <ToggleButton IsChecked="True">
+            <ToggleButton IsChecked="{Binding IsLinkedToCurrentJob}" Command="{Binding LinkJobToCurrentSolution}" CommandParameter="{Binding Jobs/}">
                 <ToggleButton.Content>
                     <Image 
                             Margin="5,0" 

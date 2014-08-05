@@ -97,7 +97,7 @@ namespace Devkoes.VSJenkinsManagerPackage
             }
 
             Instance = this;
-            SolutionHelper.InitializeEvents();
+            SolutionHelper.Instance.InitializeEvents();
         }
         #endregion
 
@@ -125,7 +125,7 @@ namespace Devkoes.VSJenkinsManagerPackage
             Guid clsid = Guid.Empty;
             int result;
 
-            var slnName = SolutionHelper.GetSolutionName();
+            var slnName = SolutionHelper.Instance.GetSolutionPath();
 
             try
             {

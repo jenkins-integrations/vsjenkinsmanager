@@ -1,6 +1,6 @@
-﻿using EnvDTE;
+﻿using Devkoes.JenkinsManagerUI.Managers;
+using EnvDTE;
 using System;
-using System.IO;
 
 namespace Devkoes.VSJenkinsManagerPackage.Helpers
 {
@@ -8,47 +8,50 @@ namespace Devkoes.VSJenkinsManagerPackage.Helpers
 
     public class SolutionHelper
     {
-        private static DTE _currentDTE;
+        private DTE _currentDTE;
+        private static Lazy<SolutionHelper> _instance;
 
-        public static event Action<Solution> SolutionLoaded;
-        public static event SolutionRenamed SolutionRenamed;
-        public static event Action<Solution> SolutionClosing;
+        private SolutionEvents _solutionEvents;
 
-        internal static void InitializeEvents()
+        static SolutionHelper()
+        {
+            _instance = new Lazy<SolutionHelper>(() => new SolutionHelper());
+        }
+
+        internal void InitializeEvents()
         {
             _currentDTE = VSJenkinsManagerPackagePackage.Instance.GetService<DTE>();
 
-            var events = _currentDTE.Events.SolutionEvents;
-            events.Opened += OpenedSolution;
-            events.BeforeClosing += BeforeClosingSolution;
-            events.Renamed += RenamedSolution;
+            _solutionEvents = _currentDTE.Events.SolutionEvents;
+            _solutionEvents.Opened += OpenedSolution;
+            _solutionEvents.BeforeClosing += BeforeClosingSolution;
+            _solutionEvents.Renamed += RenamedSolution;
         }
 
-        private static void BeforeClosingSolution()
+        public static SolutionHelper Instance
         {
-            if (SolutionClosing != null)
+            get
             {
-                SolutionClosing(_currentDTE.Solution);
+                return _instance.Value;
             }
         }
 
-        private static void RenamedSolution(string OldName)
+        private void BeforeClosingSolution()
         {
-            if (SolutionRenamed != null)
-            {
-                SolutionRenamed(_currentDTE.Solution, OldName);
-            }
+
         }
 
-        private static void OpenedSolution()
+        private void RenamedSolution(string OldName)
         {
-            if (SolutionLoaded != null)
-            {
-                SolutionLoaded(_currentDTE.Solution);
-            }
+
         }
 
-        public static Solution GetSolution()
+        private void OpenedSolution()
+        {
+            SolutionManager.Instance.CurrentSolutionPath = GetSolutionPath();
+        }
+
+        public Solution GetSolution()
         {
             return _currentDTE.Solution;
         }
@@ -58,9 +61,9 @@ namespace Devkoes.VSJenkinsManagerPackage.Helpers
             VSJenkinsManagerPackagePackage.Instance.ShowToolWindow(this, new EventArgs());
         }
 
-        public static string GetSolutionName()
+        public string GetSolutionPath()
         {
-            return Path.GetFileNameWithoutExtension(_currentDTE.FullName);
+            return _currentDTE.Solution.FullName;
         }
     }
 }
