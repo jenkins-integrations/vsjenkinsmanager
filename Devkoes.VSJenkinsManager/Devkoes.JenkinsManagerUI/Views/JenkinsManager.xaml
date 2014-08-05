@@ -34,7 +34,7 @@
                     </Image>
                 </Button.Content>
             </Button>
-            <Button>
+            <Button Command="{Binding ShowJobsWebsite}" CommandParameter="{Binding Jobs/}">
                 <Button.Content>
                     <Image 
                             Margin="5,0" 

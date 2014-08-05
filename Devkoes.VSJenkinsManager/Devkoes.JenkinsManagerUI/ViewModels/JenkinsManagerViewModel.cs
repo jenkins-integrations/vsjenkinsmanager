@@ -4,6 +4,7 @@ using Devkoes.JenkinsManagerUI.Properties;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Net;
 
 namespace Devkoes.JenkinsManagerUI.ViewModels
@@ -20,6 +21,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         public RelayCommand RemoveJenkinsServer { get; private set; }
         public RelayCommand CancelSaveJenkinsServer { get; private set; }
         public RelayCommand<Job> ScheduleJobCommand { get; private set; }
+        public RelayCommand<Job> ShowJobsWebsite { get; private set; }
 
         public string AddServerUrl { get; set; }
         public string AddServerName { get; set; }
@@ -33,11 +35,17 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             SaveJenkinsServer = new RelayCommand(HandleSaveJenkinsServer);
             RemoveJenkinsServer = new RelayCommand(HandleRemoveJenkinsServer);
             CancelSaveJenkinsServer = new RelayCommand(HandleCancelSaveJenkinsServer);
-            ScheduleJobCommand = new RelayCommand<Job>(ScheduleJob, CanScheduleJob);
+            ScheduleJobCommand = new RelayCommand<Job>(ScheduleJob, CanDoJobAction);
+            ShowJobsWebsite = new RelayCommand<Job>(ShowWebsite, CanDoJobAction);
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             Jobs = new ObservableCollection<Job>();
 
             LoadJenkinsServers();
+        }
+
+        private void ShowWebsite(Job j)
+        {
+            Process.Start(j.Url);
         }
 
         private async void ScheduleJob(Job j)
@@ -60,7 +68,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             }
         }
 
-        private bool CanScheduleJob(Job arg)
+        private bool CanDoJobAction(Job arg)
         {
             return SelectedJob != null;
         }
@@ -75,6 +83,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
                     _selectedJob = value;
                     RaisePropertyChanged(() => SelectedJob);
                     ScheduleJobCommand.RaiseCanExecuteChanged();
+                    ShowJobsWebsite.RaiseCanExecuteChanged();
                 }
             }
         }
