@@ -1,11 +1,11 @@
-﻿using Devkoes.VSJenkinsManagerPackage.Helpers;
+﻿using Devkoes.JenkinsManagerUI.Managers;
+using Devkoes.VSJenkinsManagerPackage.Helpers;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Devkoes.VSJenkinsManagerPackage
@@ -127,12 +127,25 @@ namespace Devkoes.VSJenkinsManagerPackage
 
             var slnName = SolutionHelper.GetSolutionName();
 
-            if (SolutionIsConnected != null && !SolutionIsConnected(slnName))
+            try
+            {
+                ShowToolWindow(this, new EventArgs());
+            }
+            catch
+            {
+                // if it doesn't work, user should open it
+            }
+
+            if (SolutionManager.Instance.SolutionIsConnected(slnName))
+            {
+                SolutionManager.Instance.StartJenkinsBuildForSolution(slnName);
+            }
+            else
             {
                 Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(
                            0,
                            ref clsid,
-                           "VSJenkinsManager",
+                           "Jenkins Manager",
                            "Please, connect a Jenkins build to this solution using the toolbar in the Jenkins Manager tool window.",
                            string.Empty,
                            0,
@@ -142,8 +155,6 @@ namespace Devkoes.VSJenkinsManagerPackage
                            0,        // false
                            out result));
             }
-
-            ShowToolWindow(this, new EventArgs());
         }
 
     }
