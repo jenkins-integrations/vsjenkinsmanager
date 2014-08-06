@@ -97,7 +97,7 @@ namespace Devkoes.VSJenkinsManagerPackage
             }
 
             Instance = this;
-            SolutionHelper.Instance.InitializeEvents();
+            SolutionHelper.Instance.Initialize();
         }
         #endregion
 

@@ -76,10 +76,13 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
             string jobUrl = SettingManager.GetJobUri(slnPath);
 
-            foreach (var job in Jobs)
+            UIHelper.InvokeUI(() =>
             {
-                job.LinkedToCurrentSolution = string.Equals(job.Url, jobUrl, System.StringComparison.InvariantCultureIgnoreCase);
-            }
+                foreach (var job in Jobs)
+                {
+                    job.LinkedToCurrentSolution = string.Equals(job.Url, jobUrl, System.StringComparison.InvariantCultureIgnoreCase);
+                }
+            });
         }
 
         private void LinkJobToSolution(Job j)
@@ -218,6 +221,8 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
                                     existingJob.Queued = job.Queued;
                                 }
                             });
+
+                        UpdateJobLinkedStatus();
                     }
                 }
                 catch (Exception ex)

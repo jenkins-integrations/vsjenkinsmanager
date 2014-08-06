@@ -18,7 +18,7 @@ namespace Devkoes.VSJenkinsManagerPackage.Helpers
             _instance = new Lazy<SolutionHelper>(() => new SolutionHelper());
         }
 
-        internal void InitializeEvents()
+        internal void Initialize()
         {
             _currentDTE = VSJenkinsManagerPackagePackage.Instance.GetService<DTE>();
 
@@ -26,6 +26,8 @@ namespace Devkoes.VSJenkinsManagerPackage.Helpers
             _solutionEvents.Opened += OpenedSolution;
             _solutionEvents.AfterClosing += AfterClosingSolution;
             _solutionEvents.Renamed += RenamedSolution;
+
+            SolutionManager.Instance.CurrentSolutionPath = GetSolutionPath();
         }
 
         public static SolutionHelper Instance
@@ -63,7 +65,11 @@ namespace Devkoes.VSJenkinsManagerPackage.Helpers
 
         public string GetSolutionPath()
         {
-            return _currentDTE.Solution.FullName;
+            if (_currentDTE != null && _currentDTE.Solution != null)
+            {
+                return _currentDTE.Solution.FullName;
+            }
+            return null;
         }
     }
 }
