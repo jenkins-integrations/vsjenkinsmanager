@@ -1,12 +1,16 @@
 ﻿using Devkoes.JenkinsClient;
 using Devkoes.JenkinsClient.Model;
+using Devkoes.JenkinsManagerUI.Helpers;
 using Devkoes.JenkinsManagerUI.Managers;
 using Devkoes.JenkinsManagerUI.Properties;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Devkoes.JenkinsManagerUI.ViewModels
@@ -17,6 +21,8 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         private JenkinsServer _selectedJenkinsServer;
         private string _statusMessage;
         private Job _selectedJob;
+        private Timer _refreshTimer;
+        private bool _loadingJobsBusy;
 
         public RelayCommand ShowAddJenkinsForm { get; private set; }
         public RelayCommand SaveJenkinsServer { get; private set; }
@@ -47,6 +53,13 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             SolutionManager.Instance.SolutionPathChanged += SolutionPathChanged;
 
             LoadJenkinsServers();
+
+            _refreshTimer = new Timer(RefreshJobsTimerCallback, null, 0, 5000);
+        }
+
+        private async void RefreshJobsTimerCallback(object state)
+        {
+            await LoadJenkinsJobs();
         }
 
         private void SolutionPathChanged(object sender, SolutionPathChangedEventArgs e)
@@ -153,6 +166,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             set
             {
                 _selectedJenkinsServer = value;
+                RaisePropertyChanged(() => SelectedJenkinsServer);
                 LoadJenkinsJobs();
             }
         }
@@ -167,15 +181,51 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             }
         }
 
-        private async void LoadJenkinsJobs()
+        private async Task LoadJenkinsJobs()
         {
-            Jobs.Clear();
-            if (SelectedJenkinsServer != null)
+            if (!_loadingJobsBusy)
             {
-                var jobs = await JenkinsManager.GetJobs(SelectedJenkinsServer.Url);
-                foreach (var job in jobs)
+                _loadingJobsBusy = true;
+
+                try
                 {
-                    Jobs.Add(job);
+                    if (SelectedJenkinsServer != null)
+                    {
+                        var newJobs = await JenkinsManager.GetJobs(SelectedJenkinsServer.Url);
+
+                        var jobsToDelete = Jobs.Except(newJobs, Job.JobComparer).ToArray();
+                        var jobsToAdd = newJobs.Except(Jobs, Job.JobComparer).ToArray();
+                        var jobsToUpdate = Jobs.Intersect(newJobs, Job.JobComparer).ToArray();
+
+                        UIHelper.InvokeUI(() =>
+                            {
+                                foreach (var job in jobsToDelete)
+                                {
+                                    Jobs.Remove(job);
+                                }
+
+                                foreach (var job in jobsToAdd)
+                                {
+                                    Jobs.Add(job);
+                                }
+
+                                foreach (var job in jobsToUpdate)
+                                {
+                                    var existingJob = Jobs.Single((j) => j == job);
+                                    existingJob.Building = job.Building;
+                                    existingJob.Color = job.Color;
+                                    existingJob.Name = job.Name;
+                                }
+                            });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = ex.Message;
+                }
+                finally
+                {
+                    _loadingJobsBusy = false;
                 }
             }
         }
