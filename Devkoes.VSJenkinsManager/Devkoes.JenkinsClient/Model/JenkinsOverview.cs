@@ -29,12 +29,13 @@ namespace Devkoes.JenkinsClient.Model
     {
         private bool _building;
         private bool _linkedToCurrentSolution;
+        private bool _queued;
+        public string _color;
 
         public static IEqualityComparer<Job> JobComparer;
 
         public string Name { get; set; }
         public string Url { get; set; }
-        public string Color { get; set; }
 
         static Job()
         {
@@ -54,6 +55,15 @@ namespace Devkoes.JenkinsClient.Model
             }
         }
 
+        public string Color { get { return _color; } set {
+            if (_color != value)
+            {
+                _color = value;
+                RaisePropertyChanged(() => Color);
+            }
+        }
+        }
+
         public bool LinkedToCurrentSolution
         {
             get { return _linkedToCurrentSolution; }
@@ -63,6 +73,19 @@ namespace Devkoes.JenkinsClient.Model
                 {
                     _linkedToCurrentSolution = value;
                     RaisePropertyChanged(() => LinkedToCurrentSolution);
+                }
+            }
+        }
+
+        public bool Queued
+        {
+            get { return _queued; }
+            set
+            {
+                if (value != _queued)
+                {
+                    _queued = value;
+                    RaisePropertyChanged(() => Queued);
                 }
             }
         }

@@ -8,8 +8,8 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Net;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -195,7 +195,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
                         var jobsToDelete = Jobs.Except(newJobs, Job.JobComparer).ToArray();
                         var jobsToAdd = newJobs.Except(Jobs, Job.JobComparer).ToArray();
-                        var jobsToUpdate = Jobs.Intersect(newJobs, Job.JobComparer).ToArray();
+                        var jobsToUpdate = newJobs.Intersect(Jobs, Job.JobComparer).ToArray();
 
                         UIHelper.InvokeUI(() =>
                             {
@@ -211,10 +211,11 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
                                 foreach (var job in jobsToUpdate)
                                 {
-                                    var existingJob = Jobs.Single((j) => j == job);
+                                    var existingJob = Jobs.Intersect(new[] { job }, Job.JobComparer).Single();
                                     existingJob.Building = job.Building;
                                     existingJob.Color = job.Color;
                                     existingJob.Name = job.Name;
+                                    existingJob.Queued = job.Queued;
                                 }
                             });
                     }

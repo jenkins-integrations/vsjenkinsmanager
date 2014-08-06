@@ -27,7 +27,7 @@ namespace Devkoes.JenkinsClient
             _colorScheme = new Dictionary<string, string>() {
                 { "red"+JENKINS_BUILD_PREFIX_TEXT, "Firebrick" },
                 { "red", "Firebrick" },
-                { "blue"+JENKINS_BUILD_PREFIX_TEXT, "ForestGreen" },
+                { "blue"+JENKINS_BUILD_PREFIX_TEXT, "Yellow" },
                 { "blue", "ForestGreen" }
             };
         }
@@ -40,41 +40,38 @@ namespace Devkoes.JenkinsClient
         public async static Task<IEnumerable<Job>> GetJobs(string jenkinsServerUrl)
         {
             JenkinsOverview overview = null;
+            JenkinsQueue queue = null;
 
             try
             {
                 WebClient wc = new WebClient();
                 string jsonRawData = await wc.DownloadStringTaskAsync(Path.Combine(jenkinsServerUrl, "api/json?pretty=true"));
-                overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonRawData);
+                overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonRawData) ?? new JenkinsOverview();
+
+                string jsonQueueData = await wc.DownloadStringTaskAsync(Path.Combine(jenkinsServerUrl, "queue/api/json?pretty=true"));
+                queue = JsonConvert.DeserializeObject<JenkinsQueue>(jsonQueueData) ?? new JenkinsQueue();
             }
             catch (Exception)
             {
                 // do something
             }
 
-            // Fix when something went wrong, never return an empty list
-            if (overview == null)
-            {
-                overview = new JenkinsOverview();
-            }
-            if (overview.Jobs == null)
-            {
-                overview.Jobs = new List<Job>();
-            }
+            overview.Jobs = overview.Jobs ?? new List<Job>();
+            queue.Items = queue.Items ?? new List<ScheduledJob>();
 
-            overview.Jobs = ParseJobs(overview.Jobs);
+            overview.Jobs = ParseJobs(overview.Jobs, queue);
 
             return overview.Jobs;
         }
 
-        private static IEnumerable<Job> ParseJobs(IEnumerable<Job> jobs)
+        private static IEnumerable<Job> ParseJobs(IEnumerable<Job> jobs, JenkinsQueue queue)
         {
             jobs = jobs.ToArray();
             foreach (var job in jobs)
             {
                 if (string.IsNullOrEmpty(job.Name) || string.IsNullOrEmpty(job.Color)) continue;
 
-                if (job.Name.Contains(JENKINS_BUILD_PREFIX_TEXT))
+                if (job.Color.Contains(JENKINS_BUILD_PREFIX_TEXT))
                 {
                     job.Building = true;
                 }
@@ -82,6 +79,11 @@ namespace Devkoes.JenkinsClient
                 if (_colorScheme.ContainsKey(job.Color))
                 {
                     job.Color = _colorScheme[job.Color];
+                }
+
+                if (queue.Items.Select((i) => i.Task).Contains(job, Job.JobComparer))
+                {
+                    job.Queued = true;
                 }
             }
 

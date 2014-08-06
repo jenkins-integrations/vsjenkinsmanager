@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="JenkinsManager.cs" />
     <Compile Include="Model\JenkinsOverview.cs" />
+    <Compile Include="Model\JenkinsQueue.cs" />
     <Compile Include="Model\JenkinsServer.cs" />
     <Compile Include="Model\ObservableObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -130,6 +130,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
                         <Rectangle Margin="3,0" Fill="{Binding Color}" Width="16" Height="16" />
@@ -141,6 +142,14 @@
                             Source="..\Resources\ConnectIcon.png" 
                             Height="16"
                             Visibility="{Binding LinkedToCurrentSolution, Converter={StaticResource boolToVisConverter}}">
+                        </Image>
+
+                        <Image
+                            Grid.Column="3"
+                            Margin="5,0" 
+                            Source="..\Resources\ClockIcon.png" 
+                            Height="16"
+                            Visibility="{Binding Queued, Converter={StaticResource boolToVisConverter}}">
                         </Image>
                     </Grid>
                 </DataTemplate>
