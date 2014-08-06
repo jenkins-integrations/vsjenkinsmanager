@@ -73,6 +73,7 @@
     </ApplicationDefinition>
     <Compile Include="Managers\SettingManager.cs" />
     <Compile Include="Managers\SolutionManager.cs" />
+    <Compile Include="Models\SolutionPathChangedEventArgs.cs" />
     <Compile Include="ViewModels\JenkinsManagerViewModel.cs" />
     <Compile Include="ViewModels\ViewModelController.cs" />
     <Compile Include="WatermarkTextbox\WatermarkAdorner.cs" />

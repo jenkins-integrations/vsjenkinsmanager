@@ -44,7 +44,29 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             Jobs = new ObservableCollection<Job>();
 
+            SolutionManager.Instance.SolutionPathChanged += SolutionPathChanged;
+
             LoadJenkinsServers();
+        }
+
+        private void SolutionPathChanged(object sender, SolutionPathChangedEventArgs e)
+        {
+            UpdateJobLinkedStatus(e.SolutionPath);
+        }
+
+        private void UpdateJobLinkedStatus(string slnPath = null)
+        {
+            if (string.IsNullOrEmpty(slnPath))
+            {
+                slnPath = SolutionManager.Instance.CurrentSolutionPath;
+            }
+
+            string jobUrl = SettingManager.GetJobUri(slnPath);
+
+            foreach (var job in Jobs)
+            {
+                job.LinkedToCurrentSolution = string.Equals(job.Url, jobUrl, System.StringComparison.InvariantCultureIgnoreCase);
+            }
         }
 
         private void LinkJobToSolution(Job j)
@@ -56,6 +78,8 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             }
 
             SettingManager.SaveJobForSolution(j.Url, SolutionManager.Instance.CurrentSolutionPath);
+
+            UpdateJobLinkedStatus();
         }
 
         private void ShowWebsite(Job j)

@@ -1,5 +1,4 @@
-﻿using Devkoes.JenkinsClient;
-using Devkoes.JenkinsManagerUI.ViewModels;
+﻿using Devkoes.JenkinsManagerUI.ViewModels;
 using System;
 
 namespace Devkoes.JenkinsManagerUI.Managers
@@ -7,8 +6,9 @@ namespace Devkoes.JenkinsManagerUI.Managers
     public class SolutionManager
     {
         private static Lazy<SolutionManager> _instance;
+        public string _currentSolutionPath;
 
-        public string CurrentSolutionPath { get; set; }
+        public event EventHandler<SolutionPathChangedEventArgs> SolutionPathChanged;
 
         static SolutionManager()
         {
@@ -18,6 +18,22 @@ namespace Devkoes.JenkinsManagerUI.Managers
         private SolutionManager()
         {
             // close instantiation, singleton use only
+        }
+
+        public string CurrentSolutionPath
+        {
+            get { return _currentSolutionPath; }
+            set
+            {
+                if (value != _currentSolutionPath)
+                {
+                    _currentSolutionPath = value;
+                    if (SolutionPathChanged != null)
+                    {
+                        SolutionPathChanged(this, new SolutionPathChangedEventArgs() { SolutionPath = _currentSolutionPath });
+                    }
+                }
+            }
         }
 
         public static SolutionManager Instance

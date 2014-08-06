@@ -123,11 +123,12 @@ namespace Devkoes.JenkinsClient
             Settings.Default.Save();
         }
 
-        public async static Task ScheduleJob(Job j)
+        public async static Task ScheduleJob(string jobUrl)
         {
             using (WebClient client = new WebClient())
             {
-                byte[] response = await client.UploadValuesTaskAsync(Path.Combine(j.Url, "build"), new NameValueCollection()
+                var jobUri = new Uri(jobUrl);
+                byte[] response = await client.UploadValuesTaskAsync(new Uri(jobUri, "build"), new NameValueCollection()
                    {
                        { "delay", "0sec" }
                    }

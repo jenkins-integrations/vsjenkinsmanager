@@ -24,7 +24,7 @@ namespace Devkoes.VSJenkinsManagerPackage.Helpers
 
             _solutionEvents = _currentDTE.Events.SolutionEvents;
             _solutionEvents.Opened += OpenedSolution;
-            _solutionEvents.BeforeClosing += BeforeClosingSolution;
+            _solutionEvents.AfterClosing += AfterClosingSolution;
             _solutionEvents.Renamed += RenamedSolution;
         }
 
@@ -36,14 +36,14 @@ namespace Devkoes.VSJenkinsManagerPackage.Helpers
             }
         }
 
-        private void BeforeClosingSolution()
+        private void AfterClosingSolution()
         {
-
+            SolutionManager.Instance.CurrentSolutionPath = GetSolutionPath();
         }
 
         private void RenamedSolution(string OldName)
         {
-
+            SolutionManager.Instance.CurrentSolutionPath = GetSolutionPath();
         }
 
         private void OpenedSolution()
