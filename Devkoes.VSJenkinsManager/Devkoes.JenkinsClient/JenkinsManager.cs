@@ -45,10 +45,11 @@ namespace Devkoes.JenkinsClient
             try
             {
                 WebClient wc = new WebClient();
-                string jsonRawData = await wc.DownloadStringTaskAsync(Path.Combine(jenkinsServerUrl, "api/json?pretty=true"));
+                Uri baseUri = new Uri(jenkinsServerUrl);
+                string jsonRawData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true"));
                 overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonRawData) ?? new JenkinsOverview();
 
-                string jsonQueueData = await wc.DownloadStringTaskAsync(Path.Combine(jenkinsServerUrl, "queue/api/json?pretty=true"));
+                string jsonQueueData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "queue/api/json?pretty=true"));
                 queue = JsonConvert.DeserializeObject<JenkinsQueue>(jsonQueueData) ?? new JenkinsQueue();
             }
             catch (Exception)
