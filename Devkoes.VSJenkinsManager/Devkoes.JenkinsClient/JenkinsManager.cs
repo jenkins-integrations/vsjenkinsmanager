@@ -25,7 +25,7 @@ namespace Devkoes.JenkinsClient
             }
 
             _colorScheme = new Dictionary<string, string>() {
-                { "red"+JENKINS_BUILD_PREFIX_TEXT, "Firebrick" },
+                { "red"+JENKINS_BUILD_PREFIX_TEXT, "Yellow" },
                 { "red", "Firebrick" },
                 { "blue"+JENKINS_BUILD_PREFIX_TEXT, "Yellow" },
                 { "blue", "ForestGreen" }
@@ -69,7 +69,8 @@ namespace Devkoes.JenkinsClient
             jobs = jobs.ToArray();
             foreach (var job in jobs)
             {
-                if (string.IsNullOrEmpty(job.Name) || string.IsNullOrEmpty(job.Color)) continue;
+                if (string.IsNullOrEmpty(job.Name) || string.IsNullOrEmpty(job.Color))
+                    continue;
 
                 if (job.Color.Contains(JENKINS_BUILD_PREFIX_TEXT))
                 {
