@@ -6,3 +6,11 @@ D:\Users\tomku_000\Documents\GitHub\vsjenkinsmanager\Devkoes.VSJenkinsManager\De
 D:\Users\tomku_000\Documents\GitHub\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\obj\Debug\Devkoes.JenkinsClient.csprojResolveAssemblyReference.cache
 D:\Users\tomku_000\Documents\GitHub\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\obj\Debug\Devkoes.JenkinsClient.dll
 D:\Users\tomku_000\Documents\GitHub\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\obj\Debug\Devkoes.JenkinsClient.pdb
+C:\_githubProjects\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\bin\Debug\Devkoes.JenkinsClient.dll.config
+C:\_githubProjects\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\bin\Debug\Devkoes.JenkinsClient.dll
+C:\_githubProjects\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\bin\Debug\Devkoes.JenkinsClient.pdb
+C:\_githubProjects\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\bin\Debug\Newtonsoft.Json.dll
+C:\_githubProjects\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\bin\Debug\Newtonsoft.Json.xml
+C:\_githubProjects\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\obj\Debug\Devkoes.JenkinsClient.csprojResolveAssemblyReference.cache
+C:\_githubProjects\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\obj\Debug\Devkoes.JenkinsClient.dll
+C:\_githubProjects\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsClient\obj\Debug\Devkoes.JenkinsClient.pdb

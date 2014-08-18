@@ -2,13 +2,12 @@ C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devko
 C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\Devkoes.JenkinsManagerUI.exe
 C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\VSJenkinsManagerPackage.pkgdef
 C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\extension.vsixmanifest
+C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\Devkoes.JenkinsClient.dll
 C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\GalaSoft.MvvmLight.dll
 C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\GalaSoft.MvvmLight.Extras.dll
 C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\Microsoft.Practices.ServiceLocation.dll
 C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\System.Windows.Interactivity.dll
+C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\Newtonsoft.Json.dll
 C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\VSJenkinsManagerPackage.pdb
 C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\Devkoes.JenkinsManagerUI.exe.config
 C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\Devkoes.JenkinsManagerUI.pdb
-C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\Devkoes.JenkinsClient.dll
-C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\Newtonsoft.Json.dll
-C:\Users\tomku_000\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions\Devkoes\VSJenkinsManagerPackage\1.0\\Devkoes.JenkinsClient.pdb
