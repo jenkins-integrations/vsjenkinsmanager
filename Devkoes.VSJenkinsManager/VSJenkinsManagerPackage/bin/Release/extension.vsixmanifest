@@ -1,0 +1,21 @@
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
+  <Metadata>
+    <Identity Id="252d354d-9787-42b0-b5cc-6b14e08f160f" Version="0.1" Language="en-US" Publisher="Tom Kuijsten" />
+    <DisplayName>Jenkins Manager</DisplayName>
+    <Description xml:space="preserve">View and start your Jenkins jobs from within your precious IDE.</Description>
+    <ReleaseNotes>releaseNotes.txt</ReleaseNotes>
+    <Icon>Package.ico</Icon>
+    <PreviewImage>jenkinsmanager.jpg</PreviewImage>
+    <Tags>Jenkins Jobs Manage Build CI</Tags>
+  </Metadata>
+  <Installation InstalledByMsi="false">
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[12.0]" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" Version="[4.5,)" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.12.0" DisplayName="Visual Studio MPF 12.0" Version="[12.0]" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" Path="VSJenkinsManagerPackage.pkgdef" />
+  </Assets>
+</PackageManifest>
