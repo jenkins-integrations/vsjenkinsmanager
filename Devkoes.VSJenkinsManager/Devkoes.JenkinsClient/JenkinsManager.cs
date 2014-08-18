@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -42,27 +41,26 @@ namespace Devkoes.JenkinsClient
             JenkinsOverview overview = null;
             JenkinsQueue queue = null;
 
-            try
+            WebClient wc = new WebClient();
+            Uri baseUri = new Uri(jenkinsServerUrl);
+
+            Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true"));
+            if (await Task.WhenAny(jsonRawDataTask, Task.Delay(3000)) == jsonRawDataTask)
             {
-                WebClient wc = new WebClient();
-                Uri baseUri = new Uri(jenkinsServerUrl);
-                string jsonRawData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true"));
-                overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonRawData) ?? new JenkinsOverview();
+                overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonRawDataTask.Result) ?? new JenkinsOverview();
 
                 string jsonQueueData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "queue/api/json?pretty=true"));
                 queue = JsonConvert.DeserializeObject<JenkinsQueue>(jsonQueueData) ?? new JenkinsQueue();
+
+                overview.Jobs = overview.Jobs ?? new List<Job>();
+                queue.Items = queue.Items ?? new List<ScheduledJob>();
+
+                overview.Jobs = ParseJobs(overview.Jobs, queue);
+
+                return overview.Jobs;
             }
-            catch (Exception)
-            {
-                // do something
-            }
 
-            overview.Jobs = overview.Jobs ?? new List<Job>();
-            queue.Items = queue.Items ?? new List<ScheduledJob>();
-
-            overview.Jobs = ParseJobs(overview.Jobs, queue);
-
-            return overview.Jobs;
+            return Enumerable.Empty<Job>();
         }
 
         private static IEnumerable<Job> ParseJobs(IEnumerable<Job> jobs, JenkinsQueue queue)

@@ -71,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BooleanToHiddenConverter.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Managers\SettingManager.cs" />
     <Compile Include="Managers\SolutionManager.cs" />

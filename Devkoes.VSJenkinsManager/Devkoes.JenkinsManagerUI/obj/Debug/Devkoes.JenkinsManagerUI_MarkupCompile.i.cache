@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Users\tomku_000\Documents\GitHub\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsManagerUI\obj\Debug\
+C:\_githubProjects\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsManagerUI\obj\Debug\
 Devkoes.JenkinsManagerUI
 none
 false
 DEBUG;TRACE
-D:\Users\tomku_000\Documents\GitHub\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsManagerUI\App.xaml
+C:\_githubProjects\vsjenkinsmanager\Devkoes.VSJenkinsManager\Devkoes.JenkinsManagerUI\App.xaml
 3655776325
 
-131285924530
-17-663341233
+191020814373
+171848745410
 Resources\Styles.xaml;Views\JenkinsManager.xaml;MainWindow.xaml;
 
-True
+False
 

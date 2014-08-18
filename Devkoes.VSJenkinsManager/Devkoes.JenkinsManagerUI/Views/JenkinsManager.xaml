@@ -113,11 +113,21 @@
             </StackPanel>
         </StackPanel>
         </Grid>
+        
+        <Button
+            Margin="10"
+            HorizontalAlignment="Center"
+            Visibility="{Binding LoadingFailed, Converter={StaticResource boolToVisConverter}}"
+            Grid.Row="2"
+            Content="Something went wrong loading the jobs, click to retry."
+            Command="{Binding Reload}"
+            Style="{StaticResource HyperlinkLikeButton}" />
 
         <ListBox
             Margin="0,5"
             ItemsSource="{Binding Jobs}" 
             SelectedItem="{Binding SelectedJob}"
+            Visibility="{Binding LoadingFailed, Converter={StaticResource boolToHiddenConverter}}"
             Grid.Row="2"
             Background="{DynamicResource VsBrush.Window}"
             Foreground="{DynamicResource VsBrush.WindowText}"
