@@ -36,6 +36,8 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
         public string AddServerUrl { get; set; }
         public string AddServerName { get; set; }
+        public string AddUserName { get; set; }
+        public string AddAPIToken { get; set; }
 
         public ObservableCollection<JenkinsServer> JenkinsServers { get; private set; }
         public ObservableCollection<Job> Jobs { get; private set; }
@@ -164,6 +166,8 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             ShowAddJenkinsServer = false;
             AddServerName = null;
             AddServerUrl = null;
+            AddUserName = null;
+            AddAPIToken = null;
         }
 
         private void HandleRemoveJenkinsServer()
@@ -267,7 +271,14 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
         private void HandleSaveJenkinsServer()
         {
-            JenkinsManager.AddServer(new JenkinsServer() { Name = AddServerName, Url = AddServerUrl });
+            JenkinsManager.AddServer(new JenkinsServer()
+            {
+                Name = AddServerName,
+                Url = AddServerUrl,
+                UserName = AddUserName,
+                ApiToken = AddAPIToken
+            });
+
             LoadJenkinsServers();
             ShowAddJenkinsServer = false;
         }
