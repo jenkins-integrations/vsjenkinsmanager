@@ -12,7 +12,6 @@ namespace Devkoes.JenkinsClient
 {
     public class JenkinsManager
     {
-        private const char URI_SEPERATOR = '|';
         private static string JENKINS_BUILD_PREFIX_TEXT = "_anime";
         private static Dictionary<string, string> _colorScheme;
 
