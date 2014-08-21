@@ -25,9 +25,9 @@ namespace Devkoes.JenkinsClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection JenkinsServers {
+        public global::Devkoes.JenkinsClient.Model.JenkinsServerList JenkinsServers {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["JenkinsServers"]));
+                return ((global::Devkoes.JenkinsClient.Model.JenkinsServerList)(this["JenkinsServers"]));
             }
             set {
                 this["JenkinsServers"] = value;

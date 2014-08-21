@@ -20,7 +20,7 @@ namespace Devkoes.JenkinsClient
         {
             if (Settings.Default.JenkinsServers == null)
             {
-                Settings.Default.JenkinsServers = new StringCollection();
+                Settings.Default.JenkinsServers = new JenkinsServerList();
             }
 
             _colorScheme = new Dictionary<string, string>() {
@@ -92,36 +92,18 @@ namespace Devkoes.JenkinsClient
 
         public static void AddServer(JenkinsServer server)
         {
-            // TODO: figure out how to save custom objects in an array through settings
-            Settings.Default.JenkinsServers.Add(GetServerConfigName(server));
+            Settings.Default.JenkinsServers.Add(server);
             Settings.Default.Save();
-        }
-
-        private static string GetServerConfigName(JenkinsServer server)
-        {
-            return string.Concat(server.Name, URI_SEPERATOR, server.Url);
         }
 
         public static IEnumerable<JenkinsServer> GetServers()
         {
-            var savedServers = Settings.Default.JenkinsServers;
-            List<JenkinsServer> servers = new List<JenkinsServer>();
-            savedServers = savedServers ?? new StringCollection();
-            foreach (var server in savedServers)
-            {
-                var parts = server.Split(URI_SEPERATOR);
-                if (parts.Length == 2)
-                {
-                    servers.Add(new JenkinsServer() { Name = parts[0], Url = parts[1] });
-                }
-            }
-
-            return servers;
+            return Settings.Default.JenkinsServers.ToArray();
         }
 
         public static void RemoveServer(JenkinsServer server)
         {
-            Settings.Default.JenkinsServers.Remove(GetServerConfigName(server));
+            Settings.Default.JenkinsServers.Remove(server);
             Settings.Default.Save();
         }
 

@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Devkoes.JenkinsClient.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="JenkinsServers" Type="System.Collections.Specialized.StringCollection" Scope="User">
+    <Setting Name="JenkinsServers" Type="Devkoes.JenkinsClient.Model.JenkinsServerList" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
