@@ -1,15 +1,17 @@
 Jenkins Manager for Visual Studio
 ================
 
-A visual studio package to manage Jenkins, first ideas include:
+A visual studio package to manage Jenkins:
 
- - Configure Jenkins servers ... **done**
- - List builds with status ... **done**
- - Start a job ... **done**
- - Connect a job to a visual studio solution ... **done**
- - Solution file context menu with a "Build on Jenkins" option ... **done**
+Planned highlights for 0.2:
+ - Authentication (through API token)
+ - Jenkins View support
+ - Context menu in favor of toolbar
 
-Excluding:
-
- - Authentication
- - Any other VS then 2013
+Release 0.1:
+ - Configure Jenkins servers
+ - List builds with status
+ - Start a job
+ - Connect a job to a visual studio solution
+ - Solution file context menu with a "Build on Jenkins" option
+ - Publish as visual studio extension
