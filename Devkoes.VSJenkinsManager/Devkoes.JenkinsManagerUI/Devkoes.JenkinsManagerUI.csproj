@@ -73,7 +73,6 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToHiddenConverter.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
-    <Compile Include="Managers\SettingManager.cs" />
     <Compile Include="Managers\SolutionManager.cs" />
     <Compile Include="Models\SolutionPathChangedEventArgs.cs" />
     <Compile Include="ViewModels\JenkinsManagerViewModel.cs" />

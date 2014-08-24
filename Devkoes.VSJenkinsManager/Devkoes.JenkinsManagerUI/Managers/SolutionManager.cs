@@ -1,4 +1,5 @@
-﻿using Devkoes.JenkinsManagerUI.ViewModels;
+﻿using Devkoes.JenkinsClient.Managers;
+using Devkoes.JenkinsManagerUI.ViewModels;
 using System;
 
 namespace Devkoes.JenkinsManagerUI.Managers

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Devkoes.JenkinsClient
+namespace Devkoes.JenkinsClient.Managers
 {
     public class JenkinsManager
     {

@@ -5,5 +5,8 @@
     <Setting Name="JenkinsServers" Type="Devkoes.JenkinsClient.Model.JenkinsServerList" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="SolutionJobs" Type="Devkoes.JenkinsClient.Model.SolutionJobList" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

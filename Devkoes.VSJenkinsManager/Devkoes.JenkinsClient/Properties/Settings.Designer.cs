@@ -33,5 +33,16 @@ namespace Devkoes.JenkinsClient.Properties {
                 this["JenkinsServers"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::Devkoes.JenkinsClient.Model.SolutionJobList SolutionJobs {
+            get {
+                return ((global::Devkoes.JenkinsClient.Model.SolutionJobList)(this["SolutionJobs"]));
+            }
+            set {
+                this["SolutionJobs"] = value;
+            }
+        }
     }
 }

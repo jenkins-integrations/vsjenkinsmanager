@@ -1,4 +1,5 @@
 ﻿using Devkoes.JenkinsClient;
+using Devkoes.JenkinsClient.Managers;
 using Devkoes.JenkinsClient.Model;
 using Devkoes.JenkinsManagerUI.Helpers;
 using Devkoes.JenkinsManagerUI.Managers;
@@ -105,7 +106,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
                 return;
             }
 
-            SettingManager.SaveJobForSolution(j.Url, SolutionManager.Instance.CurrentSolutionPath);
+            SettingManager.SaveJobForSolution(j.Url, SolutionManager.Instance.CurrentSolutionPath, SelectedJenkinsServer.Url);
 
             UpdateJobLinkedStatus();
         }
