@@ -1,5 +1,4 @@
-﻿using Devkoes.JenkinsClient;
-using Devkoes.JenkinsClient.Managers;
+﻿using Devkoes.JenkinsClient.Managers;
 using Devkoes.JenkinsClient.Model;
 using Devkoes.JenkinsManagerUI.Helpers;
 using Devkoes.JenkinsManagerUI.Managers;
@@ -87,13 +86,13 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
                 slnPath = SolutionManager.Instance.CurrentSolutionPath;
             }
 
-            string jobUrl = SettingManager.GetJobUri(slnPath);
+            SolutionJob sJob = SettingManager.GetJobUri(slnPath);
 
             UIHelper.InvokeUI(() =>
             {
                 foreach (var job in Jobs)
                 {
-                    job.LinkedToCurrentSolution = string.Equals(job.Url, jobUrl, System.StringComparison.InvariantCultureIgnoreCase);
+                    job.LinkedToCurrentSolution = string.Equals(job.Url, sJob.JobUrl, System.StringComparison.InvariantCultureIgnoreCase);
                 }
             });
         }
@@ -118,14 +117,14 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
         private async void ScheduleJob(Job j)
         {
-            await ScheduleJob(j.Url);
+            await ScheduleJob(j.Url, SelectedJenkinsServer.Url);
         }
 
-        public async Task ScheduleJob(string jobUrl)
+        public async Task ScheduleJob(string jobUrl, string solutionUrl)
         {
             try
             {
-                await JenkinsManager.ScheduleJob(jobUrl);
+                await JenkinsManager.ScheduleJob(jobUrl, solutionUrl);
             }
             catch (WebException ex)
             {
@@ -173,7 +172,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
         private void HandleRemoveJenkinsServer()
         {
-            JenkinsManager.RemoveServer(SelectedJenkinsServer);
+            SettingManager.RemoveServer(SelectedJenkinsServer);
             LoadJenkinsServers();
         }
 
@@ -259,7 +258,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         private void LoadJenkinsServers()
         {
             JenkinsServers.Clear();
-            var servers = JenkinsManager.GetServers();
+            var servers = SettingManager.GetServers();
             foreach (var server in servers)
             {
                 if (SelectedJenkinsServer == null)
@@ -272,7 +271,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
         private void HandleSaveJenkinsServer()
         {
-            JenkinsManager.AddServer(new JenkinsServer()
+            SettingManager.AddServer(new JenkinsServer()
             {
                 Name = AddServerName,
                 Url = AddServerUrl,

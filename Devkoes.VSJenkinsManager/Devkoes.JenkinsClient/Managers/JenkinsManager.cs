@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Devkoes.JenkinsClient.Managers
@@ -89,29 +90,33 @@ namespace Devkoes.JenkinsClient.Managers
             return jobs;
         }
 
-        public static void AddServer(JenkinsServer server)
-        {
-            Settings.Default.JenkinsServers.Add(server);
-            Settings.Default.Save();
-        }
 
-        public static IEnumerable<JenkinsServer> GetServers()
-        {
-            return Settings.Default.JenkinsServers.ToArray();
-        }
 
-        public static void RemoveServer(JenkinsServer server)
+        public async static Task ScheduleJob(string jobUrl, string jenkinsServerUri)
         {
-            Settings.Default.JenkinsServers.Remove(server);
-            Settings.Default.Save();
-        }
+            JenkinsServer server = SettingManager.GetJenkinsServer(jenkinsServerUri);
+            
+            if(server == null)
+            {
+                return;
+            }
 
-        public async static Task ScheduleJob(string jobUrl)
-        {
             using (WebClient client = new WebClient())
             {
+                if (!string.IsNullOrWhiteSpace(server.UserName))
+                {
+                    // WebClient.Credentials can not be used, because those credentials will only be send to the server
+                    // when the server responds with a challenge from the server. Jenkins won't send this challenge as documented
+                    // on the wiki: https://wiki.jenkins-ci.org/display/JENKINS/Authenticating+scripted+clients
+
+                    // We should use the "old fashion" way of setting the header manually
+                    string credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", server.UserName, server.ApiToken)));
+                    client.Headers[HttpRequestHeader.Authorization] = "Basic " + credentials;
+                }
+
                 var jobUri = new Uri(jobUrl);
-                byte[] response = await client.UploadValuesTaskAsync(new Uri(jobUri, "build"), new NameValueCollection()
+                var requestUri = new Uri(jobUri, "build");
+                byte[] response = await client.UploadValuesTaskAsync(requestUri, new NameValueCollection()
                    {
                        { "delay", "0sec" }
                    }

@@ -1,4 +1,5 @@
 ﻿using Devkoes.JenkinsClient.Managers;
+using Devkoes.JenkinsClient.Model;
 using Devkoes.JenkinsManagerUI.ViewModels;
 using System;
 
@@ -49,8 +50,8 @@ namespace Devkoes.JenkinsManagerUI.Managers
 
         public async void StartJenkinsBuildForSolution(string slnPath)
         {
-            string jobUri = SettingManager.GetJobUri(slnPath);
-            await ViewModelController.JenkinsManagerViewModel.ScheduleJob(jobUri);
+            SolutionJob sJob = SettingManager.GetJobUri(slnPath);
+            await ViewModelController.JenkinsManagerViewModel.ScheduleJob(sJob.JobUrl, sJob.JenkinsServerUrl);
         }
     }
 }
