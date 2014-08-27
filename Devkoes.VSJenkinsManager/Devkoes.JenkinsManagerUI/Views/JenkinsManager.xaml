@@ -10,6 +10,7 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="300">
+    
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -18,8 +19,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid
-        Margin="3">
+
+    <Grid Margin="3">
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="Auto" />
@@ -30,45 +31,6 @@
             <RowDefinition
                 Height="Auto" />
         </Grid.RowDefinitions>
-
-        <ToolBar>
-            <Button
-                Command="{Binding ScheduleJobCommand}"
-                CommandParameter="{Binding Jobs/}">
-                <Button.Content>
-                    <Image
-                        Margin="5,0"
-                        Source="..\Resources\BuildNotificationIcon.ico"
-                        Height="16"
-                        ToolTip="Start/schedule this job">
-                    </Image>
-                </Button.Content>
-            </Button>
-            <Button
-                Command="{Binding ShowJobsWebsite}"
-                CommandParameter="{Binding Jobs/}">
-                <Button.Content>
-                    <Image
-                        Margin="5,0"
-                        Source="..\Resources\OnlineIcon.png"
-                        Height="16"
-                        ToolTip="Go to jobs website">
-                    </Image>
-                </Button.Content>
-            </Button>
-            <Button
-                Command="{Binding LinkJobToCurrentSolution}"
-                CommandParameter="{Binding Jobs/}">
-                <Button.Content>
-                    <Image
-                        Margin="5,0"
-                        Source="..\Resources\ConnectIcon.png"
-                        Height="16"
-                        ToolTip="Link to current solution">
-                    </Image>
-                </Button.Content>
-            </Button>
-        </ToolBar>
 
         <Grid
             Grid.Row="1">
@@ -193,6 +155,42 @@
             Foreground="{DynamicResource VsBrush.WindowText}"
             BorderThickness="0"
             IsSynchronizedWithCurrentItem="True">
+            
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem
+                        Header="_Start/Schedule Job"
+                        Command="{Binding Path=ScheduleJobCommand}"
+                        CommandParameter="{Binding Jobs/}">
+                        <MenuItem.Icon>
+                            <Image
+                                Source="..\Resources\BuildNotificationIcon.ico"
+                                Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        Header="_Go to jobs website"
+                        Command="{Binding ShowJobsWebsite}"
+                        CommandParameter="{Binding Jobs/}">
+                        <MenuItem.Icon>
+                            <Image
+                                Source="..\Resources\OnlineIcon.png"
+                                Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        Header="_Link to current solution"
+                        Command="{Binding LinkJobToCurrentSolution}"
+                        CommandParameter="{Binding Jobs/}">
+                        <MenuItem.Icon>
+                            <Image
+                                Source="..\Resources\ConnectIcon.png"
+                                Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+            
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid
