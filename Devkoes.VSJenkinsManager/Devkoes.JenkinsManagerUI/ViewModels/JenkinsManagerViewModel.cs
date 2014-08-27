@@ -130,6 +130,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         private async void ScheduleJob(Job j)
         {
             await ScheduleJob(j.Url, SelectedJenkinsServer.Url);
+            await LoadJenkinsJobs();
         }
 
         public async Task ScheduleJob(string jobUrl, string solutionUrl)
