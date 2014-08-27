@@ -71,6 +71,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\Solution Items\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Converters\BooleanToHiddenConverter.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Managers\SolutionManager.cs" />

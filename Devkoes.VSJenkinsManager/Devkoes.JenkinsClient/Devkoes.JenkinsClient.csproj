@@ -48,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Solution Items\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Managers\JenkinsManager.cs" />
     <Compile Include="Managers\SettingManager.cs" />
     <Compile Include="Model\JenkinsOverview.cs" />

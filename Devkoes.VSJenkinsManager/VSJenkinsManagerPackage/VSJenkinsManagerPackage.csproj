@@ -125,6 +125,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Solution Items\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Helpers\SolutionHelper.cs" />
     <Compile Include="JenkinsToolWindow.cs" />
     <Compile Include="Guids.cs" />
