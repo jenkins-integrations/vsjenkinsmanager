@@ -23,6 +23,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         private Job _selectedJob;
         private Timer _refreshTimer;
         private bool _loadingJobsBusy;
+        private object _loadingJobsBusyLock;
         private bool _loadingFailed;
 
         public RelayCommand ShowAddJenkinsForm { get; private set; }
@@ -54,6 +55,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             LinkJobToCurrentSolution = new RelayCommand<Job>(LinkJobToSolution, CanDoJobAction);
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             Jobs = new ObservableCollection<Job>();
+            _loadingJobsBusyLock = new object();
 
             SolutionManager.Instance.SolutionPathChanged += SolutionPathChanged;
 
@@ -71,6 +73,14 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
         private async void RefreshJobsTimerCallback(object sender, ElapsedEventArgs e)
         {
+            lock (_loadingJobsBusyLock)
+            {
+                if (_loadingJobsBusy)
+                {
+                    return;
+                }
+            }
+
             await LoadJenkinsJobs();
         }
 
@@ -202,13 +212,16 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
         private async Task LoadJenkinsJobs()
         {
-            if (_loadingJobsBusy)
-                return;
-
             if (SelectedJenkinsServer == null)
                 return;
 
-            _loadingJobsBusy = true;
+            lock (_loadingJobsBusyLock)
+            {
+                if (_loadingJobsBusy)
+                    return;
+
+                _loadingJobsBusy = true;
+            }
 
             try
             {
@@ -253,7 +266,10 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             }
             finally
             {
-                _loadingJobsBusy = false;
+                lock (_loadingJobsBusyLock)
+                {
+                    _loadingJobsBusy = false;
+                }
             }
         }
 
