@@ -92,7 +92,9 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             {
                 foreach (var job in Jobs)
                 {
-                    job.LinkedToCurrentSolution = string.Equals(job.Url, sJob.JobUrl, System.StringComparison.InvariantCultureIgnoreCase);
+                    job.LinkedToCurrentSolution =
+                        sJob != null &&
+                        string.Equals(job.Url, sJob.JobUrl, System.StringComparison.InvariantCultureIgnoreCase);
                 }
             });
         }
