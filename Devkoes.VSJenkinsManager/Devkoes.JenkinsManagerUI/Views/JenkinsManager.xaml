@@ -16,6 +16,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary
                     Source="..\Resources\Styles.xaml" />
+                <ResourceDictionary
+                    Source="..\Resources\ComboBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -51,8 +53,14 @@
             <ComboBox
                 VerticalAlignment="Center"
                 ItemsSource="{Binding JenkinsServers}"
-                DisplayMemberPath="Name"
-                SelectedItem="{Binding SelectedJenkinsServer}" />
+                SelectedItem="{Binding SelectedJenkinsServer}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <Button
                 Content="add"
