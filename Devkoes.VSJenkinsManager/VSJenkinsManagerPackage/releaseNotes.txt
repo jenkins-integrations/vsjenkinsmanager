@@ -3,6 +3,11 @@ A visual studio package to manage Jenkins
 
 https://github.com/tomkuijsten/vsjenkinsmanager
 
+Version 0.2:
+ - Authentication support added (username/API token)
+ - Refresh status immediately when build started
+ - Removed toolbar in favor of a context menu
+
 Version 0.1:
  - Configure Jenkins servers
  - List builds with status
