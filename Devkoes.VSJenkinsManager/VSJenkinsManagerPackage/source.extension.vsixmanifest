@@ -13,7 +13,7 @@
     <License>license.txt</License>
     <ReleaseNotes>releaseNotes.txt</ReleaseNotes>
     <Icon>JIcon.png</Icon>
-    <PreviewImage>jenkinsmanager.jpg</PreviewImage>
+    <PreviewImage>Resources\screenshot1.jpg</PreviewImage>
     <Tags>Jenkins Jobs Manage Build CI</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
