@@ -3,10 +3,13 @@ Jenkins Manager for Visual Studio
 
 A [visual studio package](http://visualstudiogallery.msdn.microsoft.com/3471d451-c1f1-4273-b305-acf81e4f8b32) to manage Jenkins:
 
-Planned highlights for 0.2:
- - Authentication (through API token) ... done
+Planned highlights for 0.3:
  - Jenkins View support
- - Context menu in favor of toolbar ... done
+
+Release 0.2:
+ - Authentication (through API token)
+ - Auto refresh status when starting build
+ - Context menu in favor of toolbar
 
 Release 0.1:
  - Configure Jenkins servers
