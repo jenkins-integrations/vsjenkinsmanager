@@ -88,7 +88,7 @@
                         Text="{Binding AddServerUrl}">
                         <wmt:WatermarkService.Watermark>
                             <TextBlock
-                                VerticalAlignment="Center">Jenkins server url</TextBlock>
+                                VerticalAlignment="Center">Jenkins server root url (not a view!)</TextBlock>
                         </wmt:WatermarkService.Watermark>
                     </TextBox>
                 </AdornerDecorator>
