@@ -27,7 +27,8 @@ namespace Devkoes.JenkinsClient.Managers
                 { "red"+JENKINS_BUILD_PREFIX_TEXT, "Yellow" },
                 { "red", "Firebrick" },
                 { "blue"+JENKINS_BUILD_PREFIX_TEXT, "Yellow" },
-                { "blue", "ForestGreen" }
+                { "blue", "ForestGreen" },
+                { "disabled", "Gray" }
             };
         }
 
@@ -95,8 +96,8 @@ namespace Devkoes.JenkinsClient.Managers
         public async static Task ScheduleJob(string jobUrl, string jenkinsServerUri)
         {
             JenkinsServer server = SettingManager.GetJenkinsServer(jenkinsServerUri);
-            
-            if(server == null)
+
+            if (server == null)
             {
                 return;
             }
