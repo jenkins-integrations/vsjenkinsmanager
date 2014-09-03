@@ -31,6 +31,7 @@ namespace Devkoes.VSJenkinsManagerPackage
     // This attribute registers a tool window exposed by this package.
     [ProvideToolWindow(typeof(JenkinsToolWindow))]
     [Guid(GuidList.guidVSJenkinsManagerPackagePkgString)]
+    [ProvideBindingPath]
     public sealed class VSJenkinsManagerPackagePackage : Package
     {
         internal static VSJenkinsManagerPackagePackage Instance { get; private set; }
