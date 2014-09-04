@@ -58,13 +58,32 @@ namespace Devkoes.JenkinsClient.Managers
 
                 overview.Jobs = ParseJobs(overview.Jobs, queue);
 
-                if(overview.PrimaryView != null)
+                if (overview.PrimaryView != null)
                 {
                     overview.PrimaryView = overview.Views.FirstOrDefault((v) => string.Equals(v.Url, overview.PrimaryView.Url));
 
-                    if(overview.PrimaryView != null)
+                    if (overview.PrimaryView != null)
                     {
                         overview.PrimaryView.Jobs = overview.Jobs.ToList();
+                    }
+                }
+
+                foreach (var view in overview.Views.AsParallel())
+                {
+                    if(overview.PrimaryView != null && string.Equals(overview.PrimaryView.Url, view.Url))
+                    {
+                        continue;
+                    }
+
+                    JenkinsView viewData = await GetJenkinsView(view.Url);
+
+                    foreach (var job in viewData.Jobs)
+                    {
+                        var allJobsJob = overview.Jobs.FirstOrDefault((j) => string.Equals(j.Url, job.Url));
+                        if(allJobsJob !=null)
+                        {
+                            view.Jobs.Add(allJobsJob);
+                        }
                     }
                 }
 
@@ -72,6 +91,22 @@ namespace Devkoes.JenkinsClient.Managers
             }
 
             return new JenkinsOverview();
+        }
+
+        private async static Task<JenkinsView> GetJenkinsView(string viewUrl)
+        {
+            JenkinsView view = null;
+            WebClient wc = new WebClient();
+            Uri baseUri = new Uri(viewUrl);
+
+            Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true"));
+
+            if (await Task.WhenAny(jsonRawDataTask, Task.Delay(3000)) == jsonRawDataTask)
+            {
+                view = JsonConvert.DeserializeObject<JenkinsView>(jsonRawDataTask.Result);
+            }
+
+            return view ?? new JenkinsView();
         }
 
         private static IEnumerable<Job> ParseJobs(IEnumerable<Job> jobs, JenkinsQueue queue)

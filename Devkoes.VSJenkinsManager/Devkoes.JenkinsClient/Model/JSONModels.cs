@@ -130,4 +130,19 @@ namespace Devkoes.JenkinsClient.Model
             set { _jobs = value ?? new List<Job>(); }
         }
     }
+
+    public class JenkinsView
+    {
+        private IEnumerable<Job> _jobs = Enumerable.Empty<Job>();
+
+        public string Name { get; set; }
+        public string Url { get; set; }
+
+        public IEnumerable<Job> Jobs
+        {
+            get { return _jobs; }
+            set { _jobs = value ?? Enumerable.Empty<Job>(); }
+        }
+    }
+
 }

@@ -157,6 +157,7 @@
 
         <ComboBox
             VerticalAlignment="Center"
+            Margin="0,3,0,0"
             Grid.Row="2"
             ItemsSource="{Binding JOverview.Views}"
             SelectedItem="{Binding SelectedView}">

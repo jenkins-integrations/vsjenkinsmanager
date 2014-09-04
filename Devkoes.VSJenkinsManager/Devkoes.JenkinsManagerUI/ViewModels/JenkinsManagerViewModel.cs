@@ -220,7 +220,6 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             LoadJenkinsServers();
         }
 
-
         public JenkinsServer SelectedJenkinsServer
         {
             get { return _selectedJenkinsServer; }
@@ -263,6 +262,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
                 if (JOverview == null)
                 {
                     JOverview = newOverview;
+                    SelectedView = JOverview.PrimaryView;
                 }
                 else
                 {
