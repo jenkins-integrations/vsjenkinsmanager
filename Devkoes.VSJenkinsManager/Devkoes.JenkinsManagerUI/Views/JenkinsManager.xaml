@@ -29,6 +29,8 @@
             <RowDefinition
                 Height="Auto" />
             <RowDefinition
+                Height="Auto" />
+            <RowDefinition
                 Height="*" />
             <RowDefinition
                 Height="Auto" />
@@ -153,12 +155,25 @@
             Command="{Binding Reload}"
             Style="{StaticResource HyperlinkLikeButton}" />
 
+        <ComboBox
+            VerticalAlignment="Center"
+            Grid.Row="2"
+            ItemsSource="{Binding JOverview.Views}"
+            SelectedItem="{Binding SelectedView}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+                        Text="{Binding Name}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        
         <ListBox
             Margin="0,5"
-            ItemsSource="{Binding Jobs}"
+            ItemsSource="{Binding SelectedView.Jobs}"
             SelectedItem="{Binding SelectedJob}"
             Visibility="{Binding LoadingFailed, Converter={StaticResource boolToHiddenConverter}}"
-            Grid.Row="2"
+            Grid.Row="3"
             Background="{DynamicResource VsBrush.Window}"
             Foreground="{DynamicResource VsBrush.WindowText}"
             BorderThickness="0"
@@ -248,7 +263,7 @@
             Background="{DynamicResource VsBrush.Window}"
             Foreground="{DynamicResource VsBrush.WindowText}"
             Padding="5"
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.ColumnSpan="3"
             Text="{Binding StatusMessage}" />
     </Grid>

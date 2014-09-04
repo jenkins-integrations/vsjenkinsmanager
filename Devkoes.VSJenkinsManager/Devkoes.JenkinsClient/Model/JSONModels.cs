@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Devkoes.JenkinsClient.Model
 {
@@ -25,6 +26,7 @@ namespace Devkoes.JenkinsClient.Model
             return obj.Url.ToLower().GetHashCode();
         }
     }
+
     public class Job : ObservableObject
     {
         private bool _building;
@@ -55,13 +57,17 @@ namespace Devkoes.JenkinsClient.Model
             }
         }
 
-        public string Color { get { return _color; } set {
-            if (_color != value)
+        public string Color
+        {
+            get { return _color; }
+            set
             {
-                _color = value;
-                RaisePropertyChanged(() => Color);
+                if (_color != value)
+                {
+                    _color = value;
+                    RaisePropertyChanged(() => Color);
+                }
             }
-        }
         }
 
         public bool LinkedToCurrentSolution
@@ -93,6 +99,35 @@ namespace Devkoes.JenkinsClient.Model
 
     public class JenkinsOverview
     {
-        public IEnumerable<Job> Jobs { get; set; }
+        private IEnumerable<Job> _jobs = Enumerable.Empty<Job>();
+        private IEnumerable<View> _views = Enumerable.Empty<View>();
+
+        public IEnumerable<Job> Jobs
+        {
+            get { return _jobs; }
+            set { _jobs = value ?? Enumerable.Empty<Job>(); }
+        }
+
+        public IEnumerable<View> Views
+        {
+            get { return _views; }
+            set { _views = value ?? Enumerable.Empty<View>(); }
+        }
+
+        public View PrimaryView { get; set; }
+    }
+
+    public class View
+    {
+        private IList<Job> _jobs = new List<Job>();
+
+        public string Name { get; set; }
+        public string Url { get; set; }
+
+        public IList<Job> Jobs
+        {
+            get { return _jobs; }
+            set { _jobs = value ?? new List<Job>(); }
+        }
     }
 }

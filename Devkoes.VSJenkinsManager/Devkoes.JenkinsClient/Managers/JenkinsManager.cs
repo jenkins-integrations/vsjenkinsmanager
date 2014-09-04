@@ -37,7 +37,7 @@ namespace Devkoes.JenkinsClient.Managers
         /// </summary>
         /// <param name="jenkinsServerUrl">The url of the server, without any api paths (eg http://jenkins.cyanogenmod.com/)</param>
         /// <returns>The list of Jobs</returns>
-        public async static Task<IEnumerable<Job>> GetJobs(string jenkinsServerUrl)
+        public async static Task<JenkinsOverview> GetJenkinsOverview(string jenkinsServerUrl)
         {
             JenkinsOverview overview = null;
             JenkinsQueue queue = null;
@@ -58,10 +58,20 @@ namespace Devkoes.JenkinsClient.Managers
 
                 overview.Jobs = ParseJobs(overview.Jobs, queue);
 
-                return overview.Jobs;
+                if(overview.PrimaryView != null)
+                {
+                    overview.PrimaryView = overview.Views.FirstOrDefault((v) => string.Equals(v.Url, overview.PrimaryView.Url));
+
+                    if(overview.PrimaryView != null)
+                    {
+                        overview.PrimaryView.Jobs = overview.Jobs.ToList();
+                    }
+                }
+
+                return overview;
             }
 
-            return Enumerable.Empty<Job>();
+            return new JenkinsOverview();
         }
 
         private static IEnumerable<Job> ParseJobs(IEnumerable<Job> jobs, JenkinsQueue queue)
@@ -90,8 +100,6 @@ namespace Devkoes.JenkinsClient.Managers
 
             return jobs;
         }
-
-
 
         public async static Task ScheduleJob(string jobUrl, string jenkinsServerUri)
         {

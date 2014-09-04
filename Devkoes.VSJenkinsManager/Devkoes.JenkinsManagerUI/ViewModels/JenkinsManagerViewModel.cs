@@ -6,6 +6,7 @@ using Devkoes.JenkinsManagerUI.Properties;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         private bool _loadingJobsBusy;
         private object _loadingJobsBusyLock;
         private bool _loadingFailed;
+        private View _selectedView;
+        private JenkinsOverview _jOverview;
 
         public RelayCommand ShowAddJenkinsForm { get; private set; }
         public RelayCommand SaveJenkinsServer { get; private set; }
@@ -41,7 +44,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         public string AddAPIToken { get; set; }
 
         public ObservableCollection<JenkinsServer> JenkinsServers { get; private set; }
-        public ObservableCollection<Job> Jobs { get; private set; }
+        //public ObservableCollection<Job> Jobs { get; private set; }
 
         public JenkinsManagerViewModel()
         {
@@ -54,7 +57,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             ShowJobsWebsite = new RelayCommand<Job>(ShowWebsite, CanDoJobAction);
             LinkJobToCurrentSolution = new RelayCommand<Job>(LinkJobToSolution, CanDoJobAction);
             JenkinsServers = new ObservableCollection<JenkinsServer>();
-            Jobs = new ObservableCollection<Job>();
+            //Jobs = new ObservableCollection<Job>();
             _loadingJobsBusyLock = new object();
 
             SolutionManager.Instance.SolutionPathChanged += SolutionPathChanged;
@@ -64,6 +67,32 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             _refreshTimer = new Timer(5000);
             _refreshTimer.Elapsed += RefreshJobsTimerCallback;
             _refreshTimer.Start();
+        }
+
+        public View SelectedView
+        {
+            get { return _selectedView; }
+            set
+            {
+                if (value != _selectedView)
+                {
+                    _selectedView = value;
+                    RaisePropertyChanged(() => SelectedView);
+                }
+            }
+        }
+
+        public JenkinsOverview JOverview
+        {
+            get { return _jOverview; }
+            set
+            {
+                if (value != _jOverview)
+                {
+                    _jOverview = value;
+                }
+                RaisePropertyChanged(() => JOverview);
+            }
         }
 
         private async void HandleReload()
@@ -98,9 +127,11 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
             SolutionJob sJob = SettingManager.GetJobUri(slnPath);
 
+            var allJobs = JOverview.Views.SelectMany((v) => v.Jobs ?? Enumerable.Empty<Job>()).ToArray();
+
             UIHelper.InvokeUI(() =>
             {
-                foreach (var job in Jobs)
+                foreach (var job in allJobs)
                 {
                     job.LinkedToCurrentSolution =
                         sJob != null &&
@@ -196,6 +227,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             set
             {
                 _selectedJenkinsServer = value;
+                JOverview = null;
                 RaisePropertyChanged(() => SelectedJenkinsServer);
                 LoadJenkinsJobs();
             }
@@ -226,34 +258,50 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
             try
             {
-                var newJobs = await JenkinsManager.GetJobs(SelectedJenkinsServer.Url);
+                JenkinsOverview newOverview = await JenkinsManager.GetJenkinsOverview(SelectedJenkinsServer.Url);
 
-                var jobsToDelete = Jobs.Except(newJobs, Job.JobComparer).ToArray();
-                var jobsToAdd = newJobs.Except(Jobs, Job.JobComparer).ToArray();
-                var jobsToUpdate = newJobs.Intersect(Jobs, Job.JobComparer).ToArray();
-
-                UIHelper.InvokeUI(() =>
+                if (JOverview == null)
+                {
+                    JOverview = newOverview;
+                }
+                else
+                {
+                    foreach (var newView in newOverview.Views)
                     {
-                        foreach (var job in jobsToDelete)
+                        var existingView = JOverview.Views.FirstOrDefault((v) => string.Equals(v.Url, newView.Url));
+                        if (existingView != null)
                         {
-                            Jobs.Remove(job);
-                        }
+                            var existingJobs = existingView.Jobs;
+                            var newJobs = newView.Jobs;
 
-                        foreach (var job in jobsToAdd)
-                        {
-                            Jobs.Add(job);
-                        }
+                            IEnumerable<Job> jobsToDelete = existingJobs.Except(newJobs, Job.JobComparer).ToArray();
+                            IEnumerable<Job> jobsToAdd = newJobs.Except(existingJobs, Job.JobComparer).ToArray();
+                            IEnumerable<Job> jobsToUpdate = newJobs.Intersect(existingJobs, Job.JobComparer).ToArray();
 
-                        foreach (var job in jobsToUpdate)
-                        {
-                            var existingJob = Jobs.Intersect(new[] { job }, Job.JobComparer).Single();
-                            existingJob.Building = job.Building;
-                            existingJob.Color = job.Color;
-                            existingJob.Name = job.Name;
-                            existingJob.Queued = job.Queued;
-                        }
-                    });
+                            UIHelper.InvokeUI(() =>
+                                {
+                                    foreach (var job in jobsToDelete)
+                                    {
+                                        existingJobs.Remove(job);
+                                    }
 
+                                    foreach (var job in jobsToAdd)
+                                    {
+                                        existingJobs.Add(job);
+                                    }
+
+                                    foreach (var job in jobsToUpdate)
+                                    {
+                                        var existingJob = existingJobs.Intersect(new[] { job }, Job.JobComparer).Single();
+                                        existingJob.Building = job.Building;
+                                        existingJob.Color = job.Color;
+                                        existingJob.Name = job.Name;
+                                        existingJob.Queued = job.Queued;
+                                    }
+                                });
+                        }
+                    }
+                }
                 LoadingFailed = false;
 
                 StatusMessage = null;

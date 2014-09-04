@@ -53,7 +53,7 @@
     </Compile>
     <Compile Include="Managers\JenkinsManager.cs" />
     <Compile Include="Managers\SettingManager.cs" />
-    <Compile Include="Model\JenkinsOverview.cs" />
+    <Compile Include="Model\JSONModels.cs" />
     <Compile Include="Model\JenkinsQueue.cs" />
     <Compile Include="Model\JenkinsServer.cs" />
     <Compile Include="Model\JenkinsServerList.cs" />
