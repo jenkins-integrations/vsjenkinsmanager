@@ -113,8 +113,6 @@ namespace Devkoes.JenkinsClient.Model
             get { return _views; }
             set { _views = value ?? Enumerable.Empty<View>(); }
         }
-
-        public View PrimaryView { get; set; }
     }
 
     public class View

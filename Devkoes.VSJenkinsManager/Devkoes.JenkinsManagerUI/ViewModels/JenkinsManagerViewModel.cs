@@ -262,7 +262,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
                 if (JOverview == null)
                 {
                     JOverview = newOverview;
-                    SelectedView = JOverview.PrimaryView;
+                    SelectedView = JOverview.Views.FirstOrDefault();
                 }
                 else
                 {

@@ -58,29 +58,20 @@ namespace Devkoes.JenkinsClient.Managers
 
                 overview.Jobs = ParseJobs(overview.Jobs, queue);
 
-                if (overview.PrimaryView != null)
-                {
-                    overview.PrimaryView = overview.Views.FirstOrDefault((v) => string.Equals(v.Url, overview.PrimaryView.Url));
-
-                    if (overview.PrimaryView != null)
-                    {
-                        overview.PrimaryView.Jobs = overview.Jobs.ToList();
-                    }
-                }
-
                 foreach (var view in overview.Views.AsParallel())
                 {
-                    if(overview.PrimaryView != null && string.Equals(overview.PrimaryView.Url, view.Url))
+                    // Fix JSON problem which contains wrong url for primary view (is always the base url which contains
+                    // all builds, not just the ones for that view).
+                    if (!view.Url.Contains("/view/"))
                     {
-                        continue;
+                        view.Url = string.Format("{0}/view/{1}/", view.Url, view.Name);
                     }
-
                     JenkinsView viewData = await GetJenkinsView(view.Url);
 
                     foreach (var job in viewData.Jobs)
                     {
                         var allJobsJob = overview.Jobs.FirstOrDefault((j) => string.Equals(j.Url, job.Url));
-                        if(allJobsJob !=null)
+                        if (allJobsJob != null)
                         {
                             view.Jobs.Add(allJobsJob);
                         }
