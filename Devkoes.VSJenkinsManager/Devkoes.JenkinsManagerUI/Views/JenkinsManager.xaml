@@ -252,6 +252,7 @@
                             Grid.Column="3"
                             Margin="5,0"
                             Source="..\Resources\ClockIcon.png"
+                            ToolTip="{Binding QueuedWhy}"
                             Height="16"
                             Visibility="{Binding Queued, Converter={StaticResource boolToVisConverter}}">
                         </Image>

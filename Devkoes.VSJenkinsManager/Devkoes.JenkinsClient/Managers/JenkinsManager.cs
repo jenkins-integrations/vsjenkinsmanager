@@ -52,7 +52,7 @@ namespace Devkoes.JenkinsClient.Managers
             {
                 overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonRawDataTask.Result) ?? new JenkinsOverview();
 
-                string jsonQueueData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "queue/api/json?pretty=true&tree=items[task[name,url,color]]"));
+                string jsonQueueData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "queue/api/json?pretty=true&tree=items[why,task[name,url,color]]"));
                 queue = JsonConvert.DeserializeObject<JenkinsQueue>(jsonQueueData) ?? new JenkinsQueue();
 
                 queue.Items = queue.Items ?? new List<ScheduledJob>();
@@ -129,9 +129,12 @@ namespace Devkoes.JenkinsClient.Managers
                     job.Color = _colorScheme[job.Color];
                 }
 
-                if (queue.Items.Select((i) => i.Task).Contains(job, Job.JobComparer))
+                var queueItem = queue.Items.FirstOrDefault((i) => string.Equals(i.Task.Url, job.Url));
+
+                if (queueItem != null)
                 {
                     job.Queued = true;
+                    job.QueuedWhy = queueItem.Why;
                 }
             }
 

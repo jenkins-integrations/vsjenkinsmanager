@@ -10,5 +10,6 @@ namespace Devkoes.JenkinsClient.Model
     public class ScheduledJob
     {
         public Job Task { get; set; }
+        public string Why { get; set; }
     }
 }
