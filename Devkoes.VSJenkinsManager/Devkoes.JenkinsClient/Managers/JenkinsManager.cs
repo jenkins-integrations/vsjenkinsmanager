@@ -28,6 +28,8 @@ namespace Devkoes.JenkinsClient.Managers
                 { "red", "Firebrick" },
                 { "blue"+JENKINS_BUILD_PREFIX_TEXT, "Yellow" },
                 { "blue", "ForestGreen" },
+                { "yellow", "Yellow"},
+                { "yellow"+JENKINS_BUILD_PREFIX_TEXT, "Yellow"},
                 { "disabled", "Gray" }
             };
         }
@@ -45,19 +47,18 @@ namespace Devkoes.JenkinsClient.Managers
             WebClient wc = new WebClient();
             Uri baseUri = new Uri(jenkinsServerUrl);
 
-            Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true"));
+            Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true&tree=views[name,url]"));
             if (await Task.WhenAny(jsonRawDataTask, Task.Delay(3000)) == jsonRawDataTask)
             {
                 overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonRawDataTask.Result) ?? new JenkinsOverview();
 
-                string jsonQueueData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "queue/api/json?pretty=true"));
+                string jsonQueueData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "queue/api/json?pretty=true&tree=items[task[name,url,color]]"));
                 queue = JsonConvert.DeserializeObject<JenkinsQueue>(jsonQueueData) ?? new JenkinsQueue();
 
-                overview.Jobs = overview.Jobs ?? new List<Job>();
                 queue.Items = queue.Items ?? new List<ScheduledJob>();
 
-                overview.Jobs = ParseJobs(overview.Jobs, queue);
-
+                object allJobLock = new object();
+                var allJobs = new List<Job>();
                 foreach (var view in overview.Views.AsParallel())
                 {
                     // Fix JSON problem which contains wrong url for primary view (is always the base url which contains
@@ -66,17 +67,28 @@ namespace Devkoes.JenkinsClient.Managers
                     {
                         view.Url = string.Format("{0}/view/{1}/", view.Url, view.Name);
                     }
+
                     JenkinsView viewData = await GetJenkinsView(view.Url);
 
                     foreach (var job in viewData.Jobs)
                     {
-                        var allJobsJob = overview.Jobs.FirstOrDefault((j) => string.Equals(j.Url, job.Url));
-                        if (allJobsJob != null)
+                        lock (allJobLock)
                         {
-                            view.Jobs.Add(allJobsJob);
+                            var allJobsJob = allJobs.FirstOrDefault((j) => string.Equals(j.Url, job.Url));
+                            if (allJobsJob != null)
+                            {
+                                view.Jobs.Add(allJobsJob);
+                            }
+                            else
+                            {
+                                view.Jobs.Add(job);
+                                allJobs.Add(job);
+                            }
                         }
                     }
                 }
+
+                overview.Jobs = ParseJobs(allJobs, queue);
 
                 return overview;
             }
@@ -102,7 +114,6 @@ namespace Devkoes.JenkinsClient.Managers
 
         private static IEnumerable<Job> ParseJobs(IEnumerable<Job> jobs, JenkinsQueue queue)
         {
-            jobs = jobs.ToArray();
             foreach (var job in jobs)
             {
                 if (string.IsNullOrEmpty(job.Name) || string.IsNullOrEmpty(job.Color))
