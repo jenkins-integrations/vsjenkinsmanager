@@ -3,6 +3,11 @@ A visual studio package to manage Jenkins
 
 https://github.com/tomkuijsten/vsjenkinsmanager
 
+Version 0.3:
+ - Added combobox with views
+ - Reduced the JSON data loaded using the tree parameter
+ - Schedule icon has a tooltip with the "why" text
+
 Version 0.2:
  - Authentication support added (username/API token)
  - Refresh status immediately when build started
