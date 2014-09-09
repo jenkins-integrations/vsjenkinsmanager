@@ -10,6 +10,9 @@ A [visual studio package](http://visualstudiogallery.msdn.microsoft.com/3471d451
 Planned highlights for 0.4:
  - ?
 
+Release 0.3.1:
+ - [x] Bugfixes for context menu actions
+
 Release 0.3:
  - [x] Jenkins View support
  - [x] JSON data reduction
