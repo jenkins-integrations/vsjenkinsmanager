@@ -185,7 +185,7 @@
                     <MenuItem
                         Header="_Start/Schedule Job"
                         Command="{Binding Path=ScheduleJobCommand}"
-                        CommandParameter="{Binding Jobs/}">
+                        CommandParameter="{Binding  SelectedView.Jobs/}">
                         <MenuItem.Icon>
                             <Image
                                 Source="..\Resources\BuildNotificationIcon.ico"
@@ -195,7 +195,7 @@
                     <MenuItem
                         Header="_Go to jobs website"
                         Command="{Binding ShowJobsWebsite}"
-                        CommandParameter="{Binding Jobs/}">
+                        CommandParameter="{Binding  SelectedView.Jobs/}">
                         <MenuItem.Icon>
                             <Image
                                 Source="..\Resources\OnlineIcon.png"
@@ -205,7 +205,7 @@
                     <MenuItem
                         Header="_Link to current solution"
                         Command="{Binding LinkJobToCurrentSolution}"
-                        CommandParameter="{Binding Jobs/}">
+                        CommandParameter="{Binding  SelectedView.Jobs/}">
                         <MenuItem.Icon>
                             <Image
                                 Source="..\Resources\ConnectIcon.png"
