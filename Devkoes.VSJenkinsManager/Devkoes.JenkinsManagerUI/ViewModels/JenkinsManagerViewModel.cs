@@ -44,7 +44,6 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         public string AddAPIToken { get; set; }
 
         public ObservableCollection<JenkinsServer> JenkinsServers { get; private set; }
-        //public ObservableCollection<Job> Jobs { get; private set; }
 
         public JenkinsManagerViewModel()
         {
@@ -57,7 +56,6 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
             ShowJobsWebsite = new RelayCommand<Job>(ShowWebsite, CanDoJobAction);
             LinkJobToCurrentSolution = new RelayCommand<Job>(LinkJobToSolution, CanDoJobAction);
             JenkinsServers = new ObservableCollection<JenkinsServer>();
-            //Jobs = new ObservableCollection<Job>();
             _loadingJobsBusyLock = new object();
 
             SolutionManager.Instance.SolutionPathChanged += SolutionPathChanged;
