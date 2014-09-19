@@ -52,6 +52,8 @@
     <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.4.4.32.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -82,6 +84,15 @@
     <Compile Include="Resources\VsColors.cs" />
     <Compile Include="ViewModels\JenkinsManagerViewModel.cs" />
     <Compile Include="ViewModels\ViewModelController.cs" />
+    <Compile Include="Views\BasicOptionsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\BasicOptionsControl.Designer.cs">
+      <DependentUpon>BasicOptionsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserOptionsView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WatermarkTextbox\WatermarkAdorner.cs" />
     <Compile Include="WatermarkTextbox\WatermarkService.cs" />
     <Page Include="Resources\ComboBox.xaml">
@@ -121,6 +132,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\BasicOptionsControl.resx">
+      <DependentUpon>BasicOptionsControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Key.snk" />
     <None Include="packages.config" />

@@ -73,5 +73,18 @@ namespace Devkoes.JenkinsClient.Managers
             Settings.Default.JenkinsServers.Remove(server);
             Settings.Default.Save();
         }
+
+        public static bool DebugEnabled
+        {
+            get { return Settings.Default.DebugOutputEnabled; }
+            set
+            {
+                if (value != Settings.Default.DebugOutputEnabled)
+                {
+                    Settings.Default.DebugOutputEnabled = value;
+                    Settings.Default.Save();
+                }
+            }
+        }
     }
 }

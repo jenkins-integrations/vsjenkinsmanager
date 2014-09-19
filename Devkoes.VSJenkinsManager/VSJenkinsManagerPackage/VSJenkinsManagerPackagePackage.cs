@@ -1,4 +1,5 @@
 ﻿using Devkoes.JenkinsManagerUI.Managers;
+using Devkoes.JenkinsManagerUI.Views;
 using Devkoes.VSJenkinsManagerPackage.Helpers;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -32,6 +33,7 @@ namespace Devkoes.VSJenkinsManagerPackage
     [ProvideToolWindow(typeof(JenkinsToolWindow))]
     [Guid(GuidList.guidVSJenkinsManagerPackagePkgString)]
     [ProvideBindingPath]
+    [ProvideOptionPageAttribute(typeof(BasicOptionsPage), "Jenkins manager", "Basic options", 113, 114, true)]
     public sealed class VSJenkinsManagerPackagePackage : Package
     {
         internal static VSJenkinsManagerPackagePackage Instance { get; private set; }
