@@ -44,15 +44,18 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             JenkinsOverview overview = null;
             JenkinsQueue queue = null;
 
-            WebClient wc = new WebClient();
             Uri baseUri = new Uri(jenkinsServerUrl);
+            Uri overviewUri = new Uri(baseUri, "api/json?pretty=true&tree=views[name,url]");
 
-            Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true&tree=views[name,url]"));
-            if (await Task.WhenAny(jsonRawDataTask, Task.Delay(3000)) == jsonRawDataTask)
+            string jsonOverviewData = await GetWebData(overviewUri);
+
+            if (!string.IsNullOrWhiteSpace(jsonOverviewData))
             {
-                overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonRawDataTask.Result) ?? new JenkinsOverview();
+                overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonOverviewData) ?? new JenkinsOverview();
 
-                string jsonQueueData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "queue/api/json?pretty=true&tree=items[why,task[name,url,color]]"));
+                var queueUri = new Uri(baseUri, "queue/api/json?pretty=true&tree=items[why,task[name,url,color]]");
+                string jsonQueueData = await GetWebData(queueUri);
+
                 queue = JsonConvert.DeserializeObject<JenkinsQueue>(jsonQueueData) ?? new JenkinsQueue();
 
                 queue.Items = queue.Items ?? new List<ScheduledJob>();
@@ -61,12 +64,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
                 var allJobs = new List<Job>();
                 foreach (var view in overview.Views.AsParallel())
                 {
-                    // Fix JSON problem which contains wrong url for primary view (is always the base url which contains
-                    // all builds, not just the ones for that view).
-                    if (!view.Url.Contains("/view/"))
-                    {
-                        view.Url = string.Format("{0}/view/{1}/", view.Url, view.Name);
-                    }
+                    FixViewUrl(view);
 
                     JenkinsView viewData = await GetJenkinsView(view.Url);
 
@@ -94,6 +92,29 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             }
 
             return new JenkinsOverview();
+        }
+
+        private static void FixViewUrl(View view)
+        {
+            // Fix JSON problem which contains wrong url for primary view (is always the base url which contains
+            // all builds, not just the ones for that view).
+            if (!view.Url.Contains("/view/"))
+            {
+                view.Url = string.Format("{0}/view/{1}/", view.Url, view.Name);
+            }
+        }
+
+        private async static Task<string> GetWebData(Uri url)
+        {
+            WebClient wc = new WebClient();
+
+            Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(url);
+            if (await Task.WhenAny(jsonRawDataTask, Task.Delay(3000)) == jsonRawDataTask)
+            {
+                return jsonRawDataTask.Result;
+            }
+
+            return null;
         }
 
         private async static Task<JenkinsView> GetJenkinsView(string viewUrl)
