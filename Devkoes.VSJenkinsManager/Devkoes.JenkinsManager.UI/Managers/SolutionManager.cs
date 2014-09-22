@@ -1,5 +1,5 @@
 ﻿using Devkoes.JenkinsManager.APIHandler.Managers;
-using Devkoes.JenkinsManager.APIHandler.Model;
+using Devkoes.JenkinsManager.Model.Schema;
 using Devkoes.JenkinsManager.UI.ViewModels;
 using System;
 
@@ -10,7 +10,7 @@ namespace Devkoes.JenkinsManager.UI.Managers
         private static Lazy<SolutionManager> _instance;
         public string _currentSolutionPath;
 
-        public event EventHandler<SolutionPathChangedEventArgs> SolutionPathChanged;
+        public event EventHandler<SolutionChangedEventArgs> SolutionPathChanged;
 
         static SolutionManager()
         {
@@ -32,7 +32,7 @@ namespace Devkoes.JenkinsManager.UI.Managers
                     _currentSolutionPath = value;
                     if (SolutionPathChanged != null)
                     {
-                        SolutionPathChanged(this, new SolutionPathChangedEventArgs() { SolutionPath = _currentSolutionPath });
+                        SolutionPathChanged(this, new SolutionChangedEventArgs() { SolutionPath = _currentSolutionPath });
                     }
                 }
             }

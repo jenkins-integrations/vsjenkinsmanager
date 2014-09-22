@@ -1,5 +1,5 @@
 ﻿using Devkoes.JenkinsManager.APIHandler.Managers;
-using Devkoes.JenkinsManager.APIHandler.Model;
+using Devkoes.JenkinsManager.Model.Schema;
 using Devkoes.JenkinsManager.UI.Helpers;
 using Devkoes.JenkinsManager.UI.Managers;
 using Devkoes.JenkinsManager.UI.Properties;
@@ -111,7 +111,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             await LoadJenkinsJobs();
         }
 
-        private void SolutionPathChanged(object sender, SolutionPathChangedEventArgs e)
+        private void SolutionPathChanged(object sender, SolutionChangedEventArgs e)
         {
             UpdateJobLinkedStatus(e.SolutionPath);
         }

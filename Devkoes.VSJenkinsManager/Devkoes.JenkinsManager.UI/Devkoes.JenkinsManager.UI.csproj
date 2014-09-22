@@ -80,7 +80,6 @@
     <Compile Include="Converters\BooleanToHiddenConverter.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Managers\SolutionManager.cs" />
-    <Compile Include="Models\SolutionPathChangedEventArgs.cs" />
     <Compile Include="Resources\VsColors.cs" />
     <Compile Include="ViewModels\JenkinsManagerViewModel.cs" />
     <Compile Include="ViewModels\ViewModelController.cs" />
@@ -151,6 +150,10 @@
     <ProjectReference Include="..\Devkoes.JenkinsManager.APIHandler\Devkoes.JenkinsManager.APIHandler.csproj">
       <Project>{55ef2883-e867-49cf-8eb0-e3f19e27a18f}</Project>
       <Name>Devkoes.JenkinsManager.APIHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Devkoes.JenkinsManager.Model\Devkoes.JenkinsManager.Model.csproj">
+      <Project>{b2585a00-b072-4a19-88ff-ca3156e1b44b}</Project>
+      <Name>Devkoes.JenkinsManager.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

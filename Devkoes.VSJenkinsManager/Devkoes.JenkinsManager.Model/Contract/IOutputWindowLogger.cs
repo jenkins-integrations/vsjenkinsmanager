@@ -2,7 +2,7 @@
 
 namespace Devkoes.JenkinsManager.Model.Contract
 {
-    class IOutputWindowLogger
+    interface IOutputWindowLogger
     {
         void LogOutput(string message);
         void LogOutput(string format, params object[] args);

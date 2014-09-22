@@ -1,5 +1,5 @@
 ﻿
-namespace Devkoes.JenkinsManager.APIHandler.Model
+namespace Devkoes.JenkinsManager.Model.Schema
 {
     public class SolutionJob
     {

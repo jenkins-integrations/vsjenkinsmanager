@@ -1,5 +1,5 @@
-﻿using Devkoes.JenkinsManager.APIHandler.Model;
-using Devkoes.JenkinsManager.APIHandler.Properties;
+﻿using Devkoes.JenkinsManager.APIHandler.Properties;
+using Devkoes.JenkinsManager.Model.Schema;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
