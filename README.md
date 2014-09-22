@@ -1,7 +1,7 @@
 Jenkins Manager for Visual Studio
 ================
 
-![Screenshot](https://github.com/tomkuijsten/vsjenkinsmanager/blob/master/Devkoes.VSJenkinsManager/VSJenkinsManagerPackage/Resources/screenshot1.jpg)
+![Screenshot](https://github.com/tomkuijsten/vsjenkinsmanager/blob/master/Devkoes.VSJenkinsManager/Devkoes.JenskinsManager.VSPackage/Resources/screenshot1.jpg)
 
 ================
 
