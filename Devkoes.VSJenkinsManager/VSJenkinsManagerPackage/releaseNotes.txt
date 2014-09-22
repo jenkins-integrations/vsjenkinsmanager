@@ -4,7 +4,7 @@ A visual studio package to manage Jenkins
 https://github.com/tomkuijsten/vsjenkinsmanager
 
 Version 0.4:
- - ?
+ - Bug fixes
 
 Version 0.3.1:
  - Bug fixes for context menu
