@@ -425,7 +425,7 @@
                             xml:space="preserve"
                             Template="{StaticResource ComboBoxTextBoxTemplate}" />
             <Popup
-                            Placement="Top"
+                            Placement="Bottom"
                             Name="Popup"
                             Focusable="False"
                             IsOpen="{TemplateBinding ComboBox.IsDropDownOpen}"
