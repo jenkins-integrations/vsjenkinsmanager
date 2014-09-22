@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Windows;
 
-namespace Devkoes.JenkinsManagerUI.Helpers
+namespace Devkoes.JenkinsManager.UI.Helpers
 {
     internal class UIHelper
     {

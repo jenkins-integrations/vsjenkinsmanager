@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.12.0"
-    xmlns:util="clr-namespace:Devkoes.JenkinsManagerUI"
+    xmlns:util="clr-namespace:Devkoes.JenkinsManager.UI"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style

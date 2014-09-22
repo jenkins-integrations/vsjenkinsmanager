@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Devkoes.JenkinsManagerUI.ViewModels
+namespace Devkoes.JenkinsManager.UI.ViewModels
 {
     public static class ViewModelController
     {

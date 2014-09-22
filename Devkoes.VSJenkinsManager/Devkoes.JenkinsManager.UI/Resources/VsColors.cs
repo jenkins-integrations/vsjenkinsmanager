@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 
-namespace Devkoes.JenkinsManagerUI
+namespace Devkoes.JenkinsManager.UI
 {
     public static class VsColors
     {

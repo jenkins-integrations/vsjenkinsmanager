@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace Devkoes.JenkinsManagerUI.WatermarkTextbox
+namespace Devkoes.JenkinsManager.UI.WatermarkTextbox
 {
 
     /// <summary>

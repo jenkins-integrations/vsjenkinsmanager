@@ -1,7 +1,7 @@
 ﻿using Devkoes.JenkinsManager.APIHandler.Managers;
 using System.Windows.Forms;
 
-namespace Devkoes.JenkinsManagerUI.Views
+namespace Devkoes.JenkinsManager.UI.Views
 {
     public partial class BasicOptionsControl : UserControl
     {

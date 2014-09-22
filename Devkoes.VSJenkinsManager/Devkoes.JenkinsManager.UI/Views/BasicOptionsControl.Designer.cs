@@ -1,4 +1,4 @@
-﻿namespace Devkoes.JenkinsManagerUI.Views
+﻿namespace Devkoes.JenkinsManager.UI.Views
 {
     partial class BasicOptionsControl
     {

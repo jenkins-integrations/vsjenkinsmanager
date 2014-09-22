@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace Devkoes.JenkinsManagerUI.Converters
+namespace Devkoes.JenkinsManager.UI.Converters
 {
     public class BooleanToHiddenConverter : IValueConverter
     {

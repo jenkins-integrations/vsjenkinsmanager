@@ -1,7 +1,7 @@
-﻿using Devkoes.JenkinsManagerUI.ViewModels;
+﻿using Devkoes.JenkinsManager.UI.ViewModels;
 using System.Windows.Controls;
 
-namespace Devkoes.JenkinsManagerUI.Views
+namespace Devkoes.JenkinsManager.UI.Views
 {
     /// <summary>
     /// Interaction logic for JenkinsManager.xaml

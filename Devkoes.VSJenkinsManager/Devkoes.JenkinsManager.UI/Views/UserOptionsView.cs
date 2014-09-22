@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace Devkoes.JenkinsManagerUI.Views
+namespace Devkoes.JenkinsManager.UI.Views
 {
     public class BasicOptionsPage : DialogPage
     {

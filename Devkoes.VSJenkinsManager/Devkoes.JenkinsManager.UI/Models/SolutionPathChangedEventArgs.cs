@@ -1,5 +1,5 @@
 ﻿
-namespace Devkoes.JenkinsManagerUI.Managers
+namespace Devkoes.JenkinsManager.UI.Managers
 {
     public class SolutionPathChangedEventArgs
     {

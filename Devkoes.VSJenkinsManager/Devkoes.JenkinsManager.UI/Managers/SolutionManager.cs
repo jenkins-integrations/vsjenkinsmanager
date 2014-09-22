@@ -1,9 +1,9 @@
 ﻿using Devkoes.JenkinsManager.APIHandler.Managers;
 using Devkoes.JenkinsManager.APIHandler.Model;
-using Devkoes.JenkinsManagerUI.ViewModels;
+using Devkoes.JenkinsManager.UI.ViewModels;
 using System;
 
-namespace Devkoes.JenkinsManagerUI.Managers
+namespace Devkoes.JenkinsManager.UI.Managers
 {
     public class SolutionManager
     {

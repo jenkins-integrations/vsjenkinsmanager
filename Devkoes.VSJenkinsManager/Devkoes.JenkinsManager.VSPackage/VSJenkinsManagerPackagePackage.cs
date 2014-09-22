@@ -1,5 +1,5 @@
-﻿using Devkoes.JenkinsManagerUI.Managers;
-using Devkoes.JenkinsManagerUI.Views;
+﻿using Devkoes.JenkinsManager.UI.Managers;
+using Devkoes.JenkinsManager.UI.Views;
 using Devkoes.VSJenkinsManagerPackage.Helpers;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;

@@ -1,4 +1,4 @@
-﻿using Devkoes.JenkinsManagerUI.Managers;
+﻿using Devkoes.JenkinsManager.UI.Managers;
 using EnvDTE;
 using System;
 

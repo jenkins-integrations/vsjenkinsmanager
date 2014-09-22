@@ -1,8 +1,8 @@
 ﻿using Devkoes.JenkinsManager.APIHandler.Managers;
 using Devkoes.JenkinsManager.APIHandler.Model;
-using Devkoes.JenkinsManagerUI.Helpers;
-using Devkoes.JenkinsManagerUI.Managers;
-using Devkoes.JenkinsManagerUI.Properties;
+using Devkoes.JenkinsManager.UI.Helpers;
+using Devkoes.JenkinsManager.UI.Managers;
+using Devkoes.JenkinsManager.UI.Properties;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System;
@@ -14,7 +14,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace Devkoes.JenkinsManagerUI.ViewModels
+namespace Devkoes.JenkinsManager.UI.ViewModels
 {
     public class JenkinsManagerViewModel : ViewModelBase
     {
