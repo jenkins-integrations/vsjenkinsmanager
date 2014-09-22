@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Devkoes.VSJenkinsManagerPackage
+namespace Devkoes.JenkinsManager.VSPackage
 {
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.

@@ -2,7 +2,7 @@
 using EnvDTE;
 using System;
 
-namespace Devkoes.VSJenkinsManagerPackage.Helpers
+namespace Devkoes.JenkinsManager.VSPackage.Helpers
 {
     public delegate void SolutionRenamed(Solution currentSolution, string oldName);
 
@@ -20,7 +20,7 @@ namespace Devkoes.VSJenkinsManagerPackage.Helpers
 
         internal void Initialize()
         {
-            _currentDTE = VSJenkinsManagerPackagePackage.Instance.GetService<DTE>();
+            _currentDTE = VSJenkinsManagerPackage.Instance.GetService<DTE>();
 
             _solutionEvents = _currentDTE.Events.SolutionEvents;
             _solutionEvents.Opened += OpenedSolution;
@@ -60,7 +60,7 @@ namespace Devkoes.VSJenkinsManagerPackage.Helpers
 
         public void ShowJenkinsToolWindow()
         {
-            VSJenkinsManagerPackagePackage.Instance.ShowToolWindow(this, new EventArgs());
+            VSJenkinsManagerPackage.Instance.ShowToolWindow(this, new EventArgs());
         }
 
         public string GetSolutionPath()

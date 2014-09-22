@@ -2,7 +2,7 @@
 // MUST match guids.h
 using System;
 
-namespace Devkoes.VSJenkinsManagerPackage
+namespace Devkoes.JenkinsManager.VSPackage
 {
     static class GuidList
     {

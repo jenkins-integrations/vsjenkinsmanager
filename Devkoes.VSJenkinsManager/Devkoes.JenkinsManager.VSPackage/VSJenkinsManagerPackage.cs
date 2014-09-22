@@ -1,6 +1,6 @@
 ﻿using Devkoes.JenkinsManager.UI.Managers;
 using Devkoes.JenkinsManager.UI.Views;
-using Devkoes.VSJenkinsManagerPackage.Helpers;
+using Devkoes.JenkinsManager.VSPackage.Helpers;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace Devkoes.VSJenkinsManagerPackage
+namespace Devkoes.JenkinsManager.VSPackage
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -26,7 +26,7 @@ namespace Devkoes.VSJenkinsManagerPackage
     [PackageRegistration(UseManagedResourcesOnly = true)]
     // This attribute is used to register the information needed to show this package
     // in the Help/About dialog of Visual Studio.
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
+    [InstalledProductRegistration("#110", "#112", "0.4", IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
     // This attribute registers a tool window exposed by this package.
@@ -34,9 +34,9 @@ namespace Devkoes.VSJenkinsManagerPackage
     [Guid(GuidList.guidVSJenkinsManagerPackagePkgString)]
     [ProvideBindingPath]
     [ProvideOptionPageAttribute(typeof(BasicOptionsPage), "Jenkins manager", "Basic options", 113, 114, true)]
-    public sealed class VSJenkinsManagerPackagePackage : Package
+    public sealed class VSJenkinsManagerPackage : Package
     {
-        internal static VSJenkinsManagerPackagePackage Instance { get; private set; }
+        internal static VSJenkinsManagerPackage Instance { get; private set; }
 
         internal Func<string, bool> SolutionIsConnected;
 
@@ -47,7 +47,7 @@ namespace Devkoes.VSJenkinsManagerPackage
         /// not sited yet inside Visual Studio environment. The place to do all the other 
         /// initialization is the Initialize method.
         /// </summary>
-        public VSJenkinsManagerPackagePackage()
+        public VSJenkinsManagerPackage()
         {
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
         }
