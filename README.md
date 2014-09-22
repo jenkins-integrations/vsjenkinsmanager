@@ -8,7 +8,7 @@ Jenkins Manager for Visual Studio
 A [visual studio package](http://visualstudiogallery.msdn.microsoft.com/3471d451-c1f1-4273-b305-acf81e4f8b32) to manage Jenkins:
 
 Planned highlights for 0.4:
- - ?
+ - Bug fixes
 
 Release 0.3.1:
  - [x] Bugfixes for context menu actions
