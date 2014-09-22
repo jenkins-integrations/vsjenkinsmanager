@@ -1,5 +1,5 @@
-﻿using Devkoes.JenkinsClient.Managers;
-using Devkoes.JenkinsClient.Model;
+﻿using Devkoes.JenkinsManager.APIHandler.Managers;
+using Devkoes.JenkinsManager.APIHandler.Model;
 using Devkoes.JenkinsManagerUI.ViewModels;
 using System;
 

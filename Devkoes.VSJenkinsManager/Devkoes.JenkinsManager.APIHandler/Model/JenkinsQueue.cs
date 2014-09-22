@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Devkoes.JenkinsClient.Model
+namespace Devkoes.JenkinsManager.APIHandler.Model
 {
     public class JenkinsQueue
     {

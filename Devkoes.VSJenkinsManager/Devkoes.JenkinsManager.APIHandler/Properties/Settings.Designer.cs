@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Devkoes.JenkinsClient.Properties {
+namespace Devkoes.JenkinsManager.APIHandler.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,9 +25,9 @@ namespace Devkoes.JenkinsClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::Devkoes.JenkinsClient.Model.JenkinsServerList JenkinsServers {
+        public global::Devkoes.JenkinsManager.APIHandler.Model.JenkinsServerList JenkinsServers {
             get {
-                return ((global::Devkoes.JenkinsClient.Model.JenkinsServerList)(this["JenkinsServers"]));
+                return ((global::Devkoes.JenkinsManager.APIHandler.Model.JenkinsServerList)(this["JenkinsServers"]));
             }
             set {
                 this["JenkinsServers"] = value;
@@ -36,9 +36,9 @@ namespace Devkoes.JenkinsClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::Devkoes.JenkinsClient.Model.SolutionJobList SolutionJobs {
+        public global::Devkoes.JenkinsManager.APIHandler.Model.SolutionJobList SolutionJobs {
             get {
-                return ((global::Devkoes.JenkinsClient.Model.SolutionJobList)(this["SolutionJobs"]));
+                return ((global::Devkoes.JenkinsManager.APIHandler.Model.SolutionJobList)(this["SolutionJobs"]));
             }
             set {
                 this["SolutionJobs"] = value;

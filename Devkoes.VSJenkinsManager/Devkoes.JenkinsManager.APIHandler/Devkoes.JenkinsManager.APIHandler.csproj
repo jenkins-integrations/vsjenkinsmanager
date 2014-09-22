@@ -7,8 +7,8 @@
     <ProjectGuid>{55EF2883-E867-49CF-8EB0-E3F19E27A18F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Devkoes.JenkinsClient</RootNamespace>
-    <AssemblyName>Devkoes.JenkinsClient</AssemblyName>
+    <RootNamespace>Devkoes.JenkinsManager.APIHandler</RootNamespace>
+    <AssemblyName>Devkoes.JenkinsManager.APIHandler</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

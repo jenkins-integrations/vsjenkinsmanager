@@ -1,10 +1,10 @@
-﻿using Devkoes.JenkinsClient.Model;
-using Devkoes.JenkinsClient.Properties;
+﻿using Devkoes.JenkinsManager.APIHandler.Model;
+using Devkoes.JenkinsManager.APIHandler.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Devkoes.JenkinsClient.Managers
+namespace Devkoes.JenkinsManager.APIHandler.Managers
 {
     public static class SettingManager
     {

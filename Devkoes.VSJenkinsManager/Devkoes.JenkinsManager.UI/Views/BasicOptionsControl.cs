@@ -1,4 +1,4 @@
-﻿using Devkoes.JenkinsClient.Managers;
+﻿using Devkoes.JenkinsManager.APIHandler.Managers;
 using System.Windows.Forms;
 
 namespace Devkoes.JenkinsManagerUI.Views

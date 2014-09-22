@@ -1,5 +1,5 @@
-﻿using Devkoes.JenkinsClient.Managers;
-using Devkoes.JenkinsClient.Model;
+﻿using Devkoes.JenkinsManager.APIHandler.Managers;
+using Devkoes.JenkinsManager.APIHandler.Model;
 using Devkoes.JenkinsManagerUI.Helpers;
 using Devkoes.JenkinsManagerUI.Managers;
 using Devkoes.JenkinsManagerUI.Properties;
@@ -166,7 +166,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
         {
             try
             {
-                await JenkinsManager.ScheduleJob(jobUrl, solutionUrl);
+                await JenkinsManager.APIHandler.Managers.JenkinsManager.ScheduleJob(jobUrl, solutionUrl);
             }
             catch (WebException ex)
             {
@@ -255,7 +255,7 @@ namespace Devkoes.JenkinsManagerUI.ViewModels
 
             try
             {
-                JenkinsOverview newOverview = await JenkinsManager.GetJenkinsOverview(SelectedJenkinsServer.Url);
+                JenkinsOverview newOverview = await JenkinsManager.APIHandler.Managers.JenkinsManager.GetJenkinsOverview(SelectedJenkinsServer.Url);
 
                 if (JOverview == null)
                 {

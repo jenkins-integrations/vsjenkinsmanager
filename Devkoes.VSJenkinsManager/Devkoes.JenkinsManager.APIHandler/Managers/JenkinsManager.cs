@@ -1,5 +1,5 @@
-﻿using Devkoes.JenkinsClient.Model;
-using Devkoes.JenkinsClient.Properties;
+﻿using Devkoes.JenkinsManager.APIHandler.Model;
+using Devkoes.JenkinsManager.APIHandler.Properties;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Devkoes.JenkinsClient.Managers
+namespace Devkoes.JenkinsManager.APIHandler.Managers
 {
     public class JenkinsManager
     {

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Devkoes.JenkinsClient.Model
+namespace Devkoes.JenkinsManager.APIHandler.Model
 {
     public class ObservableObject : INotifyPropertyChanged
     {

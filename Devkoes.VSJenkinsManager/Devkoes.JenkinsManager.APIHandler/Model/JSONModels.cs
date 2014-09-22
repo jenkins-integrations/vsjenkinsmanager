@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Devkoes.JenkinsClient.Model
+namespace Devkoes.JenkinsManager.APIHandler.Model
 {
     public class JobComparer : IEqualityComparer<Job>
     {

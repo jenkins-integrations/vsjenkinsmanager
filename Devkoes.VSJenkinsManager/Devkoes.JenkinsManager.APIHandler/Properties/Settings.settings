@@ -1,11 +1,11 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Devkoes.JenkinsClient.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Devkoes.JenkinsManager.APIHandler.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="JenkinsServers" Type="Devkoes.JenkinsClient.Model.JenkinsServerList" Scope="User">
+    <Setting Name="JenkinsServers" Type="Devkoes.JenkinsManager.APIHandler.Model.JenkinsServerList" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SolutionJobs" Type="Devkoes.JenkinsClient.Model.SolutionJobList" Scope="User">
+    <Setting Name="SolutionJobs" Type="Devkoes.JenkinsManager.APIHandler.Model.SolutionJobList" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DebugOutputEnabled" Type="System.Boolean" Scope="User">
