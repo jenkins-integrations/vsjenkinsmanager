@@ -2,7 +2,7 @@
 using Devkoes.JenkinsManager.Model.Schema;
 using Devkoes.JenkinsManager.UI.Comparers;
 using Devkoes.JenkinsManager.UI.Helpers;
-using Devkoes.JenkinsManager.UI.Managers;
+using Devkoes.JenkinsManager.UI.ExposedServices;
 using Devkoes.JenkinsManager.UI.Properties;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -61,7 +61,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             _loadingJobsBusyLock = new object();
 
-            SolutionManager.Instance.SolutionPathChanged += SolutionPathChanged;
+            DependencyContainer.VisualStudioSolutionEvents.SolutionChanged += SolutionPathChanged;
 
             LoadJenkinsServers();
 
@@ -123,7 +123,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         {
             if (string.IsNullOrEmpty(slnPath))
             {
-                slnPath = SolutionManager.Instance.CurrentSolutionPath;
+                slnPath = DependencyContainer.VisualStudioSolutionInfo.SolutionPath;
             }
 
             SolutionJenkinsJobLink sJob = SettingManager.GetJobUri(slnPath);
@@ -143,13 +143,14 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private void LinkJobToSolution(JenkinsJob j)
         {
-            if (string.IsNullOrEmpty(SolutionManager.Instance.CurrentSolutionPath))
+            string slnPath = DependencyContainer.VisualStudioSolutionInfo.SolutionPath;
+            if (string.IsNullOrEmpty(slnPath))
             {
                 StatusMessage = Resources.SolutionNotLoaded;
                 return;
             }
 
-            SettingManager.SaveJobForSolution(j.Url, SolutionManager.Instance.CurrentSolutionPath, SelectedJenkinsServer.Url);
+            SettingManager.SaveJobForSolution(j.Url, slnPath, SelectedJenkinsServer.Url);
 
             UpdateJobLinkedStatus();
         }

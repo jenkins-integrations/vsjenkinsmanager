@@ -128,7 +128,8 @@
     <Compile Include="..\Solution Items\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Helpers\SolutionHelper.cs" />
+    <Compile Include="ExposedServices\OutputWindowLogger.cs" />
+    <Compile Include="ExposedServices\VisualStudioSolutionService.cs" />
     <Compile Include="JenkinsToolWindow.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -192,6 +193,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Devkoes.JenkinsManager.Model\Devkoes.JenkinsManager.Model.csproj">
+      <Project>{b2585a00-b072-4a19-88ff-ca3156e1b44b}</Project>
+      <Name>Devkoes.JenkinsManager.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Devkoes.JenkinsManager.UI\Devkoes.JenkinsManager.UI.csproj">
       <Project>{231e0194-b47f-456e-a54c-ce9114d17a6f}</Project>
       <Name>Devkoes.JenkinsManager.UI</Name>

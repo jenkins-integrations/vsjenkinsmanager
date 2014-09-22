@@ -3,7 +3,7 @@ using System;
 
 namespace Devkoes.JenkinsManager.Model.Contract
 {
-    interface IVisualStudioSolutionEvents
+    public interface IVisualStudioSolutionEvents
     {
         event EventHandler<SolutionChangedEventArgs> SolutionChanged;
     }

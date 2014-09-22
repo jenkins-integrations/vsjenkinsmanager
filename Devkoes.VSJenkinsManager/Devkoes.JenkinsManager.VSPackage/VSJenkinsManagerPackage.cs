@@ -1,6 +1,6 @@
-﻿using Devkoes.JenkinsManager.UI.Managers;
+﻿using Devkoes.JenkinsManager.UI;
 using Devkoes.JenkinsManager.UI.Views;
-using Devkoes.JenkinsManager.VSPackage.Helpers;
+using Devkoes.JenkinsManager.VSPackage.ExposedServices;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -36,6 +36,8 @@ namespace Devkoes.JenkinsManager.VSPackage
     [ProvideOptionPageAttribute(typeof(BasicOptionsPage), "Jenkins manager", "Basic options", 113, 114, true)]
     public sealed class VSJenkinsManagerPackage : Package
     {
+        private VisualStudioSolutionService _vsSolutionService;
+
         internal static VSJenkinsManagerPackage Instance { get; private set; }
 
         /// <summary>
@@ -80,6 +82,12 @@ namespace Devkoes.JenkinsManager.VSPackage
         /// </summary>
         protected override void Initialize()
         {
+            InitializePackage();
+            InitializeServices();
+        }
+
+        private void InitializePackage()
+        {
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
 
@@ -98,8 +106,16 @@ namespace Devkoes.JenkinsManager.VSPackage
             }
 
             Instance = this;
-            SolutionHelper.Instance.Initialize();
         }
+
+        private void InitializeServices()
+        {
+            DependencyContainer.OutputWindowLogger = new OutputWindowLogger();
+            _vsSolutionService = new VisualStudioSolutionService();
+            DependencyContainer.VisualStudioSolutionEvents = _vsSolutionService;
+            DependencyContainer.VisualStudioSolutionInfo = _vsSolutionService;
+        }
+
         #endregion
 
         internal T GetService<T>()
@@ -126,7 +142,7 @@ namespace Devkoes.JenkinsManager.VSPackage
             Guid clsid = Guid.Empty;
             int result;
 
-            var slnName = SolutionHelper.Instance.GetSolutionPath();
+            var slnPath = _vsSolutionService.SolutionPath;
 
             try
             {
@@ -137,9 +153,9 @@ namespace Devkoes.JenkinsManager.VSPackage
                 // if it doesn't work, user should open it
             }
 
-            if (SolutionManager.Instance.SolutionIsConnected(slnName))
+            if (DependencyContainer.SolutionJenkinsJobLinkInfo.IsSolutionLinked(slnPath))
             {
-                SolutionManager.Instance.StartJenkinsBuildForSolution(slnName);
+                DependencyContainer.SolutionJenkinsJobLinkInfo.StartJenkinsBuildForSolution(slnPath);
             }
             else
             {

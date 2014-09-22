@@ -1,9 +1,9 @@
 ﻿
 namespace Devkoes.JenkinsManager.Model.Contract
 {
-    interface ISolutionJobLinkInfo
+    public interface ISolutionJenkinsJobLinkInfo
     {
-        object GetJobForSolution(string solutionPath);
+        void StartJenkinsBuildForSolution(string solutionPath);
         bool IsSolutionLinked(string solutionPath);
     }
 }
