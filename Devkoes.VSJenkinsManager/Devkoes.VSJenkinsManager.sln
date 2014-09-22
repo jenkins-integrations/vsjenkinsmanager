@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSJenkinsManagerPackage", "VSJenkinsManagerPackage\VSJenkinsManagerPackage.csproj", "{61BC97DD-79B6-4121-9D4C-0F2CE293DCA5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsManager.VSPackage", "Devkoes.JenkinsManager.VSPackage\Devkoes.JenkinsManager.VSPackage.csproj", "{61BC97DD-79B6-4121-9D4C-0F2CE293DCA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsClient", "Devkoes.JenkinsClient\Devkoes.JenkinsClient.csproj", "{55EF2883-E867-49CF-8EB0-E3F19E27A18F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsManager.APIHandler", "Devkoes.JenkinsManager.APIHandler\Devkoes.JenkinsManager.APIHandler.csproj", "{55EF2883-E867-49CF-8EB0-E3F19E27A18F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsManagerUI", "Devkoes.JenkinsManagerUI\Devkoes.JenkinsManagerUI.csproj", "{231E0194-B47F-456E-A54C-CE9114D17A6F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsManager.UI", "Devkoes.JenkinsManager.UI\Devkoes.JenkinsManager.UI.csproj", "{231E0194-B47F-456E-A54C-CE9114D17A6F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2FA2A8B8-D2B1-458B-8AA7-74D353460E4D}"
 	ProjectSection(SolutionItems) = preProject

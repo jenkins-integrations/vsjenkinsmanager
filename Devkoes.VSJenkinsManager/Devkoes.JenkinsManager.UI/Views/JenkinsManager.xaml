@@ -1,0 +1,272 @@
+﻿<UserControl
+    x:Class="Devkoes.JenkinsManagerUI.Views.JenkinsManager"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    Background="{DynamicResource VsBrush.Window}"
+    Foreground="{DynamicResource VsBrush.WindowText}"
+    xmlns:wmt="clr-namespace:Devkoes.JenkinsManagerUI.WatermarkTextbox"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="300">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="..\Resources\Styles.xaml" />
+                <ResourceDictionary
+                    Source="..\Resources\ComboBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="*" />
+            <RowDefinition
+                Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="Auto" />
+                <ColumnDefinition
+                    Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="Auto" />
+            </Grid.RowDefinitions>
+            <ComboBox
+                VerticalAlignment="Center"
+                ItemsSource="{Binding JenkinsServers}"
+                SelectedItem="{Binding SelectedJenkinsServer}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <Button
+                Content="add"
+                Grid.Column="1"
+                Margin="5,0"
+                VerticalAlignment="Center"
+                Command="{Binding ShowAddJenkinsForm}"
+                Style="{StaticResource HyperlinkLikeButton}" />
+
+            <Button
+                Content="del"
+                Grid.Column="2"
+                Margin="5,0"
+                VerticalAlignment="Center"
+                Command="{Binding RemoveJenkinsServer}"
+                Style="{StaticResource HyperlinkLikeButton}" />
+
+            <StackPanel
+                Grid.Row="1"
+                Visibility="{Binding ShowAddJenkinsServer, Converter={StaticResource boolToVisConverter}}">
+
+                <AdornerDecorator>
+                    <TextBox
+                        Margin="0,3"
+                        Text="{Binding AddServerUrl}">
+                        <wmt:WatermarkService.Watermark>
+                            <TextBlock
+                                VerticalAlignment="Center">Jenkins server root url (not a view!)</TextBlock>
+                        </wmt:WatermarkService.Watermark>
+                    </TextBox>
+                </AdornerDecorator>
+                
+                <AdornerDecorator
+                    Margin="0,3">
+                    <TextBox
+                        Text="{Binding AddServerName}">
+                        <wmt:WatermarkService.Watermark>
+                            <TextBlock>Name</TextBlock>
+                        </wmt:WatermarkService.Watermark>
+                    </TextBox>
+                </AdornerDecorator>
+
+                <AdornerDecorator
+                    Margin="0,3">
+                    <TextBox
+                        Text="{Binding AddUserName}">
+                        <wmt:WatermarkService.Watermark>
+                            <TextBlock>Username (optional)</TextBlock>
+                        </wmt:WatermarkService.Watermark>
+                    </TextBox>
+                </AdornerDecorator>
+
+                <AdornerDecorator
+                    Margin="0,3">
+                    <TextBox
+                        Text="{Binding AddAPIToken}">
+                        <wmt:WatermarkService.Watermark>
+                            <TextBlock>API key (required with username)</TextBlock>
+                        </wmt:WatermarkService.Watermark>
+                    </TextBox>
+                </AdornerDecorator>
+
+                <StackPanel
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                    <Button
+                        Content="save"
+                        Grid.Column="1"
+                        Margin="5,0"
+                        HorizontalAlignment="Right"
+                        Command="{Binding SaveJenkinsServer}"
+                        Style="{StaticResource HyperlinkLikeButton}" />
+                    <Button
+                        Content="cancel"
+                        Grid.Column="1"
+                        Margin="5,0"
+                        HorizontalAlignment="Right"
+                        Command="{Binding CancelSaveJenkinsServer}"
+                        Style="{StaticResource HyperlinkLikeButton}" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <Button
+            Margin="10"
+            HorizontalAlignment="Center"
+            Visibility="{Binding LoadingFailed, Converter={StaticResource boolToVisConverter}}"
+            Grid.Row="2"
+            Content="Something went wrong loading the jobs, click to retry."
+            Command="{Binding Reload}"
+            Style="{StaticResource HyperlinkLikeButton}" />
+
+        <ComboBox
+            VerticalAlignment="Center"
+            Margin="0,3,0,0"
+            Grid.Row="2"
+            ItemsSource="{Binding JOverview.Views}"
+            SelectedItem="{Binding SelectedView}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+                        Text="{Binding Name}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        
+        <ListBox
+            Margin="0,5"
+            ItemsSource="{Binding SelectedView.Jobs}"
+            SelectedItem="{Binding SelectedJob}"
+            Visibility="{Binding LoadingFailed, Converter={StaticResource boolToHiddenConverter}}"
+            Grid.Row="3"
+            Background="{DynamicResource VsBrush.Window}"
+            Foreground="{DynamicResource VsBrush.WindowText}"
+            BorderThickness="0"
+            IsSynchronizedWithCurrentItem="True">
+            
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem
+                        Header="_Start/Schedule Job"
+                        Command="{Binding Path=ScheduleJobCommand}"
+                        CommandParameter="{Binding  SelectedView.Jobs/}">
+                        <MenuItem.Icon>
+                            <Image
+                                Source="..\Resources\BuildNotificationIcon.ico"
+                                Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        Header="_Go to jobs website"
+                        Command="{Binding ShowJobsWebsite}"
+                        CommandParameter="{Binding  SelectedView.Jobs/}">
+                        <MenuItem.Icon>
+                            <Image
+                                Source="..\Resources\OnlineIcon.png"
+                                Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        Header="_Link to current solution"
+                        Command="{Binding LinkJobToCurrentSolution}"
+                        CommandParameter="{Binding  SelectedView.Jobs/}">
+                        <MenuItem.Icon>
+                            <Image
+                                Source="..\Resources\ConnectIcon.png"
+                                Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+            
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid
+                        Margin="0,3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="Auto" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="Auto" />
+                            <ColumnDefinition
+                                Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Rectangle
+                            Margin="3,0"
+                            Fill="{Binding Color}"
+                            Width="16"
+                            Height="16" />
+                        <TextBlock
+                            Margin="3,0"
+                            Text="{Binding Name}"
+                            Grid.Column="1" />
+
+                        <Image
+                            Grid.Column="2"
+                            Margin="5,0"
+                            Source="..\Resources\ConnectIcon.png"
+                            Height="16"
+                            Visibility="{Binding LinkedToCurrentSolution, Converter={StaticResource boolToVisConverter}}">
+                        </Image>
+
+                        <Image
+                            Grid.Column="3"
+                            Margin="5,0"
+                            Source="..\Resources\ClockIcon.png"
+                            ToolTip="{Binding QueuedWhy}"
+                            Height="16"
+                            Visibility="{Binding Queued, Converter={StaticResource boolToVisConverter}}">
+                        </Image>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ListBox>
+
+        <TextBlock
+            Background="{DynamicResource VsBrush.Window}"
+            Foreground="{DynamicResource VsBrush.WindowText}"
+            Padding="5"
+            Grid.Row="4"
+            Grid.ColumnSpan="3"
+            Text="{Binding StatusMessage}" />
+    </Grid>
+</UserControl>
