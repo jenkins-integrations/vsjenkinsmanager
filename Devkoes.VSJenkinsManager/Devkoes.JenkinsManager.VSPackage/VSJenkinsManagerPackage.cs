@@ -38,8 +38,6 @@ namespace Devkoes.JenkinsManager.VSPackage
     {
         internal static VSJenkinsManagerPackage Instance { get; private set; }
 
-        internal Func<string, bool> SolutionIsConnected;
-
         /// <summary>
         /// Default constructor of the package.
         /// Inside this method you can place any initialization code that does not require 
