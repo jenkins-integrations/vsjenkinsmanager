@@ -39,15 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contract\IOutputWindowLogger.cs" />
+    <Compile Include="Contract\ISolutionJobLinkInfo.cs" />
+    <Compile Include="Contract\IVisualStudioSolutionEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\Solution Items\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Schema\SolutionChangedEventArgs.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Contract\" />
-    <Folder Include="Schema\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
