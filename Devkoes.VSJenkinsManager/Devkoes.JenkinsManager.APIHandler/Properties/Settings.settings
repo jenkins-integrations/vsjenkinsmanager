@@ -5,7 +5,7 @@
     <Setting Name="JenkinsServers" Type="Devkoes.JenkinsManager.Model.Schema.JenkinsServerList" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SolutionJobs" Type="Devkoes.JenkinsManager.Model.Schema.SolutionJobList" Scope="User">
+    <Setting Name="SolutionJobs" Type="Devkoes.JenkinsManager.Model.Schema.SolutionJenkinsJobLinkList" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DebugOutputEnabled" Type="System.Boolean" Scope="User">

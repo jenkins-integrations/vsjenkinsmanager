@@ -1,5 +1,4 @@
-﻿
-namespace Devkoes.JenkinsManager.Model.Schema
+﻿namespace Devkoes.JenkinsManager.Model.Schema
 {
     public class JenkinsServer
     {

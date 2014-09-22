@@ -1,5 +1,6 @@
 ﻿using Devkoes.JenkinsManager.APIHandler.Managers;
 using Devkoes.JenkinsManager.Model.Schema;
+using Devkoes.JenkinsManager.UI.Comparers;
 using Devkoes.JenkinsManager.UI.Helpers;
 using Devkoes.JenkinsManager.UI.Managers;
 using Devkoes.JenkinsManager.UI.Properties;
@@ -21,22 +22,23 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         private bool _showAddJenkinsServer;
         private JenkinsServer _selectedJenkinsServer;
         private string _statusMessage;
-        private Job _selectedJob;
+        private JenkinsJob _selectedJob;
         private Timer _refreshTimer;
         private bool _loadingJobsBusy;
         private object _loadingJobsBusyLock;
         private bool _loadingFailed;
-        private View _selectedView;
+        private JenkinsView _selectedView;
         private JenkinsOverview _jOverview;
+        private IEqualityComparer<JenkinsJob> _jobComparer;
 
         public RelayCommand ShowAddJenkinsForm { get; private set; }
         public RelayCommand SaveJenkinsServer { get; private set; }
         public RelayCommand RemoveJenkinsServer { get; private set; }
         public RelayCommand CancelSaveJenkinsServer { get; private set; }
         public RelayCommand Reload { get; private set; }
-        public RelayCommand<Job> ScheduleJobCommand { get; private set; }
-        public RelayCommand<Job> ShowJobsWebsite { get; private set; }
-        public RelayCommand<Job> LinkJobToCurrentSolution { get; private set; }
+        public RelayCommand<JenkinsJob> ScheduleJobCommand { get; private set; }
+        public RelayCommand<JenkinsJob> ShowJobsWebsite { get; private set; }
+        public RelayCommand<JenkinsJob> LinkJobToCurrentSolution { get; private set; }
 
         public string AddServerUrl { get; set; }
         public string AddServerName { get; set; }
@@ -47,14 +49,15 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         public JenkinsManagerViewModel()
         {
+            _jobComparer = new JobComparer();
             ShowAddJenkinsForm = new RelayCommand(HandleShowAddJenkinsServer);
             SaveJenkinsServer = new RelayCommand(HandleSaveJenkinsServer);
             RemoveJenkinsServer = new RelayCommand(HandleRemoveJenkinsServer);
             CancelSaveJenkinsServer = new RelayCommand(HandleCancelSaveJenkinsServer);
             Reload = new RelayCommand(HandleReload);
-            ScheduleJobCommand = new RelayCommand<Job>(ScheduleJob, CanDoJobAction);
-            ShowJobsWebsite = new RelayCommand<Job>(ShowWebsite, CanDoJobAction);
-            LinkJobToCurrentSolution = new RelayCommand<Job>(LinkJobToSolution, CanDoJobAction);
+            ScheduleJobCommand = new RelayCommand<JenkinsJob>(ScheduleJob, CanDoJobAction);
+            ShowJobsWebsite = new RelayCommand<JenkinsJob>(ShowWebsite, CanDoJobAction);
+            LinkJobToCurrentSolution = new RelayCommand<JenkinsJob>(LinkJobToSolution, CanDoJobAction);
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             _loadingJobsBusyLock = new object();
 
@@ -67,7 +70,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             _refreshTimer.Start();
         }
 
-        public View SelectedView
+        public JenkinsView SelectedView
         {
             get { return _selectedView; }
             set
@@ -123,9 +126,9 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 slnPath = SolutionManager.Instance.CurrentSolutionPath;
             }
 
-            SolutionJob sJob = SettingManager.GetJobUri(slnPath);
+            SolutionJenkinsJobLink sJob = SettingManager.GetJobUri(slnPath);
 
-            var allJobs = JOverview.Views.SelectMany((v) => v.Jobs ?? Enumerable.Empty<Job>()).ToArray();
+            var allJobs = JOverview.Views.SelectMany((v) => v.Jobs ?? Enumerable.Empty<JenkinsJob>()).ToArray();
 
             UIHelper.InvokeUI(() =>
             {
@@ -138,7 +141,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             });
         }
 
-        private void LinkJobToSolution(Job j)
+        private void LinkJobToSolution(JenkinsJob j)
         {
             if (string.IsNullOrEmpty(SolutionManager.Instance.CurrentSolutionPath))
             {
@@ -151,12 +154,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             UpdateJobLinkedStatus();
         }
 
-        private void ShowWebsite(Job j)
+        private void ShowWebsite(JenkinsJob j)
         {
             Process.Start(j.Url);
         }
 
-        private async void ScheduleJob(Job j)
+        private async void ScheduleJob(JenkinsJob j)
         {
             await ScheduleJob(j.Url, SelectedJenkinsServer.Url);
             await LoadJenkinsJobs();
@@ -182,12 +185,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private bool CanDoJobAction(Job arg)
+        private bool CanDoJobAction(JenkinsJob arg)
         {
             return SelectedJob != null;
         }
 
-        public Job SelectedJob
+        public JenkinsJob SelectedJob
         {
             get { return _selectedJob; }
             set
@@ -272,9 +275,9 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                             var existingJobs = existingView.Jobs;
                             var newJobs = newView.Jobs;
 
-                            IEnumerable<Job> jobsToDelete = existingJobs.Except(newJobs, Job.JobComparer).ToArray();
-                            IEnumerable<Job> jobsToAdd = newJobs.Except(existingJobs, Job.JobComparer).ToArray();
-                            IEnumerable<Job> jobsToUpdate = newJobs.Intersect(existingJobs, Job.JobComparer).ToArray();
+                            IEnumerable<JenkinsJob> jobsToDelete = existingJobs.Except(newJobs, _jobComparer).ToArray();
+                            IEnumerable<JenkinsJob> jobsToAdd = newJobs.Except(existingJobs, _jobComparer).ToArray();
+                            IEnumerable<JenkinsJob> jobsToUpdate = newJobs.Intersect(existingJobs, _jobComparer).ToArray();
 
                             UIHelper.InvokeUI(() =>
                                 {
@@ -290,7 +293,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
                                     foreach (var job in jobsToUpdate)
                                     {
-                                        var existingJob = existingJobs.Intersect(new[] { job }, Job.JobComparer).Single();
+                                        var existingJob = existingJobs.Intersect(new[] { job }, _jobComparer).Single();
                                         existingJob.Building = job.Building;
                                         existingJob.Color = job.Color;
                                         existingJob.Name = job.Name;

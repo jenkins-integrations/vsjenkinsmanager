@@ -36,9 +36,9 @@ namespace Devkoes.JenkinsManager.APIHandler.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::Devkoes.JenkinsManager.Model.Schema.SolutionJobList SolutionJobs {
+        public global::Devkoes.JenkinsManager.Model.Schema.SolutionJenkinsJobLinkList SolutionJobs {
             get {
-                return ((global::Devkoes.JenkinsManager.Model.Schema.SolutionJobList)(this["SolutionJobs"]));
+                return ((global::Devkoes.JenkinsManager.Model.Schema.SolutionJenkinsJobLinkList)(this["SolutionJobs"]));
             }
             set {
                 this["SolutionJobs"] = value;

@@ -12,7 +12,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         {
             if (Settings.Default.SolutionJobs == null)
             {
-                Settings.Default.SolutionJobs = new SolutionJobList();
+                Settings.Default.SolutionJobs = new SolutionJenkinsJobLinkList();
             }
 
             if (Settings.Default.JenkinsServers == null)
@@ -32,7 +32,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
                 Settings.Default.SolutionJobs.Remove(existingSolutionJob);
             }
 
-            Settings.Default.SolutionJobs.Add(new SolutionJob()
+            Settings.Default.SolutionJobs.Add(new SolutionJenkinsJobLink()
             {
                 SolutionPath = solutionPath,
                 JobUrl = jobUri,
@@ -42,7 +42,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             Settings.Default.Save();
         }
 
-        public static SolutionJob GetJobUri(string solutionPath)
+        public static SolutionJenkinsJobLink GetJobUri(string solutionPath)
         {
             return Settings.Default.SolutionJobs.FirstOrDefault((sj) => string.Equals(sj.SolutionPath, solutionPath, StringComparison.InvariantCultureIgnoreCase));
         }

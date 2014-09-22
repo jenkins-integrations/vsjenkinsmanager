@@ -2,7 +2,7 @@
 
 namespace Devkoes.JenkinsManager.Model.Schema
 {
-    public class SolutionJobList : List<SolutionJob>
+    public class SolutionJenkinsJobLinkList : List<SolutionJenkinsJobLink>
     {
     }
 }

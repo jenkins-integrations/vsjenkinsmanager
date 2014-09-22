@@ -58,10 +58,10 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
 
                 queue = JsonConvert.DeserializeObject<JenkinsQueue>(jsonQueueData) ?? new JenkinsQueue();
 
-                queue.Items = queue.Items ?? new List<ScheduledJob>();
+                queue.Items = queue.Items ?? new List<JenkinsScheduledJob>();
 
                 object allJobLock = new object();
-                var allJobs = new List<Job>();
+                var allJobs = new List<JenkinsJob>();
                 foreach (var view in overview.Views.AsParallel())
                 {
                     FixViewUrl(view);
@@ -94,7 +94,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             return new JenkinsOverview();
         }
 
-        private static void FixViewUrl(View view)
+        private static void FixViewUrl(JenkinsView view)
         {
             // Fix JSON problem which contains wrong url for primary view (is always the base url which contains
             // all builds, not just the ones for that view).
@@ -133,7 +133,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             return view ?? new JenkinsView();
         }
 
-        private static IEnumerable<Job> ParseJobs(IEnumerable<Job> jobs, JenkinsQueue queue)
+        private static IEnumerable<JenkinsJob> ParseJobs(IEnumerable<JenkinsJob> jobs, JenkinsQueue queue)
         {
             foreach (var job in jobs)
             {

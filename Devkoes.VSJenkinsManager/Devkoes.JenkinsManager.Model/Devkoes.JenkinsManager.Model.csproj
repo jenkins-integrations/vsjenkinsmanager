@@ -48,13 +48,16 @@
     <Compile Include="Contract\IOutputWindowLogger.cs" />
     <Compile Include="Contract\ISolutionJobLinkInfo.cs" />
     <Compile Include="Contract\IVisualStudioSolutionEvents.cs" />
+    <Compile Include="Schema\JenkinsOverview.cs" />
     <Compile Include="Schema\JenkinsQueue.cs" />
     <Compile Include="Schema\JenkinsServer.cs" />
     <Compile Include="Schema\JenkinsServerList.cs" />
-    <Compile Include="Schema\JSONModels.cs" />
+    <Compile Include="Schema\JenkinsView.cs" />
+    <Compile Include="Schema\JenkinsJob.cs" />
     <Compile Include="Schema\ObservableObject.cs" />
-    <Compile Include="Schema\SolutionJob.cs" />
-    <Compile Include="Schema\SolutionJobList.cs" />
+    <Compile Include="Schema\JenkinsScheduledJob.cs" />
+    <Compile Include="Schema\SolutionJenkinsJobLink.cs" />
+    <Compile Include="Schema\SolutionJenkinsJobLinkList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\Solution Items\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>

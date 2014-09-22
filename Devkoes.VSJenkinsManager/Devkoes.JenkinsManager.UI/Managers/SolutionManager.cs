@@ -50,7 +50,7 @@ namespace Devkoes.JenkinsManager.UI.Managers
 
         public async void StartJenkinsBuildForSolution(string slnPath)
         {
-            SolutionJob sJob = SettingManager.GetJobUri(slnPath);
+            SolutionJenkinsJobLink sJob = SettingManager.GetJobUri(slnPath);
             await ViewModelController.JenkinsManagerViewModel.ScheduleJob(sJob.JobUrl, sJob.JenkinsServerUrl);
         }
     }
