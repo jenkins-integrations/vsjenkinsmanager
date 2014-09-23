@@ -79,6 +79,7 @@
     </Compile>
     <Compile Include="Comparers\JobComparer.cs" />
     <Compile Include="Converters\BooleanToHiddenConverter.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="ServicesContainer.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="ExposedServices\SolutionJobLinkInfo.cs" />

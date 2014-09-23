@@ -2,7 +2,6 @@
 using Devkoes.JenkinsManager.Model.Schema;
 using Devkoes.JenkinsManager.UI.Comparers;
 using Devkoes.JenkinsManager.UI.Helpers;
-using Devkoes.JenkinsManager.UI.ExposedServices;
 using Devkoes.JenkinsManager.UI.Properties;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -121,49 +120,77 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private void UpdateJobLinkedStatus(string slnPath = null)
         {
-            if (string.IsNullOrEmpty(slnPath))
+            try
             {
-                slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
-            }
-
-            SolutionJenkinsJobLink sJob = SettingManager.GetJobUri(slnPath);
-
-            var allJobs = JOverview.Views.SelectMany((v) => v.Jobs ?? Enumerable.Empty<JenkinsJob>()).ToArray();
-
-            UIHelper.InvokeUI(() =>
-            {
-                foreach (var job in allJobs)
+                if (string.IsNullOrEmpty(slnPath))
                 {
-                    job.LinkedToCurrentSolution =
-                        sJob != null &&
-                        string.Equals(job.Url, sJob.JobUrl, System.StringComparison.InvariantCultureIgnoreCase);
+                    slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
                 }
-            });
+
+                SolutionJenkinsJobLink sJob = SettingManager.GetJobUri(slnPath);
+
+                var allJobs = JOverview.Views.SelectMany((v) => v.Jobs ?? Enumerable.Empty<JenkinsJob>()).ToArray();
+
+                UIHelper.InvokeUI(() =>
+                {
+                    foreach (var job in allJobs)
+                    {
+                        job.LinkedToCurrentSolution =
+                            sJob != null &&
+                            string.Equals(job.Url, sJob.JobUrl, System.StringComparison.InvariantCultureIgnoreCase);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private void LinkJobToSolution(JenkinsJob j)
         {
-            string slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
-            if (string.IsNullOrEmpty(slnPath))
+            try
             {
-                StatusMessage = Resources.SolutionNotLoaded;
-                return;
+                string slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
+                if (string.IsNullOrEmpty(slnPath))
+                {
+                    StatusMessage = Resources.SolutionNotLoaded;
+                    return;
+                }
+
+                SettingManager.SaveJobForSolution(j.Url, slnPath, SelectedJenkinsServer.Url);
+
+                UpdateJobLinkedStatus();
             }
-
-            SettingManager.SaveJobForSolution(j.Url, slnPath, SelectedJenkinsServer.Url);
-
-            UpdateJobLinkedStatus();
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private void ShowWebsite(JenkinsJob j)
         {
-            Process.Start(j.Url);
+            try
+            {
+                Process.Start(j.Url);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private async void ScheduleJob(JenkinsJob j)
         {
-            await ScheduleJob(j.Url, SelectedJenkinsServer.Url);
-            await LoadJenkinsJobs();
+            try
+            {
+                await ScheduleJob(j.Url, SelectedJenkinsServer.Url);
+                await LoadJenkinsJobs();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         public async Task ScheduleJob(string jobUrl, string solutionUrl)
@@ -174,6 +201,8 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
             catch (WebException ex)
             {
+                Logger.Log(ex);
+
                 var resp = ex.Response as HttpWebResponse;
                 if (resp != null)
                 {
@@ -218,8 +247,15 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private void HandleRemoveJenkinsServer()
         {
-            SettingManager.RemoveServer(SelectedJenkinsServer);
-            LoadJenkinsServers();
+            try
+            {
+                SettingManager.RemoveServer(SelectedJenkinsServer);
+                LoadJenkinsServers();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         public JenkinsServer SelectedJenkinsServer
@@ -313,6 +349,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = ex.Message;
+                Logger.Log(ex);
                 LoadingFailed = true;
             }
             finally
@@ -326,30 +363,44 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private void LoadJenkinsServers()
         {
-            JenkinsServers.Clear();
-            var servers = SettingManager.GetServers();
-            foreach (var server in servers)
+            try
             {
-                if (SelectedJenkinsServer == null)
+                JenkinsServers.Clear();
+                var servers = SettingManager.GetServers();
+                foreach (var server in servers)
                 {
-                    SelectedJenkinsServer = server;
+                    if (SelectedJenkinsServer == null)
+                    {
+                        SelectedJenkinsServer = server;
+                    }
+                    JenkinsServers.Add(server);
                 }
-                JenkinsServers.Add(server);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
         private void HandleSaveJenkinsServer()
         {
-            SettingManager.AddServer(new JenkinsServer()
+            try
             {
-                Name = AddServerName,
-                Url = AddServerUrl,
-                UserName = AddUserName,
-                ApiToken = AddAPIToken
-            });
+                SettingManager.AddServer(new JenkinsServer()
+                    {
+                        Name = AddServerName,
+                        Url = AddServerUrl,
+                        UserName = AddUserName,
+                        ApiToken = AddAPIToken
+                    });
 
-            LoadJenkinsServers();
-            ShowAddJenkinsServer = false;
+                LoadJenkinsServers();
+                ShowAddJenkinsServer = false;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private void HandleShowAddJenkinsServer()

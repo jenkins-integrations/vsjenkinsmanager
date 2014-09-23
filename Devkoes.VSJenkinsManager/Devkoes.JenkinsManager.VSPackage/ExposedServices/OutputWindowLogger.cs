@@ -36,10 +36,12 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
 
         public void LogOutput(Exception ex)
         {
-            if (ex != null && !string.IsNullOrWhiteSpace(ex.Message))
+            if (ex == null)
             {
-                _outputWindow.OutputString(ex.Message);
+                return;
             }
+
+            _outputWindow.OutputString(ex.ToString());
         }
     }
 }
