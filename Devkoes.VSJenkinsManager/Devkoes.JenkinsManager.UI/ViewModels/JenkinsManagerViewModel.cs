@@ -61,7 +61,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             _loadingJobsBusyLock = new object();
 
-            DependencyContainer.VisualStudioSolutionEvents.SolutionChanged += SolutionPathChanged;
+            ServicesContainer.VisualStudioSolutionEvents.SolutionChanged += SolutionPathChanged;
 
             LoadJenkinsServers();
 
@@ -123,7 +123,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         {
             if (string.IsNullOrEmpty(slnPath))
             {
-                slnPath = DependencyContainer.VisualStudioSolutionInfo.SolutionPath;
+                slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
             }
 
             SolutionJenkinsJobLink sJob = SettingManager.GetJobUri(slnPath);
@@ -143,7 +143,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private void LinkJobToSolution(JenkinsJob j)
         {
-            string slnPath = DependencyContainer.VisualStudioSolutionInfo.SolutionPath;
+            string slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
             if (string.IsNullOrEmpty(slnPath))
             {
                 StatusMessage = Resources.SolutionNotLoaded;

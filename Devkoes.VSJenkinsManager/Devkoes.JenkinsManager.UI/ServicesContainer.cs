@@ -3,7 +3,12 @@ using Devkoes.JenkinsManager.UI.ExposedServices;
 
 namespace Devkoes.JenkinsManager.UI
 {
-    public static class DependencyContainer
+    /// <summary>
+    /// Mediator between this UI assembly and the package assembly. We need services from the one package
+    /// in the other and vice versa. We could use a IoT container (Unity/MEF) when we need more flexibility. At
+    /// the moment these properties are set at the time the services become available (eg package is initialized).
+    /// </summary>
+    public static class ServicesContainer
     {
         private static ISolutionJenkinsJobLinkInfo _slnJobLinkInfo;
 
@@ -11,7 +16,7 @@ namespace Devkoes.JenkinsManager.UI
         public static IVisualStudioSolutionEvents VisualStudioSolutionEvents { get; set; }
         public static IVisualStudioSolutionInfo VisualStudioSolutionInfo { get; set; }
 
-        static DependencyContainer()
+        static ServicesContainer()
         {
             _slnJobLinkInfo = new SolutionJenkinsJobLinkInfo();
         }
