@@ -44,69 +44,113 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             JenkinsOverview overview = null;
             JenkinsQueue queue = null;
 
-            WebClient wc = new WebClient();
-            Uri baseUri = new Uri(jenkinsServerUrl);
+            JenkinsServer server = SettingManager.GetJenkinsServer(jenkinsServerUrl);
 
-            Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true&tree=views[name,url]"));
-            if (await Task.WhenAny(jsonRawDataTask, Task.Delay(3000)) == jsonRawDataTask)
+            if (server == null)
             {
-                overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonRawDataTask.Result) ?? new JenkinsOverview();
+                return null;
+            }
 
-                string jsonQueueData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "queue/api/json?pretty=true&tree=items[why,task[name,url,color]]"));
-                queue = JsonConvert.DeserializeObject<JenkinsQueue>(jsonQueueData) ?? new JenkinsQueue();
-
-                queue.Items = queue.Items ?? new List<ScheduledJob>();
-
-                object allJobLock = new object();
-                var allJobs = new List<Job>();
-                foreach (var view in overview.Views.AsParallel())
+            using (WebClient wc = new WebClient())
+            {
+                if (!string.IsNullOrWhiteSpace(server.UserName))
                 {
-                    // Fix JSON problem which contains wrong url for primary view (is always the base url which contains
-                    // all builds, not just the ones for that view).
-                    if (!view.Url.Contains("/view/"))
-                    {
-                        view.Url = string.Format("{0}/view/{1}/", view.Url, view.Name);
-                    }
+                    // WebClient.Credentials can not be used, because those credentials will only be send to the server
+                    // when the server responds with a challenge from the server. Jenkins won't send this challenge as documented
+                    // on the wiki: https://wiki.jenkins-ci.org/display/JENKINS/Authenticating+scripted+clients
 
-                    JenkinsView viewData = await GetJenkinsView(view.Url);
+                    // We should use the "old fashion" way of setting the header manually
+                    string credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", server.UserName, server.ApiToken)));
+                    wc.Headers[HttpRequestHeader.Authorization] = "Basic " + credentials;
+                }
 
-                    foreach (var job in viewData.Jobs)
+                Uri baseUri = new Uri(jenkinsServerUrl);
+
+                Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true&tree=views[name,url]"));
+                if (await Task.WhenAny(jsonRawDataTask, Task.Delay(3000)) == jsonRawDataTask)
+                {
+                    overview = JsonConvert.DeserializeObject<JenkinsOverview>(jsonRawDataTask.Result) ?? new JenkinsOverview();
+
+                    string jsonQueueData = await wc.DownloadStringTaskAsync(new Uri(baseUri, "queue/api/json?pretty=true&tree=items[why,task[name,url,color]]"));
+                    queue = JsonConvert.DeserializeObject<JenkinsQueue>(jsonQueueData) ?? new JenkinsQueue();
+
+                    queue.Items = queue.Items ?? new List<ScheduledJob>();
+
+                    object allJobLock = new object();
+                    var allJobs = new List<Job>();
+                    foreach (var view in overview.Views.AsParallel())
                     {
-                        lock (allJobLock)
+                        // Fix JSON problem which contains wrong url for primary view (is always the base url which contains
+                        // all builds, not just the ones for that view).
+                        if (!view.Url.Contains("/view/"))
                         {
-                            var allJobsJob = allJobs.FirstOrDefault((j) => string.Equals(j.Url, job.Url));
-                            if (allJobsJob != null)
+                            view.Url = string.Format("{0}/view/{1}/", view.Url, view.Name);
+                        }
+
+                        JenkinsView viewData = await GetJenkinsView(jenkinsServerUrl, view.Url);
+
+                        if (viewData == null) continue;
+
+                        foreach (var job in viewData.Jobs)
+                        {
+                            lock (allJobLock)
                             {
-                                view.Jobs.Add(allJobsJob);
-                            }
-                            else
-                            {
-                                view.Jobs.Add(job);
-                                allJobs.Add(job);
+                                var allJobsJob = allJobs.FirstOrDefault((j) => string.Equals(j.Url, job.Url));
+                                if (allJobsJob != null)
+                                {
+                                    view.Jobs.Add(allJobsJob);
+                                }
+                                else
+                                {
+                                    view.Jobs.Add(job);
+                                    allJobs.Add(job);
+                                }
                             }
                         }
                     }
+
+                    overview.Jobs = ParseJobs(allJobs, queue);
+
+                    return overview;
                 }
-
-                overview.Jobs = ParseJobs(allJobs, queue);
-
-                return overview;
             }
 
             return new JenkinsOverview();
         }
 
-        private async static Task<JenkinsView> GetJenkinsView(string viewUrl)
+        private async static Task<JenkinsView> GetJenkinsView(string jenkinsServerUrl, string viewUrl)
         {
             JenkinsView view = null;
-            WebClient wc = new WebClient();
-            Uri baseUri = new Uri(viewUrl);
 
-            Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true"));
+            JenkinsServer server = SettingManager.GetJenkinsServer(jenkinsServerUrl);
 
-            if (await Task.WhenAny(jsonRawDataTask, Task.Delay(3000)) == jsonRawDataTask)
+            if (server == null)
             {
-                view = JsonConvert.DeserializeObject<JenkinsView>(jsonRawDataTask.Result);
+                return null;
+            }
+
+            using (WebClient wc = new WebClient())
+            {
+
+                if (!string.IsNullOrWhiteSpace(server.UserName))
+                {
+                    // WebClient.Credentials can not be used, because those credentials will only be send to the server
+                    // when the server responds with a challenge from the server. Jenkins won't send this challenge as documented
+                    // on the wiki: https://wiki.jenkins-ci.org/display/JENKINS/Authenticating+scripted+clients
+
+                    // We should use the "old fashion" way of setting the header manually
+                    string credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", server.UserName, server.ApiToken)));
+                    wc.Headers[HttpRequestHeader.Authorization] = "Basic " + credentials;
+                }
+
+                Uri baseUri = new Uri(viewUrl);
+
+                Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(new Uri(baseUri, "api/json?pretty=true"));
+
+                if (await Task.WhenAny(jsonRawDataTask, Task.Delay(3000)) == jsonRawDataTask)
+                {
+                    view = JsonConvert.DeserializeObject<JenkinsView>(jsonRawDataTask.Result);
+                }
             }
 
             return view ?? new JenkinsView();

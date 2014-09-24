@@ -257,6 +257,13 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             {
                 JenkinsOverview newOverview = await JenkinsManager.APIHandler.Managers.JenkinsManager.GetJenkinsOverview(SelectedJenkinsServer.Url);
 
+                if (newOverview == null)
+                {
+                    StatusMessage = "Could not fetch jobs overview";
+                    LoadingFailed = true;
+                    return;
+                }
+
                 if (JOverview == null)
                 {
                     JOverview = newOverview;
