@@ -110,10 +110,10 @@ namespace Devkoes.JenkinsManager.VSPackage
 
         private void InitializeServices()
         {
-            DependencyContainer.OutputWindowLogger = new OutputWindowLogger();
+            ServicesContainer.OutputWindowLogger = new OutputWindowLogger();
             _vsSolutionService = new VisualStudioSolutionService();
-            DependencyContainer.VisualStudioSolutionEvents = _vsSolutionService;
-            DependencyContainer.VisualStudioSolutionInfo = _vsSolutionService;
+            ServicesContainer.VisualStudioSolutionEvents = _vsSolutionService;
+            ServicesContainer.VisualStudioSolutionInfo = _vsSolutionService;
         }
 
         #endregion
@@ -153,9 +153,9 @@ namespace Devkoes.JenkinsManager.VSPackage
                 // if it doesn't work, user should open it
             }
 
-            if (DependencyContainer.SolutionJenkinsJobLinkInfo.IsSolutionLinked(slnPath))
+            if (ServicesContainer.SolutionJenkinsJobLinkInfo.IsSolutionLinked(slnPath))
             {
-                DependencyContainer.SolutionJenkinsJobLinkInfo.StartJenkinsBuildForSolution(slnPath);
+                ServicesContainer.SolutionJenkinsJobLinkInfo.StartJenkinsBuildForSolution(slnPath);
             }
             else
             {
