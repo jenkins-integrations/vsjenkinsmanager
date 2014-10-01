@@ -285,6 +285,8 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             if (SelectedJenkinsServer == null)
                 return;
 
+            string sourceUrl = SelectedJenkinsServer.Url;
+
             lock (_loadingJobsBusyLock)
             {
                 if (_loadingJobsBusy)
@@ -295,55 +297,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
             try
             {
-                JenkinsOverview newOverview = await JenkinsManager.APIHandler.Managers.JenkinsManager.GetJenkinsOverview(SelectedJenkinsServer.Url);
+                JenkinsOverview newOverview = await JenkinsManager.APIHandler.Managers.JenkinsManager.GetJenkinsOverview(sourceUrl);
 
-                if (JOverview == null)
-                {
-                    JOverview = newOverview;
-                    SelectedView = JOverview.Views.FirstOrDefault();
-                }
-                else
-                {
-                    foreach (var newView in newOverview.Views)
-                    {
-                        var existingView = JOverview.Views.FirstOrDefault((v) => string.Equals(v.Url, newView.Url));
-                        if (existingView != null)
-                        {
-                            var existingJobs = existingView.Jobs;
-                            var newJobs = newView.Jobs;
+                HandleNewJenkinsOverview(newOverview, sourceUrl);
 
-                            IEnumerable<JenkinsJob> jobsToDelete = existingJobs.Except(newJobs, _jobComparer).ToArray();
-                            IEnumerable<JenkinsJob> jobsToAdd = newJobs.Except(existingJobs, _jobComparer).ToArray();
-                            IEnumerable<JenkinsJob> jobsToUpdate = newJobs.Intersect(existingJobs, _jobComparer).ToArray();
-
-                            UIHelper.InvokeUI(() =>
-                                {
-                                    foreach (var job in jobsToDelete)
-                                    {
-                                        existingJobs.Remove(job);
-                                    }
-
-                                    foreach (var job in jobsToAdd)
-                                    {
-                                        existingJobs.Add(job);
-                                    }
-
-                                    foreach (var job in jobsToUpdate)
-                                    {
-                                        var existingJob = existingJobs.Intersect(new[] { job }, _jobComparer).Single();
-                                        existingJob.Building = job.Building;
-                                        existingJob.Color = job.Color;
-                                        existingJob.Name = job.Name;
-                                        existingJob.Queued = job.Queued;
-                                    }
-                                });
-                        }
-                    }
-                }
                 LoadingFailed = false;
-
                 StatusMessage = null;
-
                 UpdateJobLinkedStatus();
             }
             catch (Exception ex)
@@ -358,6 +317,77 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 {
                     _loadingJobsBusy = false;
                 }
+            }
+        }
+
+        private void HandleNewJenkinsOverview(JenkinsOverview newOverview, string sourceUrl)
+        {
+            if (SelectedJenkinsServer == null || !string.Equals(SelectedJenkinsServer.Url, sourceUrl))
+            {
+                // In the time we were loading the data, the selected server could be changed. If done so,
+                // ignore this data for it is invalid.
+                return;
+            }
+
+            if (JOverview == null)
+            {
+                JOverview = newOverview;
+                SelectedView = JOverview.Views.FirstOrDefault();
+                return;
+            }
+
+            MergeJenkinsOverviewData(newOverview);
+        }
+
+        private void MergeJenkinsOverviewData(JenkinsOverview newOverview)
+        {
+            foreach (var newView in newOverview.Views)
+            {
+                var existingView = JOverview.Views.FirstOrDefault((v) => string.Equals(v.Url, newView.Url));
+                if (existingView != null)
+                {
+                    var existingJobs = existingView.Jobs;
+                    var newJobs = newView.Jobs;
+
+                    IEnumerable<JenkinsJob> jobsToAdd = newJobs.Except(existingJobs, _jobComparer).ToArray();
+                    IEnumerable<JenkinsJob> jobsToDelete = existingJobs.Except(newJobs, _jobComparer).ToArray();
+                    IEnumerable<JenkinsJob> jobsToUpdate = newJobs.Intersect(existingJobs, _jobComparer).ToArray();
+
+                    UIHelper.InvokeUI(() =>
+                    {
+                        AddNewJob(existingJobs, jobsToAdd);
+                        DeleteJob(existingJobs, jobsToDelete);
+                        UpdateJob(existingJobs, jobsToUpdate);
+                    });
+                }
+            }
+        }
+
+        private void AddNewJob(IList<JenkinsJob> existingJobs, IEnumerable<JenkinsJob> jobsToAdd)
+        {
+            foreach (var job in jobsToAdd)
+            {
+                existingJobs.Add(job);
+            }
+        }
+
+        private void DeleteJob(IList<JenkinsJob> existingJobs, IEnumerable<JenkinsJob> jobsToDelete)
+        {
+            foreach (var job in jobsToDelete)
+            {
+                existingJobs.Remove(job);
+            }
+        }
+
+        private void UpdateJob(IList<JenkinsJob> existingJobs, IEnumerable<JenkinsJob> jobsToUpdate)
+        {
+            foreach (var job in jobsToUpdate)
+            {
+                var existingJob = existingJobs.Intersect(new[] { job }, _jobComparer).Single();
+                existingJob.Building = job.Building;
+                existingJob.Color = job.Color;
+                existingJob.Name = job.Name;
+                existingJob.Queued = job.Queued;
             }
         }
 
