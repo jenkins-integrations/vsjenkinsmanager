@@ -31,6 +31,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         private JenkinsOverview _jOverview;
         private IEqualityComparer<JenkinsJob> _jobComparer;
         private bool _jenkinsServersEnabled;
+        private bool _forceRefresh;
 
         public RelayCommand ShowAddJenkinsForm { get; private set; }
         public RelayCommand SaveJenkinsServer { get; private set; }
@@ -65,10 +66,13 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
             ServicesContainer.VisualStudioSolutionEvents.SolutionChanged += SolutionPathChanged;
 
-            LoadJenkinsServers();
 
             _refreshTimer = new Timer(_refreshInterval);
             _refreshTimer.Elapsed += RefreshJobsTimerCallback;
+            _refreshTimer.AutoReset = false;
+
+            LoadJenkinsServers();
+
             _refreshTimer.Start();
         }
 
@@ -201,7 +205,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             try
             {
                 await ScheduleJob(j.Url, SelectedJenkinsServer.Url);
-                await LoadJenkinsJobs();
+                ForceReload(false);
             }
             catch (Exception ex)
             {
@@ -285,15 +289,28 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private async void ForceReload(bool disableJenkinsServers)
+        private void ForceReload(bool disableJenkinsServers)
         {
             if (disableJenkinsServers)
             {
                 JenkinsServersEnabled = false;
             }
 
-            JOverview = null;
-            await LoadJenkinsJobs();
+            lock (_loadingJobsBusyLock)
+            {
+                JOverview = null;
+                _refreshTimer.Stop();
+                if (_loadingJobsBusy)
+                {
+                    _forceRefresh = true;
+                }
+                else
+                {
+                    _refreshTimer.Interval = 1;
+                    _refreshTimer.Start();
+                }
+
+            }
         }
 
         public string StatusMessage
@@ -308,23 +325,23 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private async Task LoadJenkinsJobs()
         {
-            if (SelectedJenkinsServer == null)
+            try
             {
-                return;
-            }
-
-            lock (_loadingJobsBusyLock)
-            {
-                if (_loadingJobsBusy)
+                if (SelectedJenkinsServer == null)
                 {
                     return;
                 }
 
-                _loadingJobsBusy = true;
-            }
+                lock (_loadingJobsBusyLock)
+                {
+                    if (_loadingJobsBusy)
+                    {
+                        return;
+                    }
 
-            try
-            {
+                    _loadingJobsBusy = true;
+                }
+
                 string sourceUrl = SelectedJenkinsServer.Url;
                 JenkinsOverview newOverview = await JenkinsManager.APIHandler.Managers.JenkinsManager.GetJenkinsOverview(sourceUrl);
 
@@ -334,7 +351,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 }
 
                 LoadingFailed = false;
-                _refreshTimer.Start();
                 StatusMessage = null;
                 JenkinsServersEnabled = true;
             }
@@ -350,6 +366,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 lock (_loadingJobsBusyLock)
                 {
                     _loadingJobsBusy = false;
+
+                    if (!LoadingFailed)
+                    {
+                        _refreshTimer.Interval = _forceRefresh ? 1 : _refreshInterval;
+                        _refreshTimer.Start();
+                    }
                 }
             }
         }
