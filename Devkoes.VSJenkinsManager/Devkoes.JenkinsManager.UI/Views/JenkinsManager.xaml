@@ -181,6 +181,15 @@
             BorderThickness="0"
             IsSynchronizedWithCurrentItem="True">
             
+            <ListBox.ItemContainerStyle>
+                <Style
+                    TargetType="ListBoxItem">
+                    <Setter
+                        Property="HorizontalContentAlignment"
+                        Value="Stretch"></Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem
@@ -215,8 +224,8 @@
                     </MenuItem>
                 </ContextMenu>
             </ListBox.ContextMenu>
-            
-            <ItemsControl.ItemTemplate>
+
+            <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid
                         Margin="0,3">
@@ -259,7 +268,7 @@
                         </Image>
                     </Grid>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
 
         <TextBlock
