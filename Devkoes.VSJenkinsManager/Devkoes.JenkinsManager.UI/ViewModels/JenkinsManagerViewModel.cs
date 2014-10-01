@@ -30,6 +30,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         private JenkinsView _selectedView;
         private JenkinsOverview _jOverview;
         private IEqualityComparer<JenkinsJob> _jobComparer;
+        private bool _jenkinsServersEnabled;
 
         public RelayCommand ShowAddJenkinsForm { get; private set; }
         public RelayCommand SaveJenkinsServer { get; private set; }
@@ -49,6 +50,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         public JenkinsManagerViewModel()
         {
+            _jenkinsServersEnabled = true;
             _jobComparer = new JobComparer();
             ShowAddJenkinsForm = new RelayCommand(HandleShowAddJenkinsServer);
             SaveJenkinsServer = new RelayCommand(HandleSaveJenkinsServer);
@@ -68,6 +70,19 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             _refreshTimer = new Timer(_refreshInterval);
             _refreshTimer.Elapsed += RefreshJobsTimerCallback;
             _refreshTimer.Start();
+        }
+
+        public bool JenkinsServersEnabled
+        {
+            get { return _jenkinsServersEnabled; }
+            set
+            {
+                if (_jenkinsServersEnabled != value)
+                {
+                    _jenkinsServersEnabled = value;
+                    RaisePropertyChanged(() => JenkinsServersEnabled);
+                }
+            }
         }
 
         public JenkinsView SelectedView
@@ -96,21 +111,13 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private async void HandleReload()
+        private void HandleReload()
         {
-            await LoadJenkinsJobs();
+            ForceReload(false);
         }
 
         private async void RefreshJobsTimerCallback(object sender, ElapsedEventArgs e)
         {
-            lock (_loadingJobsBusyLock)
-            {
-                if (_loadingJobsBusy)
-                {
-                    return;
-                }
-            }
-
             await LoadJenkinsJobs();
         }
 
@@ -130,7 +137,15 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
                 SolutionJenkinsJobLink sJob = SettingManager.GetJobUri(slnPath);
 
-                var allJobs = JOverview.Views.SelectMany((v) => v.Jobs ?? Enumerable.Empty<JenkinsJob>()).ToArray();
+                IEnumerable<JenkinsJob> allJobs;
+                if (JOverview == null)
+                {
+                    allJobs = Enumerable.Empty<JenkinsJob>();
+                }
+                else
+                {
+                    allJobs = JOverview.Views.SelectMany((v) => v.Jobs ?? Enumerable.Empty<JenkinsJob>()).ToArray();
+                }
 
                 UIHelper.InvokeUI(() =>
                 {
@@ -264,18 +279,21 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             get { return _selectedJenkinsServer; }
             set
             {
-                lock (_loadingJobsBusyLock)
-                {
-                    if (_loadingJobsBusy)
-                    {
-
-                    }
-                }
                 _selectedJenkinsServer = value;
-                JOverview = null;
                 RaisePropertyChanged(() => SelectedJenkinsServer);
-                LoadJenkinsJobs();
+                ForceReload(true);
             }
+        }
+
+        private async void ForceReload(bool disableJenkinsServers)
+        {
+            if (disableJenkinsServers)
+            {
+                JenkinsServersEnabled = false;
+            }
+
+            JOverview = null;
+            await LoadJenkinsJobs();
         }
 
         public string StatusMessage
@@ -316,13 +334,16 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 }
 
                 LoadingFailed = false;
+                _refreshTimer.Start();
                 StatusMessage = null;
+                JenkinsServersEnabled = true;
             }
             catch (Exception ex)
             {
                 StatusMessage = ex.Message;
                 Logger.Log(ex);
                 LoadingFailed = true;
+                _refreshTimer.Stop();
             }
             finally
             {
@@ -463,15 +484,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             {
                 if (_loadingFailed != value)
                 {
-                    if (value)
-                    {
-                        _refreshTimer.Stop();
-                    }
-                    else
-                    {
-                        _refreshTimer.Start();
-                    }
-
                     _loadingFailed = value;
                     RaisePropertyChanged(() => LoadingFailed);
                 }

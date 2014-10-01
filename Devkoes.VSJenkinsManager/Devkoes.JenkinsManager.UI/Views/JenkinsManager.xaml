@@ -54,6 +54,7 @@
             </Grid.RowDefinitions>
             <ComboBox
                 VerticalAlignment="Center"
+                IsEnabled="{Binding JenkinsServersEnabled}"
                 ItemsSource="{Binding JenkinsServers}"
                 SelectedItem="{Binding SelectedJenkinsServer}">
                 <ComboBox.ItemTemplate>
