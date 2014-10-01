@@ -5,6 +5,9 @@
     <BooleanToVisibilityConverter
         x:Key="boolToVisConverter" />
 
+    <local:BooleanInverterConverter
+        x:Key="boolInvConverter" />
+
     <local:BooleanToHiddenConverter
         x:Key="boolToHiddenConverter" />
 
