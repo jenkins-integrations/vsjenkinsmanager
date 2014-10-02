@@ -31,6 +31,8 @@
             <RowDefinition
                 Height="Auto" />
             <RowDefinition
+                Height="Auto" />
+            <RowDefinition
                 Height="*" />
             <RowDefinition
                 Height="Auto" />
@@ -54,6 +56,7 @@
             </Grid.RowDefinitions>
             <ComboBox
                 VerticalAlignment="Center"
+                IsEnabled="{Binding JenkinsServersEnabled}"
                 ItemsSource="{Binding JenkinsServers}"
                 SelectedItem="{Binding SelectedJenkinsServer}">
                 <ComboBox.ItemTemplate>
@@ -159,6 +162,7 @@
             VerticalAlignment="Center"
             Margin="0,3,0,0"
             Grid.Row="2"
+            IsEnabled="{Binding JenkinsServersEnabled}"
             ItemsSource="{Binding JOverview.Views}"
             SelectedItem="{Binding SelectedView}">
             <ComboBox.ItemTemplate>
@@ -168,17 +172,33 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+
+        <ProgressBar
+            Margin="0,3,0,0"
+            Height="1"
+            BorderBrush="Transparent"
+            Grid.Row="3"
+            IsIndeterminate="{Binding JenkinsServersEnabled, Converter={StaticResource boolInvConverter}}" />
         
         <ListBox
             Margin="0,5"
             ItemsSource="{Binding SelectedView.Jobs}"
             SelectedItem="{Binding SelectedJob}"
             Visibility="{Binding LoadingFailed, Converter={StaticResource boolToHiddenConverter}}"
-            Grid.Row="3"
+            Grid.Row="4"
             Background="{DynamicResource VsBrush.Window}"
             Foreground="{DynamicResource VsBrush.WindowText}"
             BorderThickness="0"
             IsSynchronizedWithCurrentItem="True">
+            
+            <ListBox.ItemContainerStyle>
+                <Style
+                    TargetType="ListBoxItem">
+                    <Setter
+                        Property="HorizontalContentAlignment"
+                        Value="Stretch"></Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
             
             <ListBox.ContextMenu>
                 <ContextMenu>
@@ -214,8 +234,8 @@
                     </MenuItem>
                 </ContextMenu>
             </ListBox.ContextMenu>
-            
-            <ItemsControl.ItemTemplate>
+
+            <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid
                         Margin="0,3">
@@ -258,14 +278,14 @@
                         </Image>
                     </Grid>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
 
         <TextBlock
             Background="{DynamicResource VsBrush.Window}"
             Foreground="{DynamicResource VsBrush.WindowText}"
             Padding="5"
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.ColumnSpan="3"
             Text="{Binding StatusMessage}" />
     </Grid>
