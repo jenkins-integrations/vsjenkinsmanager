@@ -22,7 +22,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="3">
+    <Grid
+        Margin="3">
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="Auto" />
@@ -181,6 +182,7 @@
             IsIndeterminate="{Binding JenkinsServersEnabled, Converter={StaticResource boolInvConverter}}" />
         
         <ListBox
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             Margin="0,5"
             ItemsSource="{Binding SelectedView.Jobs}"
             SelectedItem="{Binding SelectedJob}"
