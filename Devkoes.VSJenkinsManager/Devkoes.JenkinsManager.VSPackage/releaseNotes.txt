@@ -4,7 +4,10 @@ A visual studio package to manage Jenkins
 https://github.com/tomkuijsten/vsjenkinsmanager
 
 Version 0.4:
- - Bug fixes
+ - Bug fix for view caching problem (wrong views for server)
+ - Disable dropdowns when switching server
+ - Progressbar when switching server
+ - Bug fix for servers where authentication is required for everything
 
 Version 0.3.1:
  - Bug fixes for context menu
