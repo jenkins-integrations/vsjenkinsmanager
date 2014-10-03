@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace Devkoes.JenkinsManager.UI.Views
 {
-    public partial class BasicOptionsControl : UserControl
+    public partial class UserOptionsControl : UserControl
     {
-        public BasicOptionsControl()
+        public UserOptionsControl()
         {
             InitializeComponent();
 

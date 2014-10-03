@@ -87,11 +87,11 @@
     <Compile Include="Resources\VsColors.cs" />
     <Compile Include="ViewModels\JenkinsManagerViewModel.cs" />
     <Compile Include="ViewModels\ViewModelController.cs" />
-    <Compile Include="Views\BasicOptionsControl.cs">
+    <Compile Include="Views\UserOptionsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\BasicOptionsControl.Designer.cs">
-      <DependentUpon>BasicOptionsControl.cs</DependentUpon>
+    <Compile Include="Views\UserOptionsControl.Designer.cs">
+      <DependentUpon>UserOptionsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\UserOptionsView.cs">
       <SubType>Component</SubType>
@@ -136,8 +136,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\BasicOptionsControl.resx">
-      <DependentUpon>BasicOptionsControl.cs</DependentUpon>
+    <EmbeddedResource Include="Views\UserOptionsControl.resx">
+      <DependentUpon>UserOptionsControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Key.snk" />
     <None Include="packages.config" />
