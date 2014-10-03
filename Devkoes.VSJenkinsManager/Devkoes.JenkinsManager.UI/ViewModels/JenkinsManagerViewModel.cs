@@ -289,17 +289,22 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private void ForceReload(bool disableJenkinsServers)
+        private void ForceReload(bool newServerSelected)
         {
-            if (disableJenkinsServers)
+            if (newServerSelected)
             {
                 JenkinsServersEnabled = false;
             }
 
             lock (_loadingJobsBusyLock)
             {
-                JOverview = null;
+                if (newServerSelected)
+                {
+                    JOverview = null;
+                }
+
                 _refreshTimer.Stop();
+
                 if (_loadingJobsBusy)
                 {
                     _forceRefresh = true;
@@ -347,12 +352,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
                 if (TryHandleNewJenkinsOverview(newOverview, sourceUrl))
                 {
+                    JenkinsServersEnabled = true;
                     UpdateJobLinkedStatus();
                 }
 
                 LoadingFailed = false;
                 StatusMessage = null;
-                JenkinsServersEnabled = true;
             }
             catch (Exception ex)
             {
@@ -387,7 +392,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             {
                 JOverview = newOverview;
                 SelectedView = JOverview.Views.FirstOrDefault();
-                return false;
+                return true;
             }
 
             foreach (var newView in newOverview.Views)

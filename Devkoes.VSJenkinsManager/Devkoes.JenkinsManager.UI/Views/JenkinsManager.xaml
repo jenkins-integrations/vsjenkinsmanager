@@ -178,8 +178,9 @@
             Grid.Row="3"
             Grid.ColumnSpan="4"
             Margin="0,3,0,0"
-            Height="1"
+            Height="5"
             BorderBrush="Gray"
+            Visibility="{Binding JenkinsServersEnabled, Converter={StaticResource boolToHiddenConverter}}"
             IsIndeterminate="{Binding JenkinsServersEnabled, Converter={StaticResource boolInvConverter}}" />
 
         <Button
