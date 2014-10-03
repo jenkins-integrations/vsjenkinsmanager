@@ -177,7 +177,7 @@
         <ProgressBar
             Margin="0,3,0,0"
             Height="1"
-            BorderBrush="Transparent"
+            BorderBrush="Gray"
             Grid.Row="3"
             IsIndeterminate="{Binding JenkinsServersEnabled, Converter={StaticResource boolInvConverter}}" />
         
