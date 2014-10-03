@@ -50,6 +50,7 @@
         </Grid.RowDefinitions>
 
         <Label
+            Foreground="{DynamicResource VsBrush.WindowText}"
             Content="_Server"
             Target="{Binding ElementName=serverCmb}" />
         
@@ -151,6 +152,7 @@
         </StackPanel>
 
         <Label
+            Foreground="{DynamicResource VsBrush.WindowText}"
             Grid.Row="2"
             Content="_View"
             Target="{Binding ElementName=viewCmb}" />
