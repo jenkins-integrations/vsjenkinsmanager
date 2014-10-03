@@ -29,6 +29,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -39,14 +45,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contract\IOutputWindowLogger.cs" />
+    <Compile Include="Contract\ISolutionJenkinsJobLinkInfo.cs" />
+    <Compile Include="Contract\IVisualStudioSolutionEvents.cs" />
+    <Compile Include="Contract\IVisualStudioSolutionInfo.cs" />
+    <Compile Include="Schema\JenkinsOverview.cs" />
+    <Compile Include="Schema\JenkinsQueue.cs" />
+    <Compile Include="Schema\JenkinsServer.cs" />
+    <Compile Include="Schema\JenkinsServerList.cs" />
+    <Compile Include="Schema\JenkinsView.cs" />
+    <Compile Include="Schema\JenkinsJob.cs" />
+    <Compile Include="Schema\ObservableObject.cs" />
+    <Compile Include="Schema\JenkinsScheduledJob.cs" />
+    <Compile Include="Schema\SolutionJenkinsJobLink.cs" />
+    <Compile Include="Schema\SolutionJenkinsJobLinkList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\Solution Items\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Schema\SolutionChangedEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Contract\" />
-    <Folder Include="Schema\" />
+    <None Include="Key.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

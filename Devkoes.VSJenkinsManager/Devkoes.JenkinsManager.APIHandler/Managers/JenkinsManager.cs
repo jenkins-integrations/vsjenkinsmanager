@@ -1,5 +1,5 @@
-﻿using Devkoes.JenkinsManager.APIHandler.Model;
-using Devkoes.JenkinsManager.APIHandler.Properties;
+﻿using Devkoes.JenkinsManager.APIHandler.Properties;
+using Devkoes.JenkinsManager.Model.Schema;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -49,19 +49,19 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             Uri queueUri = CreateQueueUri(jenkinsServerUrl);
             JenkinsQueue queue = await GetFromJSONData<JenkinsQueue>(server, queueUri);
 
-            queue.Items = queue.Items ?? new List<ScheduledJob>();
+            queue.Items = queue.Items ?? new List<JenkinsScheduledJob>();
 
-            List<Job> allJobs = await GetJobsFromViews(server, overview.Views);
+            List<JenkinsJob> allJobs = await GetJobsFromViews(server, overview.Views);
 
             overview.Jobs = ParseJobs(allJobs, queue);
 
             return overview;
         }
 
-        private static async Task<List<Job>> GetJobsFromViews(JenkinsServer server, IEnumerable<View> allViews)
+        private static async Task<List<JenkinsJob>> GetJobsFromViews(JenkinsServer server, IEnumerable<JenkinsView> allViews)
         {
             object allJobLock = new object();
-            var allJobs = new List<Job>();
+            var allJobs = new List<JenkinsJob>();
             foreach (var view in allViews.AsParallel())
             {
                 view.Url = FixViewUrl(view);
@@ -95,7 +95,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             return allJobs;
         }
 
-        private static string FixViewUrl(View view)
+        private static string FixViewUrl(JenkinsView view)
         {
             // Fix JSON problem which contains wrong url for primary view (is always the base url which contains
             // all builds, not just the ones for that view).
@@ -115,7 +115,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             return jView;
         }
 
-        private static IEnumerable<Job> ParseJobs(IEnumerable<Job> jobs, JenkinsQueue queue)
+        private static IEnumerable<JenkinsJob> ParseJobs(IEnumerable<JenkinsJob> jobs, JenkinsQueue queue)
         {
             foreach (var job in jobs)
             {

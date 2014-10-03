@@ -77,18 +77,21 @@
     <Compile Include="..\Solution Items\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Comparers\JobComparer.cs" />
+    <Compile Include="Converters\BooleanInverterConverter.cs" />
     <Compile Include="Converters\BooleanToHiddenConverter.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="ServicesContainer.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
-    <Compile Include="Managers\SolutionManager.cs" />
-    <Compile Include="Models\SolutionPathChangedEventArgs.cs" />
+    <Compile Include="ExposedServices\SolutionJobLinkInfo.cs" />
     <Compile Include="Resources\VsColors.cs" />
     <Compile Include="ViewModels\JenkinsManagerViewModel.cs" />
     <Compile Include="ViewModels\ViewModelController.cs" />
-    <Compile Include="Views\BasicOptionsControl.cs">
+    <Compile Include="Views\UserOptionsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\BasicOptionsControl.Designer.cs">
-      <DependentUpon>BasicOptionsControl.cs</DependentUpon>
+    <Compile Include="Views\UserOptionsControl.Designer.cs">
+      <DependentUpon>UserOptionsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\UserOptionsView.cs">
       <SubType>Component</SubType>
@@ -133,8 +136,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\BasicOptionsControl.resx">
-      <DependentUpon>BasicOptionsControl.cs</DependentUpon>
+    <EmbeddedResource Include="Views\UserOptionsControl.resx">
+      <DependentUpon>UserOptionsControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Key.snk" />
     <None Include="packages.config" />
@@ -152,6 +155,10 @@
       <Project>{55ef2883-e867-49cf-8eb0-e3f19e27a18f}</Project>
       <Name>Devkoes.JenkinsManager.APIHandler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Devkoes.JenkinsManager.Model\Devkoes.JenkinsManager.Model.csproj">
+      <Project>{b2585a00-b072-4a19-88ff-ca3156e1b44b}</Project>
+      <Name>Devkoes.JenkinsManager.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\BuildNotificationIcon.ico" />
@@ -165,6 +172,7 @@
   <ItemGroup>
     <Resource Include="Resources\ClockIcon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

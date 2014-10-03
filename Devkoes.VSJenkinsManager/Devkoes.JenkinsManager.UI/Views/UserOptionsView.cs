@@ -4,13 +4,13 @@ using System.Windows.Forms;
 
 namespace Devkoes.JenkinsManager.UI.Views
 {
-    public class BasicOptionsPage : DialogPage
+    public class UserOptionsPage : DialogPage
     {
         private static IWin32Window _basicOptions;
 
-        static BasicOptionsPage()
+        static UserOptionsPage()
         {
-            _basicOptions = new BasicOptionsControl();
+            _basicOptions = new UserOptionsControl();
         }
 
         [BrowsableAttribute(false)]

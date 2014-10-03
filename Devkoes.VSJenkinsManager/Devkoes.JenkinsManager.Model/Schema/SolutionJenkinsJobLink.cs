@@ -1,7 +1,7 @@
 ﻿
-namespace Devkoes.JenkinsManager.APIHandler.Model
+namespace Devkoes.JenkinsManager.Model.Schema
 {
-    public class SolutionJob
+    public class SolutionJenkinsJobLink
     {
         public string SolutionPath { get; set; }
         public string JenkinsServerUrl { get; set; }

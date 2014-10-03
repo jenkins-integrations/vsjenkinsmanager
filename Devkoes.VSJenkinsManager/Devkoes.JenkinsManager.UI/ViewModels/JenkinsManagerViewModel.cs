@@ -1,7 +1,7 @@
 ﻿using Devkoes.JenkinsManager.APIHandler.Managers;
-using Devkoes.JenkinsManager.APIHandler.Model;
+using Devkoes.JenkinsManager.Model.Schema;
+using Devkoes.JenkinsManager.UI.Comparers;
 using Devkoes.JenkinsManager.UI.Helpers;
-using Devkoes.JenkinsManager.UI.Managers;
 using Devkoes.JenkinsManager.UI.Properties;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -18,25 +18,29 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 {
     public class JenkinsManagerViewModel : ViewModelBase
     {
+        private int _refreshInterval = 5000;
         private bool _showAddJenkinsServer;
         private JenkinsServer _selectedJenkinsServer;
         private string _statusMessage;
-        private Job _selectedJob;
+        private JenkinsJob _selectedJob;
         private Timer _refreshTimer;
         private bool _loadingJobsBusy;
         private object _loadingJobsBusyLock;
         private bool _loadingFailed;
-        private View _selectedView;
+        private JenkinsView _selectedView;
         private JenkinsOverview _jOverview;
+        private IEqualityComparer<JenkinsJob> _jobComparer;
+        private bool _jenkinsServersEnabled;
+        private bool _forceRefresh;
 
         public RelayCommand ShowAddJenkinsForm { get; private set; }
         public RelayCommand SaveJenkinsServer { get; private set; }
         public RelayCommand RemoveJenkinsServer { get; private set; }
         public RelayCommand CancelSaveJenkinsServer { get; private set; }
         public RelayCommand Reload { get; private set; }
-        public RelayCommand<Job> ScheduleJobCommand { get; private set; }
-        public RelayCommand<Job> ShowJobsWebsite { get; private set; }
-        public RelayCommand<Job> LinkJobToCurrentSolution { get; private set; }
+        public RelayCommand<JenkinsJob> ScheduleJobCommand { get; private set; }
+        public RelayCommand<JenkinsJob> ShowJobsWebsite { get; private set; }
+        public RelayCommand<JenkinsJob> LinkJobToCurrentSolution { get; private set; }
 
         public string AddServerUrl { get; set; }
         public string AddServerName { get; set; }
@@ -47,27 +51,45 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         public JenkinsManagerViewModel()
         {
+            _jenkinsServersEnabled = true;
+            _jobComparer = new JobComparer();
             ShowAddJenkinsForm = new RelayCommand(HandleShowAddJenkinsServer);
             SaveJenkinsServer = new RelayCommand(HandleSaveJenkinsServer);
             RemoveJenkinsServer = new RelayCommand(HandleRemoveJenkinsServer);
             CancelSaveJenkinsServer = new RelayCommand(HandleCancelSaveJenkinsServer);
             Reload = new RelayCommand(HandleReload);
-            ScheduleJobCommand = new RelayCommand<Job>(ScheduleJob, CanDoJobAction);
-            ShowJobsWebsite = new RelayCommand<Job>(ShowWebsite, CanDoJobAction);
-            LinkJobToCurrentSolution = new RelayCommand<Job>(LinkJobToSolution, CanDoJobAction);
+            ScheduleJobCommand = new RelayCommand<JenkinsJob>(ScheduleJob, CanDoJobAction);
+            ShowJobsWebsite = new RelayCommand<JenkinsJob>(ShowWebsite, CanDoJobAction);
+            LinkJobToCurrentSolution = new RelayCommand<JenkinsJob>(LinkJobToSolution, CanDoJobAction);
             JenkinsServers = new ObservableCollection<JenkinsServer>();
             _loadingJobsBusyLock = new object();
 
-            SolutionManager.Instance.SolutionPathChanged += SolutionPathChanged;
+            ServicesContainer.VisualStudioSolutionEvents.SolutionChanged += SolutionPathChanged;
+
+
+            _refreshTimer = new Timer(_refreshInterval);
+            _refreshTimer.Elapsed += RefreshJobsTimerCallback;
+            _refreshTimer.AutoReset = false;
 
             LoadJenkinsServers();
 
-            _refreshTimer = new Timer(5000);
-            _refreshTimer.Elapsed += RefreshJobsTimerCallback;
             _refreshTimer.Start();
         }
 
-        public View SelectedView
+        public bool JenkinsServersEnabled
+        {
+            get { return _jenkinsServersEnabled; }
+            set
+            {
+                if (_jenkinsServersEnabled != value)
+                {
+                    _jenkinsServersEnabled = value;
+                    RaisePropertyChanged(() => JenkinsServersEnabled);
+                }
+            }
+        }
+
+        public JenkinsView SelectedView
         {
             get { return _selectedView; }
             set
@@ -93,73 +115,102 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private async void HandleReload()
+        private void HandleReload()
         {
-            await LoadJenkinsJobs();
+            ForceReload(false);
         }
 
         private async void RefreshJobsTimerCallback(object sender, ElapsedEventArgs e)
         {
-            lock (_loadingJobsBusyLock)
-            {
-                if (_loadingJobsBusy)
-                {
-                    return;
-                }
-            }
-
             await LoadJenkinsJobs();
         }
 
-        private void SolutionPathChanged(object sender, SolutionPathChangedEventArgs e)
+        private void SolutionPathChanged(object sender, SolutionChangedEventArgs e)
         {
             UpdateJobLinkedStatus(e.SolutionPath);
         }
 
         private void UpdateJobLinkedStatus(string slnPath = null)
         {
-            if (string.IsNullOrEmpty(slnPath))
+            try
             {
-                slnPath = SolutionManager.Instance.CurrentSolutionPath;
-            }
-
-            SolutionJob sJob = SettingManager.GetJobUri(slnPath);
-
-            var allJobs = JOverview.Views.SelectMany((v) => v.Jobs ?? Enumerable.Empty<Job>()).ToArray();
-
-            UIHelper.InvokeUI(() =>
-            {
-                foreach (var job in allJobs)
+                if (string.IsNullOrEmpty(slnPath))
                 {
-                    job.LinkedToCurrentSolution =
-                        sJob != null &&
-                        string.Equals(job.Url, sJob.JobUrl, System.StringComparison.InvariantCultureIgnoreCase);
+                    slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
                 }
-            });
-        }
 
-        private void LinkJobToSolution(Job j)
-        {
-            if (string.IsNullOrEmpty(SolutionManager.Instance.CurrentSolutionPath))
-            {
-                StatusMessage = Resources.SolutionNotLoaded;
-                return;
+                SolutionJenkinsJobLink sJob = SettingManager.GetJobUri(slnPath);
+
+                IEnumerable<JenkinsJob> allJobs;
+                if (JOverview == null)
+                {
+                    allJobs = Enumerable.Empty<JenkinsJob>();
+                }
+                else
+                {
+                    allJobs = JOverview.Views.SelectMany((v) => v.Jobs ?? Enumerable.Empty<JenkinsJob>()).ToArray();
+                }
+
+                UIHelper.InvokeUI(() =>
+                {
+                    foreach (var job in allJobs)
+                    {
+                        job.LinkedToCurrentSolution =
+                            sJob != null &&
+                            string.Equals(job.Url, sJob.JobUrl, System.StringComparison.InvariantCultureIgnoreCase);
+                    }
+                });
             }
-
-            SettingManager.SaveJobForSolution(j.Url, SolutionManager.Instance.CurrentSolutionPath, SelectedJenkinsServer.Url);
-
-            UpdateJobLinkedStatus();
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
-        private void ShowWebsite(Job j)
+        private void LinkJobToSolution(JenkinsJob j)
         {
-            Process.Start(j.Url);
+            try
+            {
+                string slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
+                if (string.IsNullOrEmpty(slnPath))
+                {
+                    StatusMessage = Resources.SolutionNotLoaded;
+                    return;
+                }
+
+                SettingManager.SaveJobForSolution(j.Url, slnPath, SelectedJenkinsServer.Url);
+
+                UpdateJobLinkedStatus();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
-        private async void ScheduleJob(Job j)
+        private void ShowWebsite(JenkinsJob j)
         {
-            await ScheduleJob(j.Url, SelectedJenkinsServer.Url);
-            await LoadJenkinsJobs();
+            try
+            {
+                Process.Start(j.Url);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        private async void ScheduleJob(JenkinsJob j)
+        {
+            try
+            {
+                await ScheduleJob(j.Url, SelectedJenkinsServer.Url);
+                ForceReload(false);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         public async Task ScheduleJob(string jobUrl, string solutionUrl)
@@ -170,6 +221,8 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
             catch (WebException ex)
             {
+                Logger.Log(ex);
+
                 var resp = ex.Response as HttpWebResponse;
                 if (resp != null)
                 {
@@ -182,12 +235,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private bool CanDoJobAction(Job arg)
+        private bool CanDoJobAction(JenkinsJob arg)
         {
             return SelectedJob != null;
         }
 
-        public Job SelectedJob
+        public JenkinsJob SelectedJob
         {
             get { return _selectedJob; }
             set
@@ -214,8 +267,15 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private void HandleRemoveJenkinsServer()
         {
-            SettingManager.RemoveServer(SelectedJenkinsServer);
-            LoadJenkinsServers();
+            try
+            {
+                SettingManager.RemoveServer(SelectedJenkinsServer);
+                LoadJenkinsServers();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         public JenkinsServer SelectedJenkinsServer
@@ -224,9 +284,37 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             set
             {
                 _selectedJenkinsServer = value;
-                JOverview = null;
                 RaisePropertyChanged(() => SelectedJenkinsServer);
-                LoadJenkinsJobs();
+                ForceReload(true);
+            }
+        }
+
+        private void ForceReload(bool newServerSelected)
+        {
+            if (newServerSelected)
+            {
+                JenkinsServersEnabled = false;
+            }
+
+            lock (_loadingJobsBusyLock)
+            {
+                if (newServerSelected)
+                {
+                    JOverview = null;
+                }
+
+                _refreshTimer.Stop();
+
+                if (_loadingJobsBusy)
+                {
+                    _forceRefresh = true;
+                }
+                else
+                {
+                    _refreshTimer.Interval = 1;
+                    _refreshTimer.Start();
+                }
+
             }
         }
 
@@ -242,117 +330,163 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private async Task LoadJenkinsJobs()
         {
-            if (SelectedJenkinsServer == null)
-                return;
-
-            lock (_loadingJobsBusyLock)
-            {
-                if (_loadingJobsBusy)
-                    return;
-
-                _loadingJobsBusy = true;
-            }
-
             try
             {
-                JenkinsOverview newOverview = await JenkinsManager.APIHandler.Managers.JenkinsManager.GetJenkinsOverview(SelectedJenkinsServer.Url);
-
-                if (newOverview == null)
+                if (SelectedJenkinsServer == null)
                 {
-                    StatusMessage = "Could not fetch jobs overview";
-                    LoadingFailed = true;
                     return;
                 }
 
-                if (JOverview == null)
+                lock (_loadingJobsBusyLock)
                 {
-                    JOverview = newOverview;
-                    SelectedView = JOverview.Views.FirstOrDefault();
-                }
-                else
-                {
-                    foreach (var newView in newOverview.Views)
+                    if (_loadingJobsBusy)
                     {
-                        var existingView = JOverview.Views.FirstOrDefault((v) => string.Equals(v.Url, newView.Url));
-                        if (existingView != null)
-                        {
-                            var existingJobs = existingView.Jobs;
-                            var newJobs = newView.Jobs;
-
-                            IEnumerable<Job> jobsToDelete = existingJobs.Except(newJobs, Job.JobComparer).ToArray();
-                            IEnumerable<Job> jobsToAdd = newJobs.Except(existingJobs, Job.JobComparer).ToArray();
-                            IEnumerable<Job> jobsToUpdate = newJobs.Intersect(existingJobs, Job.JobComparer).ToArray();
-
-                            UIHelper.InvokeUI(() =>
-                                {
-                                    foreach (var job in jobsToDelete)
-                                    {
-                                        existingJobs.Remove(job);
-                                    }
-
-                                    foreach (var job in jobsToAdd)
-                                    {
-                                        existingJobs.Add(job);
-                                    }
-
-                                    foreach (var job in jobsToUpdate)
-                                    {
-                                        var existingJob = existingJobs.Intersect(new[] { job }, Job.JobComparer).Single();
-                                        existingJob.Building = job.Building;
-                                        existingJob.Color = job.Color;
-                                        existingJob.Name = job.Name;
-                                        existingJob.Queued = job.Queued;
-                                    }
-                                });
-                        }
+                        return;
                     }
+
+                    _loadingJobsBusy = true;
                 }
+
+                string sourceUrl = SelectedJenkinsServer.Url;
+                JenkinsOverview newOverview = await JenkinsManager.APIHandler.Managers.JenkinsManager.GetJenkinsOverview(sourceUrl);
+
+                if (TryHandleNewJenkinsOverview(newOverview, sourceUrl))
+                {
+                    JenkinsServersEnabled = true;
+                    UpdateJobLinkedStatus();
+                }
+
                 LoadingFailed = false;
-
                 StatusMessage = null;
-
-                UpdateJobLinkedStatus();
             }
             catch (Exception ex)
             {
                 StatusMessage = ex.Message;
+                Logger.Log(ex);
                 LoadingFailed = true;
+                _refreshTimer.Stop();
             }
             finally
             {
                 lock (_loadingJobsBusyLock)
                 {
                     _loadingJobsBusy = false;
+
+                    if (!LoadingFailed)
+                    {
+                        _refreshTimer.Interval = _forceRefresh ? 1 : _refreshInterval;
+                        _refreshTimer.Start();
+                    }
                 }
+            }
+        }
+
+        private bool TryHandleNewJenkinsOverview(JenkinsOverview newOverview, string sourceUrl)
+        {
+            if (!string.Equals(sourceUrl, SelectedJenkinsServer.Url))
+            {
+                return false;
+            }
+
+            if (JOverview == null)
+            {
+                JOverview = newOverview;
+                SelectedView = JOverview.Views.FirstOrDefault();
+                return true;
+            }
+
+            foreach (var newView in newOverview.Views)
+            {
+                var existingView = JOverview.Views.FirstOrDefault((v) => string.Equals(v.Url, newView.Url));
+                if (existingView != null)
+                {
+                    var existingJobs = existingView.Jobs;
+                    var newJobs = newView.Jobs;
+
+                    IEnumerable<JenkinsJob> jobsToDelete = existingJobs.Except(newJobs, _jobComparer).ToArray();
+                    IEnumerable<JenkinsJob> jobsToAdd = newJobs.Except(existingJobs, _jobComparer).ToArray();
+                    IEnumerable<JenkinsJob> jobsToUpdate = newJobs.Intersect(existingJobs, _jobComparer).ToArray();
+
+                    UIHelper.InvokeUI(() =>
+                    {
+                        DeleteJobs(existingJobs, jobsToDelete);
+                        AddJobs(existingJobs, jobsToAdd);
+                        ModifyJobs(existingJobs, jobsToUpdate);
+                    });
+                }
+            }
+
+            return true;
+        }
+
+        private void ModifyJobs(IList<JenkinsJob> existingJobs, IEnumerable<JenkinsJob> jobsToUpdate)
+        {
+            foreach (var job in jobsToUpdate)
+            {
+                var existingJob = existingJobs.Intersect(new[] { job }, _jobComparer).Single();
+                existingJob.Building = job.Building;
+                existingJob.Color = job.Color;
+                existingJob.Name = job.Name;
+                existingJob.Queued = job.Queued;
+            }
+        }
+
+        private static void AddJobs(IList<JenkinsJob> existingJobs, IEnumerable<JenkinsJob> jobsToAdd)
+        {
+            foreach (var job in jobsToAdd)
+            {
+                existingJobs.Add(job);
+            }
+        }
+
+        private static void DeleteJobs(IList<JenkinsJob> existingJobs, IEnumerable<JenkinsJob> jobsToDelete)
+        {
+            foreach (var job in jobsToDelete)
+            {
+                existingJobs.Remove(job);
             }
         }
 
         private void LoadJenkinsServers()
         {
-            JenkinsServers.Clear();
-            var servers = SettingManager.GetServers();
-            foreach (var server in servers)
+            try
             {
-                if (SelectedJenkinsServer == null)
+                JenkinsServers.Clear();
+                var servers = SettingManager.GetServers();
+                foreach (var server in servers)
                 {
-                    SelectedJenkinsServer = server;
+                    if (SelectedJenkinsServer == null)
+                    {
+                        SelectedJenkinsServer = server;
+                    }
+                    JenkinsServers.Add(server);
                 }
-                JenkinsServers.Add(server);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
         private void HandleSaveJenkinsServer()
         {
-            SettingManager.AddServer(new JenkinsServer()
+            try
             {
-                Name = AddServerName,
-                Url = AddServerUrl,
-                UserName = AddUserName,
-                ApiToken = AddAPIToken
-            });
+                SettingManager.AddServer(new JenkinsServer()
+                    {
+                        Name = AddServerName,
+                        Url = AddServerUrl,
+                        UserName = AddUserName,
+                        ApiToken = AddAPIToken
+                    });
 
-            LoadJenkinsServers();
-            ShowAddJenkinsServer = false;
+                LoadJenkinsServers();
+                ShowAddJenkinsServer = false;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private void HandleShowAddJenkinsServer()
@@ -377,15 +511,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             {
                 if (_loadingFailed != value)
                 {
-                    if (value)
-                    {
-                        _refreshTimer.Stop();
-                    }
-                    else
-                    {
-                        _refreshTimer.Start();
-                    }
-
                     _loadingFailed = value;
                     RaisePropertyChanged(() => LoadingFailed);
                 }

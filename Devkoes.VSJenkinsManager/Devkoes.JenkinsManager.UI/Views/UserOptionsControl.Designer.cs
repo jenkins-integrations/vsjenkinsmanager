@@ -1,6 +1,6 @@
 ﻿namespace Devkoes.JenkinsManager.UI.Views
 {
-    partial class BasicOptionsControl
+    partial class UserOptionsControl
     {
         /// <summary> 
         /// Required designer variable.

@@ -53,13 +53,6 @@
     </Compile>
     <Compile Include="Managers\JenkinsManager.cs" />
     <Compile Include="Managers\SettingManager.cs" />
-    <Compile Include="Model\JSONModels.cs" />
-    <Compile Include="Model\JenkinsQueue.cs" />
-    <Compile Include="Model\JenkinsServer.cs" />
-    <Compile Include="Model\JenkinsServerList.cs" />
-    <Compile Include="Model\ObservableObject.cs" />
-    <Compile Include="Model\SolutionJob.cs" />
-    <Compile Include="Model\SolutionJobList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -67,7 +60,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Devkoes.JenkinsManager.Model\Devkoes.JenkinsManager.Model.csproj">
+      <Project>{b2585a00-b072-4a19-88ff-ca3156e1b44b}</Project>
+      <Name>Devkoes.JenkinsManager.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Key.snk" />
