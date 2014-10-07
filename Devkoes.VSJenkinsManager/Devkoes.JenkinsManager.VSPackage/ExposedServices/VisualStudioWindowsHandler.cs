@@ -1,4 +1,6 @@
 ﻿using Devkoes.JenkinsManager.Model.Contract;
+using Devkoes.JenkinsManager.UI;
+using Devkoes.JenkinsManager.UI.Views;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -19,6 +21,20 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
             }
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+        }
+
+        public void ShowSettingsWindow()
+        {
+            try
+            {
+                VSJenkinsManagerPackage.Instance.ShowOptionPage(typeof(UserOptionsPage));
+            }
+            catch (Exception ex)
+            {
+                ServicesContainer.OutputWindowLogger.LogOutput(
+                    "Showing settings panel failed:",
+                    ex.ToString());
+            }
         }
     }
 }

@@ -13,25 +13,40 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
 
         public OutputWindowLogger()
         {
-            var outputWindowGuid = new Guid(_outputWindowId);
+            try
+            {
+                var outputWindowGuid = new Guid(_outputWindowId);
 
-            IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-            string customTitle = _outputWindowTitle;
-            outWindow.CreatePane(ref outputWindowGuid, customTitle, 1, 1);
+                IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+                outWindow.CreatePane(ref outputWindowGuid, _outputWindowTitle, 1, 1);
 
-            outWindow.GetPane(ref outputWindowGuid, out _outputWindow);
+                outWindow.GetPane(ref outputWindowGuid, out _outputWindow);
 
-            _outputWindow.OutputString("Jenkins Manager loaded");
+                _outputWindow.OutputString("Jenkins Manager loaded");
+            }
+            catch (Exception)
+            {
+                // We don't want any exception to propagate, cause that will result in vs crash
+                // but there is nothing left to do, cause logging won't work.
+            }
         }
 
         public void LogOutput(string message)
         {
-            _outputWindow.OutputString(message);
+            try
+            {
+                _outputWindow.OutputString(message);
+            }
+            catch { }
         }
 
         public void LogOutput(string format, params object[] args)
         {
-            _outputWindow.OutputString(string.Format(format, args));
+            try
+            {
+                _outputWindow.OutputString(string.Format(format, args));
+            }
+            catch { }
         }
 
         public void LogOutput(Exception ex)
@@ -41,7 +56,17 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
                 return;
             }
 
-            _outputWindow.OutputString(ex.ToString());
+            try
+            {
+                _outputWindow.OutputString(ex.ToString());
+            }
+            catch { }
+        }
+
+        public void LogOutput(string message, Exception ex)
+        {
+            LogOutput(message);
+            LogOutput(ex);
         }
     }
 }
