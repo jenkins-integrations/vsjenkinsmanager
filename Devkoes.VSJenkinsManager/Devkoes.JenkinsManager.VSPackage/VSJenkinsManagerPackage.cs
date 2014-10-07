@@ -34,7 +34,7 @@ namespace Devkoes.JenkinsManager.VSPackage
     [ProvideToolWindow(typeof(JenkinsToolWindow))]
     [Guid(GuidList.guidVSJenkinsManagerPackagePkgString)]
     [ProvideBindingPath]
-    [ProvideOptionPageAttribute(typeof(UserOptionsPage), "Jenkins manager", "Basic options", 113, 114, true)]
+    [ProvideOptionPageAttribute(typeof(UserOptionsHost), "Jenkins manager", "Basic options", 113, 114, true)]
     public sealed class VSJenkinsManagerPackage : Package
     {
         private VisualStudioSolutionService _vsSolutionService;

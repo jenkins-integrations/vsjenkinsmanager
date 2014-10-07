@@ -65,9 +65,11 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -85,15 +87,19 @@
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="ExposedServices\SolutionJobLinkInfo.cs" />
     <Compile Include="Resources\VsColors.cs" />
+    <Compile Include="ViewModels\BasicUserOptionsContentViewModel.cs" />
     <Compile Include="ViewModels\JenkinsManagerViewModel.cs" />
     <Compile Include="ViewModels\ViewModelController.cs" />
-    <Compile Include="Views\UserOptionsControl.cs">
+    <Compile Include="Views\BasicUserOptionsContent.xaml.cs">
+      <DependentUpon>BasicUserOptionsContent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BasicUserOptions.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\UserOptionsControl.Designer.cs">
-      <DependentUpon>UserOptionsControl.cs</DependentUpon>
+    <Compile Include="Views\BasicUserOptions.Designer.cs">
+      <DependentUpon>BasicUserOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserOptionsView.cs">
+    <Compile Include="Views\UserOptionsHost.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WatermarkTextbox\WatermarkAdorner.cs" />
@@ -117,6 +123,10 @@
     <Compile Include="Views\JenkinsManager.xaml.cs">
       <DependentUpon>JenkinsManager.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\BasicUserOptionsContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -136,8 +146,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\UserOptionsControl.resx">
-      <DependentUpon>UserOptionsControl.cs</DependentUpon>
+    <EmbeddedResource Include="Views\BasicUserOptions.resx">
+      <DependentUpon>BasicUserOptions.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Key.snk" />
     <None Include="packages.config" />

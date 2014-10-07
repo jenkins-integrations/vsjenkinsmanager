@@ -27,7 +27,7 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
         {
             try
             {
-                VSJenkinsManagerPackage.Instance.ShowOptionPage(typeof(UserOptionsPage));
+                VSJenkinsManagerPackage.Instance.ShowOptionPage(typeof(UserOptionsHost));
             }
             catch (Exception ex)
             {
