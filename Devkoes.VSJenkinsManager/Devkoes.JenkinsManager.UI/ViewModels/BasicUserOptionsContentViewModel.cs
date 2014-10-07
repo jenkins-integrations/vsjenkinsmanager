@@ -2,30 +2,75 @@
 using Devkoes.JenkinsManager.Model.Schema;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Devkoes.JenkinsManager.UI.ViewModels
 {
     public class BasicUserOptionsContentViewModel : ViewModelBase
     {
+        private enum ModifyMode { None, Add, Edit }
+
         public ObservableCollection<JenkinsServer> JenkinsServers { get; private set; }
         public RelayCommand AddServer { get; private set; }
+        public RelayCommand RemoveServer { get; private set; }
+        public RelayCommand ApplyChanges { get; private set; }
         private JenkinsServer _selectedJenkinsServer;
+        private JenkinsServer _addEditJenkinsServer;
+        private ModifyMode _currentModifyMode;
 
         public BasicUserOptionsContentViewModel()
         {
-            JenkinsServers = new ObservableCollection<JenkinsServer>();
+            _addEditJenkinsServer = new JenkinsServer();
             AddServer = new RelayCommand(HandleAddJenkinsServer);
+            RemoveServer = new RelayCommand(HandleRemoveJenkinsServer);
+            ApplyChanges = new RelayCommand(HandleApplyChanges);
 
-            LoadJenkinsServers();
+            JenkinsServers = SettingManager.GetServers();
+            SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
+        }
+
+        private void HandleRemoveJenkinsServer()
+        {
+            if (SelectedJenkinsServer == null)
+            {
+                return;
+            }
+
+            SettingManager.RemoveServer(SelectedJenkinsServer);
+        }
+
+        private void HandleApplyChanges()
+        {
+            if (_currentModifyMode == ModifyMode.Edit)
+            {
+                SettingManager.UpdateServer(SelectedJenkinsServer, AddEditJenkinsServer);
+            }
+            else
+            {
+                // We shouldn't add the _addEditJenkinsServer, cause that will add the instance
+                // to the list of JenkinsServers. Which we want to prevent, because the _addEditJenkinsServer
+                // is a decoupled object to support edit and add of any jenkins server.
+                var newJenkinsServer = new JenkinsServer()
+                {
+                    Name = AddEditJenkinsServer.Name,
+                    Url = AddEditJenkinsServer.Url,
+                    UserName = AddEditJenkinsServer.UserName,
+                    ApiToken = AddEditJenkinsServer.ApiToken
+                };
+
+                SettingManager.AddServer(newJenkinsServer);
+            }
         }
 
         private void HandleAddJenkinsServer()
         {
-            var newServer = new JenkinsServer();
-            JenkinsServers.Add(newServer);
-            SelectedJenkinsServer = newServer;
+            // will set _currentModifyMode to edit, so do this first
+            SelectedJenkinsServer = null;
+
+            _currentModifyMode = ModifyMode.Add;
+
+            UpdateAddEditJenkinsServer();
         }
 
         public bool DebugEnabled
@@ -46,30 +91,32 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             get { return _selectedJenkinsServer; }
             set
             {
-                _selectedJenkinsServer = value;
-                RaisePropertyChanged(() => SelectedJenkinsServer);
+                if (_selectedJenkinsServer != value)
+                {
+                    _selectedJenkinsServer = value;
+                    _currentModifyMode = ModifyMode.Edit;
+                    UpdateAddEditJenkinsServer(_selectedJenkinsServer);
+                    RaisePropertyChanged(() => SelectedJenkinsServer);
+                }
             }
         }
 
-        private void LoadJenkinsServers()
+        private void UpdateAddEditJenkinsServer(JenkinsServer server = null)
         {
-            try
+            if (server == null)
             {
-                JenkinsServers.Clear();
-                var servers = SettingManager.GetServers();
-                foreach (var server in servers)
-                {
-                    if (SelectedJenkinsServer == null)
-                    {
-                        SelectedJenkinsServer = server;
-                    }
-                    JenkinsServers.Add(server);
-                }
+                server = new JenkinsServer() { Name = "New server", Url = "http://" };
             }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
+
+            AddEditJenkinsServer.Name = server.Name;
+            AddEditJenkinsServer.Url = server.Url;
+            AddEditJenkinsServer.UserName = server.UserName;
+            AddEditJenkinsServer.ApiToken = server.ApiToken;
+        }
+
+        public JenkinsServer AddEditJenkinsServer
+        {
+            get { return _addEditJenkinsServer; }
         }
     }
 }

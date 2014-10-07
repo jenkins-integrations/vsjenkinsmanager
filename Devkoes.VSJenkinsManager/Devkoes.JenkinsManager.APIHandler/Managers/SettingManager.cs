@@ -1,27 +1,33 @@
 ﻿using Devkoes.JenkinsManager.APIHandler.Properties;
 using Devkoes.JenkinsManager.Model.Schema;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Devkoes.JenkinsManager.APIHandler.Managers
 {
     public static class SettingManager
     {
+        private static ObservableCollection<JenkinsServer> _serversCopy;
+
         static SettingManager()
         {
+            _serversCopy = new ObservableCollection<JenkinsServer>();
+
             if (Settings.Default.SolutionJobs == null)
             {
                 Settings.Default.SolutionJobs = new SolutionJenkinsJobLinkList();
             }
 
-            if (Settings.Default.JenkinsServers == null)
+            if (Settings.Default.JenkinsServers != null)
             {
-                Settings.Default.JenkinsServers = new JenkinsServerList();
+                foreach (var s in Settings.Default.JenkinsServers)
+                {
+                    _serversCopy.Add(s);
+                }
             }
 
             Settings.Default.Save();
-
         }
 
         public static void SaveJobForSolution(string jobUri, string solutionPath, string jenkinsServerUri)
@@ -49,7 +55,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
 
         public static JenkinsServer GetJenkinsServer(string solutionUrl)
         {
-            return Settings.Default.JenkinsServers.FirstOrDefault((js) => string.Equals(js.Url, solutionUrl, StringComparison.InvariantCultureIgnoreCase));
+            return _serversCopy.FirstOrDefault((js) => string.Equals(js.Url, solutionUrl, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public static bool ContainsSolutionPreference(string solutionPath)
@@ -59,19 +65,19 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
 
         public static void AddServer(JenkinsServer server)
         {
-            Settings.Default.JenkinsServers.Add(server);
-            Settings.Default.Save();
+            _serversCopy.Add(server);
+            SaveJenkinsServers();
         }
 
-        public static IEnumerable<JenkinsServer> GetServers()
+        public static ObservableCollection<JenkinsServer> GetServers()
         {
-            return Settings.Default.JenkinsServers.ToArray();
+            return _serversCopy;
         }
 
         public static void RemoveServer(JenkinsServer server)
         {
-            Settings.Default.JenkinsServers.Remove(server);
-            Settings.Default.Save();
+            _serversCopy.Remove(server);
+            SaveJenkinsServers();
         }
 
         public static bool DebugEnabled
@@ -85,6 +91,31 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
                     Settings.Default.Save();
                 }
             }
+        }
+
+        public static void UpdateServer(
+            JenkinsServer originalJenkinsServer,
+            JenkinsServer newJenkinsServer)
+        {
+            if (!_serversCopy.Contains(originalJenkinsServer))
+            {
+                return;
+            }
+
+            originalJenkinsServer.Name = newJenkinsServer.Name;
+            originalJenkinsServer.Url = newJenkinsServer.Url;
+            originalJenkinsServer.UserName = newJenkinsServer.UserName;
+            originalJenkinsServer.ApiToken = newJenkinsServer.ApiToken;
+
+            SaveJenkinsServers();
+        }
+
+        private static void SaveJenkinsServers()
+        {
+            var newJenkinsServerList = new JenkinsServerList();
+            newJenkinsServerList.AddRange(_serversCopy);
+
+            Settings.Default.Save();
         }
     }
 }

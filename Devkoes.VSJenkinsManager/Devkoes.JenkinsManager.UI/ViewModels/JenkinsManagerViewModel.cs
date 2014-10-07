@@ -61,17 +61,16 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             ScheduleJobCommand = new RelayCommand<JenkinsJob>(ScheduleJob, CanDoJobAction);
             ShowJobsWebsite = new RelayCommand<JenkinsJob>(ShowWebsite, CanDoJobAction);
             LinkJobToCurrentSolution = new RelayCommand<JenkinsJob>(LinkJobToSolution, CanDoJobAction);
-            JenkinsServers = new ObservableCollection<JenkinsServer>();
             _loadingJobsBusyLock = new object();
 
             ServicesContainer.VisualStudioSolutionEvents.SolutionChanged += SolutionPathChanged;
-
 
             _refreshTimer = new Timer(_refreshInterval);
             _refreshTimer.Elapsed += RefreshJobsTimerCallback;
             _refreshTimer.AutoReset = false;
 
-            LoadJenkinsServers();
+            JenkinsServers = SettingManager.GetServers();
+            SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
 
             _refreshTimer.Start();
         }
@@ -270,7 +269,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             try
             {
                 SettingManager.RemoveServer(SelectedJenkinsServer);
-                LoadJenkinsServers();
+                SelectedJenkinsServer = SelectedJenkinsServer ?? JenkinsServers.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -447,27 +446,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private void LoadJenkinsServers()
-        {
-            try
-            {
-                JenkinsServers.Clear();
-                var servers = SettingManager.GetServers();
-                foreach (var server in servers)
-                {
-                    if (SelectedJenkinsServer == null)
-                    {
-                        SelectedJenkinsServer = server;
-                    }
-                    JenkinsServers.Add(server);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
         private void HandleSaveJenkinsServer()
         {
             try
@@ -480,7 +458,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                         ApiToken = AddAPIToken
                     });
 
-                LoadJenkinsServers();
                 ShowAddJenkinsServer = false;
             }
             catch (Exception ex)

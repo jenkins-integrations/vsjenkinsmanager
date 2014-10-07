@@ -12,31 +12,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <GroupBox Header="Debug options" Padding="5" Margin="0,5">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <TextBlock
-                    VerticalAlignment="Center"
-                    Text="Enable debug output" />
-                <CheckBox
-                    Grid.Column="2"
-                    VerticalAlignment="Center"
-                    IsChecked="{Binding DebugEnabled}" />
-            </Grid>
-        </GroupBox>
-
-        <GroupBox Grid.Row="1" Header="Jenkins servers" Padding="5" Margin="0,5">
+        <GroupBox Header="Jenkins servers" Padding="5" Margin="0,5">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" MinHeight="75" MaxHeight="125"/>
+                    <RowDefinition Height="125"/>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -45,7 +24,7 @@
                 </Grid.ColumnDefinitions>
 
                 <ListBox 
-                    VerticalAlignment="Stretch" 
+                    VerticalAlignment="Stretch"
                     Margin="3" 
                     SelectedItem="{Binding SelectedJenkinsServer}"
                     ItemsSource="{Binding JenkinsServers}">
@@ -71,7 +50,7 @@
                     </Grid.RowDefinitions>
 
                     <Button Margin="3" Content="_Add" Command="{Binding AddServer}" />
-                    <Button Margin="3" Grid.Row="1" Content="_Remove" />
+                    <Button Margin="3" Grid.Row="1" Command="{Binding RemoveServer}" Content="_Remove" />
                 </Grid>
 
                 <Grid Grid.Row="1">
@@ -86,18 +65,39 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Label Margin="3" Content="_Name" />
-                    <Label Margin="3" Content="_Url" Grid.Row="1" />
+                    <Label Margin="3" Content="_Name*" />
+                    <Label Margin="3" Content="_Url*" Grid.Row="1" />
                     <Label Margin="3" Content="User_name" Grid.Row="2" />
                     <Label Margin="3" Content="API _token" Grid.Row="3" />
 
-                    <TextBox Margin="3" Text="{Binding SelectedJenkinsServer.Name, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
-                    <TextBox Margin="3" Text="{Binding SelectedJenkinsServer.Url}" Grid.Column="1" Grid.Row="1"/>
-                    <TextBox Margin="3" Text="{Binding SelectedJenkinsServer.UserName}" Grid.Column="1" Grid.Row="2"/>
-                    <TextBox Margin="3" Text="{Binding SelectedJenkinsServer.ApiToken}" Grid.Column="1" Grid.Row="3"/>
+                    <TextBox Margin="3" Text="{Binding AddEditJenkinsServer.Name, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
+                    <TextBox Margin="3" Text="{Binding AddEditJenkinsServer.Url}" Grid.Column="1" Grid.Row="1"/>
+                    <TextBox Margin="3" Text="{Binding AddEditJenkinsServer.UserName}" Grid.Column="1" Grid.Row="2"/>
+                    <TextBox Margin="3" Text="{Binding AddEditJenkinsServer.ApiToken}" Grid.Column="1" Grid.Row="3"/>
                 </Grid>
 
-                <Button Margin="3" Content="A_pply" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" />
+                <Button Margin="3" Content="A_pply" Command="{Binding ApplyChanges}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="1"  Header="Debug options" Padding="5" Margin="0,5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Text="Enable debug output" />
+                <CheckBox
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding DebugEnabled}" />
             </Grid>
         </GroupBox>
     </Grid>
