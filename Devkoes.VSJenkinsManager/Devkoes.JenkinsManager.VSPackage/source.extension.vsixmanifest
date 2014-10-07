@@ -4,17 +4,14 @@
                  xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="252d354d-9787-42b0-b5cc-6b14e08f160f"
-              Version="0.4.1"
+              Version="0.5"
               Language="en-US"
               Publisher="Tom Kuijsten" />
     <DisplayName>Jenkins Manager</DisplayName>
     <Description xml:space="preserve">View and start your Jenkins jobs from within your precious IDE.
 
-Latest changes (0.4):
- - Bug fix for view caching problem (wrong views for server)
- - Disable dropdowns when switching server
- - Progressbar when switching server
- - Bug fix for servers where authentication is required for everything</Description>
+Latest changes (0.5):
+ - </Description>
     <MoreInfo>https://github.com/tomkuijsten/vsjenkinsmanager</MoreInfo>
     <License>license.txt</License>
     <ReleaseNotes>releaseNotes.txt</ReleaseNotes>
