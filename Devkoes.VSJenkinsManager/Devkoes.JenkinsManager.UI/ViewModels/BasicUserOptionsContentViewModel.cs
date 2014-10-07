@@ -30,6 +30,14 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
         }
 
+        public string RequiredVersion
+        {
+            get
+            {
+                return JenkinsServerValidator.MINIMUM_VERSION.ToString();
+            }
+        }
+
         private void HandleRemoveJenkinsServer()
         {
             if (SelectedJenkinsServer == null)
@@ -48,6 +56,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
             else
             {
+                if (!JenkinsServerValidator.ValidJenkinsServer(AddEditJenkinsServer.Url))
+                {
+                    return;
+                }
+
                 // We shouldn't add the _addEditJenkinsServer, cause that will add the instance
                 // to the list of JenkinsServers. Which we want to prevent, because the _addEditJenkinsServer
                 // is a decoupled object to support edit and add of any jenkins server.
