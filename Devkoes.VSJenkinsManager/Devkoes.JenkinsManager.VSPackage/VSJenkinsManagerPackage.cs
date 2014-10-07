@@ -1,4 +1,5 @@
-﻿using Devkoes.JenkinsManager.UI;
+﻿using Devkoes.JenkinsManager.Model.Contract;
+using Devkoes.JenkinsManager.UI;
 using Devkoes.JenkinsManager.UI.Views;
 using Devkoes.JenkinsManager.VSPackage.ExposedServices;
 using Microsoft.VisualStudio.Shell;
@@ -37,6 +38,7 @@ namespace Devkoes.JenkinsManager.VSPackage
     public sealed class VSJenkinsManagerPackage : Package
     {
         private VisualStudioSolutionService _vsSolutionService;
+        private IVisualStudioWindowHandler _vsWindowHandler;
 
         internal static VSJenkinsManagerPackage Instance { get; private set; }
 
@@ -50,27 +52,9 @@ namespace Devkoes.JenkinsManager.VSPackage
         public VSJenkinsManagerPackage()
         {
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
-        }
 
-        /// <summary>
-        /// This function is called when the user clicks the menu item that shows the 
-        /// tool window. See the Initialize method to see how the menu item is associated to 
-        /// this function using the OleMenuCommandService service and the MenuCommand class.
-        /// </summary>
-        internal void ShowToolWindow(object sender, EventArgs e)
-        {
-            // Get the instance number 0 of this tool window. This window is single instance so this instance
-            // is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.FindToolWindow(typeof(JenkinsToolWindow), 0, true);
-            if ((null == window) || (null == window.Frame))
-            {
-                throw new NotSupportedException(Resources.CanNotCreateWindow);
-            }
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+            _vsWindowHandler = new VisualStudioWindowHandler();
         }
-
 
         /////////////////////////////////////////////////////////////////////////////
         // Overridden Package Implementation
@@ -108,9 +92,20 @@ namespace Devkoes.JenkinsManager.VSPackage
             Instance = this;
         }
 
+        /// <summary>
+        /// This function is called when the user clicks the menu item that shows the 
+        /// tool window. See the Initialize method to see how the menu item is associated to 
+        /// this function using the OleMenuCommandService service and the MenuCommand class.
+        /// </summary>
+        private void ShowToolWindow(object sender, EventArgs e)
+        {
+            _vsWindowHandler.ShowToolWindow();
+        }
+
         private void InitializeServices()
         {
             ServicesContainer.OutputWindowLogger = new OutputWindowLogger();
+            ServicesContainer.VisualStudioWindowHandler = _vsWindowHandler;
             _vsSolutionService = new VisualStudioSolutionService();
             ServicesContainer.VisualStudioSolutionEvents = _vsSolutionService;
             ServicesContainer.VisualStudioSolutionInfo = _vsSolutionService;

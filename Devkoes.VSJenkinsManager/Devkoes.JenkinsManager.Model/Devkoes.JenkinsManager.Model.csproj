@@ -49,6 +49,7 @@
     <Compile Include="Contract\ISolutionJenkinsJobLinkInfo.cs" />
     <Compile Include="Contract\IVisualStudioSolutionEvents.cs" />
     <Compile Include="Contract\IVisualStudioSolutionInfo.cs" />
+    <Compile Include="Contract\IVisualStudioWindowHandler.cs" />
     <Compile Include="Schema\JenkinsOverview.cs" />
     <Compile Include="Schema\JenkinsQueue.cs" />
     <Compile Include="Schema\JenkinsServer.cs" />

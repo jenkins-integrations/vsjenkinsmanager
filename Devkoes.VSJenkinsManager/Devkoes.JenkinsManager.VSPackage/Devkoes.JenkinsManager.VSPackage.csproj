@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="ExposedServices\OutputWindowLogger.cs" />
     <Compile Include="ExposedServices\VisualStudioSolutionService.cs" />
+    <Compile Include="ExposedServices\VisualStudioWindowsHandler.cs" />
     <Compile Include="JenkinsToolWindow.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">

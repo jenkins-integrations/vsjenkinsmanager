@@ -15,6 +15,7 @@ namespace Devkoes.JenkinsManager.UI
         public static IOutputWindowLogger OutputWindowLogger { get; set; }
         public static IVisualStudioSolutionEvents VisualStudioSolutionEvents { get; set; }
         public static IVisualStudioSolutionInfo VisualStudioSolutionInfo { get; set; }
+        public static IVisualStudioWindowHandler VisualStudioWindowHandler { get; set; }
 
         static ServicesContainer()
         {
@@ -26,5 +27,6 @@ namespace Devkoes.JenkinsManager.UI
             get { return _slnJobLinkInfo; }
             set { _slnJobLinkInfo = value; }
         }
+
     }
 }
