@@ -19,7 +19,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
     public class JenkinsManagerViewModel : ViewModelBase
     {
         private int _refreshInterval = 5000;
-        private bool _showAddJenkinsServer;
         private JenkinsServer _selectedJenkinsServer;
         private string _statusMessage;
         private JenkinsJob _selectedJob;
@@ -33,19 +32,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         private bool _jenkinsServersEnabled;
         private bool _forceRefresh;
 
-        public RelayCommand ShowAddJenkinsForm { get; private set; }
-        public RelayCommand SaveJenkinsServer { get; private set; }
-        public RelayCommand RemoveJenkinsServer { get; private set; }
-        public RelayCommand CancelSaveJenkinsServer { get; private set; }
+        public RelayCommand ShowSettings { get; private set; }
         public RelayCommand Reload { get; private set; }
+
         public RelayCommand<JenkinsJob> ScheduleJobCommand { get; private set; }
         public RelayCommand<JenkinsJob> ShowJobsWebsite { get; private set; }
         public RelayCommand<JenkinsJob> LinkJobToCurrentSolution { get; private set; }
-
-        public string AddServerUrl { get; set; }
-        public string AddServerName { get; set; }
-        public string AddUserName { get; set; }
-        public string AddAPIToken { get; set; }
 
         public ObservableCollection<JenkinsServer> JenkinsServers { get; private set; }
 
@@ -53,11 +45,10 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         {
             _jenkinsServersEnabled = true;
             _jobComparer = new JobComparer();
-            ShowAddJenkinsForm = new RelayCommand(HandleShowAddJenkinsServer);
-            SaveJenkinsServer = new RelayCommand(HandleSaveJenkinsServer);
-            RemoveJenkinsServer = new RelayCommand(HandleRemoveJenkinsServer);
-            CancelSaveJenkinsServer = new RelayCommand(HandleCancelSaveJenkinsServer);
+
             Reload = new RelayCommand(HandleReload);
+            ShowSettings = new RelayCommand(HandleShowSettings);
+
             ScheduleJobCommand = new RelayCommand<JenkinsJob>(ScheduleJob, CanDoJobAction);
             ShowJobsWebsite = new RelayCommand<JenkinsJob>(ShowWebsite, CanDoJobAction);
             LinkJobToCurrentSolution = new RelayCommand<JenkinsJob>(LinkJobToSolution, CanDoJobAction);
@@ -73,6 +64,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
 
             _refreshTimer.Start();
+        }
+
+        private void HandleShowSettings()
+        {
+            ServicesContainer.VisualStudioWindowHandler.ShowSettingsWindow();
         }
 
         public bool JenkinsServersEnabled
@@ -255,28 +251,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private void HandleCancelSaveJenkinsServer()
-        {
-            ShowAddJenkinsServer = false;
-            AddServerName = null;
-            AddServerUrl = null;
-            AddUserName = null;
-            AddAPIToken = null;
-        }
-
-        private void HandleRemoveJenkinsServer()
-        {
-            try
-            {
-                SettingManager.RemoveServer(SelectedJenkinsServer);
-                SelectedJenkinsServer = SelectedJenkinsServer ?? JenkinsServers.FirstOrDefault();
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
         public JenkinsServer SelectedJenkinsServer
         {
             get { return _selectedJenkinsServer; }
@@ -443,41 +417,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             foreach (var job in jobsToDelete)
             {
                 existingJobs.Remove(job);
-            }
-        }
-
-        private void HandleSaveJenkinsServer()
-        {
-            try
-            {
-                SettingManager.AddServer(new JenkinsServer()
-                    {
-                        Name = AddServerName,
-                        Url = AddServerUrl,
-                        UserName = AddUserName,
-                        ApiToken = AddAPIToken
-                    });
-
-                ShowAddJenkinsServer = false;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
-        private void HandleShowAddJenkinsServer()
-        {
-            ShowAddJenkinsServer = !ShowAddJenkinsServer;
-        }
-
-        public bool ShowAddJenkinsServer
-        {
-            get { return _showAddJenkinsServer; }
-            set
-            {
-                _showAddJenkinsServer = value;
-                RaisePropertyChanged(() => ShowAddJenkinsServer);
             }
         }
 

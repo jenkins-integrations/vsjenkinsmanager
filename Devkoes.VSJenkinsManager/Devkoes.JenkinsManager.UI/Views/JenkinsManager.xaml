@@ -31,12 +31,8 @@
                 Width="*" />
             <ColumnDefinition
                 Width="Auto" />
-            <ColumnDefinition
-                Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition
-                Height="Auto" />
             <RowDefinition
                 Height="Auto" />
             <RowDefinition
@@ -70,90 +66,16 @@
         </ComboBox>
 
         <Button
-            Content="add"
+            Content="settings"
             Grid.Column="2"
             Margin="5,0"
             VerticalAlignment="Center"
-            Command="{Binding ShowAddJenkinsForm}"
+            Command="{Binding ShowSettings}"
             Style="{StaticResource HyperlinkLikeButton}" />
-
-        <Button
-            Content="del"
-            Grid.Column="3"
-            Margin="5,0"
-            VerticalAlignment="Center"
-            Command="{Binding RemoveJenkinsServer}"
-            Style="{StaticResource HyperlinkLikeButton}" />
-
-        <StackPanel
-            Grid.Row="1"
-            Grid.Column="1"
-            Visibility="{Binding ShowAddJenkinsServer, Converter={StaticResource boolToVisConverter}}">
-
-            <AdornerDecorator>
-                <TextBox
-                    Margin="0,3"
-                    Text="{Binding AddServerUrl}">
-                    <wmt:WatermarkService.Watermark>
-                        <TextBlock
-                            VerticalAlignment="Center">Jenkins server root url (not a view!)</TextBlock>
-                    </wmt:WatermarkService.Watermark>
-                </TextBox>
-            </AdornerDecorator>
-
-            <AdornerDecorator
-                Margin="0,3">
-                <TextBox
-                    Text="{Binding AddServerName}">
-                    <wmt:WatermarkService.Watermark>
-                        <TextBlock>Name</TextBlock>
-                    </wmt:WatermarkService.Watermark>
-                </TextBox>
-            </AdornerDecorator>
-
-            <AdornerDecorator
-                Margin="0,3">
-                <TextBox
-                    Text="{Binding AddUserName}">
-                    <wmt:WatermarkService.Watermark>
-                        <TextBlock>Username (optional)</TextBlock>
-                    </wmt:WatermarkService.Watermark>
-                </TextBox>
-            </AdornerDecorator>
-
-            <AdornerDecorator
-                Margin="0,3">
-                <TextBox
-                    Text="{Binding AddAPIToken}">
-                    <wmt:WatermarkService.Watermark>
-                        <TextBlock>API key (required with username)</TextBlock>
-                    </wmt:WatermarkService.Watermark>
-                </TextBox>
-            </AdornerDecorator>
-
-            <StackPanel
-                Orientation="Horizontal"
-                HorizontalAlignment="Right">
-                <Button
-                    Content="save"
-                    Grid.Column="1"
-                    Margin="5,0"
-                    HorizontalAlignment="Right"
-                    Command="{Binding SaveJenkinsServer}"
-                    Style="{StaticResource HyperlinkLikeButton}" />
-                <Button
-                    Content="cancel"
-                    Grid.Column="1"
-                    Margin="5,0"
-                    HorizontalAlignment="Right"
-                    Command="{Binding CancelSaveJenkinsServer}"
-                    Style="{StaticResource HyperlinkLikeButton}" />
-            </StackPanel>
-        </StackPanel>
 
         <Label
             Foreground="{DynamicResource VsBrush.WindowText}"
-            Grid.Row="2"
+            Grid.Row="1"
             Content="_View"
             Target="{Binding ElementName=viewCmb}" />
         
@@ -161,7 +83,7 @@
             x:Name="viewCmb"
             VerticalAlignment="Center"
             Margin="0,3,0,0"
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="1"
             IsEnabled="{Binding JenkinsServersEnabled}"
             ItemsSource="{Binding JOverview.Views}"
@@ -175,8 +97,8 @@
         </ComboBox>
 
         <ProgressBar
-            Grid.Row="3"
-            Grid.ColumnSpan="4"
+            Grid.Row="2"
+            Grid.Column="1"
             Margin="0,3,0,0"
             Height="5"
             BorderBrush="Gray"
@@ -187,7 +109,7 @@
             Margin="10"
             HorizontalAlignment="Center"
             Visibility="{Binding LoadingFailed, Converter={StaticResource boolToVisConverter}}"
-            Grid.Row="4" Grid.ColumnSpan="4"
+            Grid.Row="3" Grid.ColumnSpan="3"
             Content="Something went wrong loading the jobs, click to retry."
             Command="{Binding Reload}"
             Style="{StaticResource HyperlinkLikeButton}" />
@@ -198,7 +120,7 @@
             ItemsSource="{Binding SelectedView.Jobs}"
             SelectedItem="{Binding SelectedJob}"
             Visibility="{Binding LoadingFailed, Converter={StaticResource boolToHiddenConverter}}"
-            Grid.Row="4" Grid.ColumnSpan="4"
+            Grid.Row="3" Grid.ColumnSpan="3"
             Background="{DynamicResource VsBrush.Window}"
             Foreground="{DynamicResource VsBrush.WindowText}"
             BorderThickness="0"
@@ -298,8 +220,8 @@
             Background="{DynamicResource VsBrush.Window}"
             Foreground="{DynamicResource VsBrush.WindowText}"
             Padding="5"
-            Grid.Row="5"
-            Grid.ColumnSpan="4"
+            Grid.Row="4"
+            Grid.ColumnSpan="3"
             Text="{Binding StatusMessage}" />
     </Grid>
 </UserControl>
