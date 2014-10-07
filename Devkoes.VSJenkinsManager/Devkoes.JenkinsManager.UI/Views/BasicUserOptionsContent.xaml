@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             Loaded="UserControl_Loaded"
              d:DesignHeight="400" d:DesignWidth="600">
     <Grid>
         <Grid.RowDefinitions>
@@ -43,7 +44,11 @@
                     <ColumnDefinition Width="100" />
                 </Grid.ColumnDefinitions>
 
-                <ListBox VerticalAlignment="Stretch" Margin="3">
+                <ListBox 
+                    VerticalAlignment="Stretch" 
+                    Margin="3" 
+                    SelectedItem="{Binding SelectedJenkinsServer}"
+                    ItemsSource="{Binding JenkinsServers}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="3">
@@ -53,7 +58,7 @@
                                 </Grid.RowDefinitions>
                                 
                                 <TextBlock Text="{Binding Name}" />
-                                <TextBlock Text="{Binding Url}" FontSize="10" />
+                                <TextBlock Text="{Binding Url}" Grid.Row="1" FontSize="10" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -65,8 +70,8 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Button Margin="3" Content="Add" />
-                    <Button Margin="3" Grid.Row="1" Content="Remove" />
+                    <Button Margin="3" Content="_Add" Command="{Binding AddServer}" />
+                    <Button Margin="3" Grid.Row="1" Content="_Remove" />
                 </Grid>
 
                 <Grid Grid.Row="1">
@@ -81,18 +86,18 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Label Margin="3" Content="Name" />
-                    <Label Margin="3" Content="Url" Grid.Row="1" />
-                    <Label Margin="3" Content="Username" Grid.Row="2" />
-                    <Label Margin="3" Content="API token" Grid.Row="3" />
+                    <Label Margin="3" Content="_Name" />
+                    <Label Margin="3" Content="_Url" Grid.Row="1" />
+                    <Label Margin="3" Content="User_name" Grid.Row="2" />
+                    <Label Margin="3" Content="API _token" Grid.Row="3" />
 
-                    <TextBox Margin="3" Text="{Binding Name}" Grid.Column="1"/>
-                    <TextBox Margin="3" Text="{Binding Url}" Grid.Column="1" Grid.Row="1"/>
-                    <TextBox Margin="3" Text="{Binding Username}" Grid.Column="1" Grid.Row="2"/>
-                    <TextBox Margin="3" Text="{Binding API token}" Grid.Column="1" Grid.Row="3"/>
+                    <TextBox Margin="3" Text="{Binding SelectedJenkinsServer.Name, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
+                    <TextBox Margin="3" Text="{Binding SelectedJenkinsServer.Url}" Grid.Column="1" Grid.Row="1"/>
+                    <TextBox Margin="3" Text="{Binding SelectedJenkinsServer.UserName}" Grid.Column="1" Grid.Row="2"/>
+                    <TextBox Margin="3" Text="{Binding SelectedJenkinsServer.ApiToken}" Grid.Column="1" Grid.Row="3"/>
                 </Grid>
 
-                <Button Margin="3" Content="Apply" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" />
+                <Button Margin="3" Content="A_pply" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" />
             </Grid>
         </GroupBox>
     </Grid>

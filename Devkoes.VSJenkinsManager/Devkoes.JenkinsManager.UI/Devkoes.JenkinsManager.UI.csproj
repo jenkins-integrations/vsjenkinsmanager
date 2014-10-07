@@ -93,17 +93,15 @@
     <Compile Include="Views\BasicUserOptionsContent.xaml.cs">
       <DependentUpon>BasicUserOptionsContent.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BasicUserOptions.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\BasicUserOptions.Designer.cs">
-      <DependentUpon>BasicUserOptions.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\UserOptionsHost.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WatermarkTextbox\WatermarkAdorner.cs" />
     <Compile Include="WatermarkTextbox\WatermarkService.cs" />
+    <Compile Include="Win32FormWpfInterop\NativeMethods.cs" />
+    <Compile Include="Win32FormWpfInterop\UIElementDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Page Include="Resources\ComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -145,9 +143,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\BasicUserOptions.resx">
-      <DependentUpon>BasicUserOptions.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Key.snk" />
     <None Include="packages.config" />

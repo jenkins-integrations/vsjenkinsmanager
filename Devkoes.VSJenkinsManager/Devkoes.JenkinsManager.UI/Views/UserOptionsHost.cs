@@ -1,26 +1,19 @@
 ﻿using Microsoft.VisualStudio.Shell;
-using System.ComponentModel;
-using System.Windows.Forms;
 
 namespace Devkoes.JenkinsManager.UI.Views
 {
-    public class UserOptionsHost : DialogPage
+    public class UserOptionsHost : UIElementDialogPage
     {
-        private static IWin32Window _basicOptions;
+        private static BasicUserOptionsContent _basicOptions;
 
         static UserOptionsHost()
         {
-            _basicOptions = new BasicUserOptions();
+            _basicOptions = new BasicUserOptionsContent();
         }
 
-        [BrowsableAttribute(false)]
-        protected override IWin32Window Window
+        protected override System.Windows.UIElement Child
         {
-            get
-            {
-                return _basicOptions;
-            }
+            get { return _basicOptions; }
         }
-
     }
 }
