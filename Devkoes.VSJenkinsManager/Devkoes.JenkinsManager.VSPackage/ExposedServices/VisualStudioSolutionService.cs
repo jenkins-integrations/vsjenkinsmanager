@@ -1,11 +1,13 @@
 ﻿using Devkoes.JenkinsManager.Model.Contract;
 using Devkoes.JenkinsManager.Model.Schema;
+using Devkoes.JenkinsManager.UI;
 using EnvDTE;
 using System;
+using System.IO;
 
 namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
 {
-    public class VisualStudioSolutionService : IVisualStudioSolutionEvents, IVisualStudioSolutionInfo
+    public class VisualStudioSolutionService : IVisualStudioSolutionEvents, IVisualStudioSolutionInfo, IVisualStudioFileManager
     {
         private DTE _currentDTE;
         private SolutionEvents _solutionEvents;
@@ -25,6 +27,24 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
         public string SolutionPath
         {
             get { return GetSolutionPath(); }
+        }
+
+        public void OpenFile(string filePath)
+        {
+            try
+            {
+                if (!File.Exists(filePath))
+                {
+                    ServicesContainer.OutputWindowLogger.LogOutput("Can't find file: {0}", filePath);
+                    return;
+                }
+
+                _currentDTE.ItemOperations.OpenFile(filePath);
+            }
+            catch (Exception ex)
+            {
+                ServicesContainer.OutputWindowLogger.LogOutput(ex);
+            }
         }
 
         private void RenamedSolution(string OldName)

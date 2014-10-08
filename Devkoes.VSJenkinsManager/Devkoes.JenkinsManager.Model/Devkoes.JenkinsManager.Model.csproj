@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Contract\IOutputWindowLogger.cs" />
     <Compile Include="Contract\ISolutionJenkinsJobLinkInfo.cs" />
+    <Compile Include="Contract\IVisualStudioFileManager.cs" />
     <Compile Include="Contract\IVisualStudioSolutionEvents.cs" />
     <Compile Include="Contract\IVisualStudioSolutionInfo.cs" />
     <Compile Include="Contract\IVisualStudioWindowHandler.cs" />

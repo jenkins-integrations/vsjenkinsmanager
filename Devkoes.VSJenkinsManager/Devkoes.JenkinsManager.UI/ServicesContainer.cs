@@ -16,6 +16,7 @@ namespace Devkoes.JenkinsManager.UI
         public static IVisualStudioSolutionEvents VisualStudioSolutionEvents { get; set; }
         public static IVisualStudioSolutionInfo VisualStudioSolutionInfo { get; set; }
         public static IVisualStudioWindowHandler VisualStudioWindowHandler { get; set; }
+        public static IVisualStudioFileManager VisualStudioFileManager { get; set; }
 
         static ServicesContainer()
         {

@@ -140,7 +140,7 @@
                     <MenuItem
                         Header="_Start/Schedule Job"
                         Command="{Binding Path=ScheduleJobCommand}"
-                        CommandParameter="{Binding  SelectedView.Jobs/}">
+                        CommandParameter="{Binding SelectedJob}">
                         <MenuItem.Icon>
                             <Image
                                 Source="..\Resources\BuildNotificationIcon.ico"
@@ -150,7 +150,7 @@
                     <MenuItem
                         Header="_Go to jobs website"
                         Command="{Binding ShowJobsWebsite}"
-                        CommandParameter="{Binding  SelectedView.Jobs/}">
+                        CommandParameter="{Binding SelectedJob}">
                         <MenuItem.Icon>
                             <Image
                                 Source="..\Resources\OnlineIcon.png"
@@ -160,12 +160,17 @@
                     <MenuItem
                         Header="_Link to current solution"
                         Command="{Binding LinkJobToCurrentSolution}"
-                        CommandParameter="{Binding  SelectedView.Jobs/}">
+                        CommandParameter="{Binding SelectedJob}">
                         <MenuItem.Icon>
                             <Image
                                 Source="..\Resources\ConnectIcon.png"
                                 Height="16" />
                         </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        Header="S_how log"
+                        Command="{Binding ShowLatestLog}"
+                        CommandParameter="{Binding SelectedJob}">
                     </MenuItem>
                 </ContextMenu>
             </ListBox.ContextMenu>

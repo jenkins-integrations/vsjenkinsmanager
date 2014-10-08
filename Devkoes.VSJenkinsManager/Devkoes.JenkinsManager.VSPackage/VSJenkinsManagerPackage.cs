@@ -109,6 +109,7 @@ namespace Devkoes.JenkinsManager.VSPackage
             _vsSolutionService = new VisualStudioSolutionService();
             ServicesContainer.VisualStudioSolutionEvents = _vsSolutionService;
             ServicesContainer.VisualStudioSolutionInfo = _vsSolutionService;
+            ServicesContainer.VisualStudioFileManager = _vsSolutionService;
         }
 
         #endregion

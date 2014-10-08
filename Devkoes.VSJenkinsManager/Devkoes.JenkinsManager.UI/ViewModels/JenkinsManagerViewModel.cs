@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -38,6 +39,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         public RelayCommand<JenkinsJob> ScheduleJobCommand { get; private set; }
         public RelayCommand<JenkinsJob> ShowJobsWebsite { get; private set; }
         public RelayCommand<JenkinsJob> LinkJobToCurrentSolution { get; private set; }
+        public RelayCommand<JenkinsJob> ShowLatestLog { get; private set; }
 
         public ObservableCollection<JenkinsServer> JenkinsServers { get; private set; }
 
@@ -51,6 +53,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
             ScheduleJobCommand = new RelayCommand<JenkinsJob>(ScheduleJob, CanDoJobAction);
             ShowJobsWebsite = new RelayCommand<JenkinsJob>(ShowWebsite, CanDoJobAction);
+            ShowLatestLog = new RelayCommand<JenkinsJob>(HandleShowLatestLog, CanDoJobAction);
             LinkJobToCurrentSolution = new RelayCommand<JenkinsJob>(LinkJobToSolution, CanDoJobAction);
             _loadingJobsBusyLock = new object();
 
@@ -64,6 +67,25 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
 
             _refreshTimer.Start();
+        }
+
+        private void HandleShowLatestLog(JenkinsJob job)
+        {
+            try
+            {
+                // TODO: move webclient stuff elsewhere
+                string fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".txt";
+                WebClient wc = new WebClient();
+                string b = wc.DownloadString(job.Url + "/lastBuild/consoleText");
+
+                File.WriteAllText(fileName, b);
+
+                ServicesContainer.VisualStudioFileManager.OpenFile(fileName);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private void HandleShowSettings()
@@ -247,6 +269,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                     ScheduleJobCommand.RaiseCanExecuteChanged();
                     ShowJobsWebsite.RaiseCanExecuteChanged();
                     LinkJobToCurrentSolution.RaiseCanExecuteChanged();
+                    ShowLatestLog.RaiseCanExecuteChanged();
                 }
             }
         }
