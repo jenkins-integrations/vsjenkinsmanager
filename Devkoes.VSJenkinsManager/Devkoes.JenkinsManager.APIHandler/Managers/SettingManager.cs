@@ -116,6 +116,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             var newJenkinsServerList = new JenkinsServerList();
             newJenkinsServerList.AddRange(_serversCopy);
 
+            Settings.Default.JenkinsServers = newJenkinsServerList;
             Settings.Default.Save();
         }
     }
