@@ -5,5 +5,6 @@ namespace Devkoes.JenkinsManager.Model.Contract
     {
         void ShowToolWindow();
         void ShowSettingsWindow();
+        void ShowOutputWindow();
     }
 }

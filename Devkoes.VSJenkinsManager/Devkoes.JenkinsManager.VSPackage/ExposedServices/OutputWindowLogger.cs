@@ -7,7 +7,7 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
 {
     public class OutputWindowLogger : IOutputWindowLogger
     {
-        private const string _outputWindowId = "D252353A-6121-4AC7-8B0E-316A0571ED68";
+        internal const string OUTPUTWINDOW_ID = "D252353A-6121-4AC7-8B0E-316A0571ED68";
         private const string _outputWindowTitle = "Jenkins Manager";
         private IVsOutputWindowPane _outputWindow;
 
@@ -15,7 +15,7 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
         {
             try
             {
-                var outputWindowGuid = new Guid(_outputWindowId);
+                var outputWindowGuid = new Guid(OUTPUTWINDOW_ID);
 
                 IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
                 outWindow.CreatePane(ref outputWindowGuid, _outputWindowTitle, 1, 1);

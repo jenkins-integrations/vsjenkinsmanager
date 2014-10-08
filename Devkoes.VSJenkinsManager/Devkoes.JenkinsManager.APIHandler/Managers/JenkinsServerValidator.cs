@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Devkoes.JenkinsManager.Model.Schema;
+using System;
 using System.Net;
 
 namespace Devkoes.JenkinsManager.APIHandler.Managers
@@ -9,12 +10,8 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
     /// </summary>
     public static class JenkinsServerValidator
     {
-        public static readonly Version MINIMUM_VERSION;
-
-        static JenkinsServerValidator()
-        {
-            MINIMUM_VERSION = new Version("1.367");
-        }
+        public static readonly Version MINIMUM_VERSION = new Version("1.367");
+        public static readonly Version RANGE_SPECIFIER_VERSION = new Version("1.568");
 
         public static Version GetJenkinsVersion(string url)
         {
@@ -41,6 +38,11 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             var version = GetJenkinsVersion(url);
 
             return version >= MINIMUM_VERSION;
+        }
+
+        public static bool RangeSpecifierSupported(JenkinsServer server)
+        {
+            return server.Version >= RANGE_SPECIFIER_VERSION;
         }
     }
 }

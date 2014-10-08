@@ -86,7 +86,7 @@
             Grid.Row="1"
             Grid.Column="1"
             IsEnabled="{Binding JenkinsServersEnabled}"
-            ItemsSource="{Binding JOverview.Views}"
+            ItemsSource="{Binding JenkinsViews}"
             SelectedItem="{Binding SelectedView}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
@@ -117,7 +117,7 @@
         <ListBox
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             Margin="0,5"
-            ItemsSource="{Binding SelectedView.Jobs}"
+            ItemsSource="{Binding Jobs}"
             SelectedItem="{Binding SelectedJob}"
             Visibility="{Binding LoadingFailed, Converter={StaticResource boolToHiddenConverter}}"
             Grid.Row="3" Grid.ColumnSpan="3"
@@ -140,7 +140,7 @@
                     <MenuItem
                         Header="_Start/Schedule Job"
                         Command="{Binding Path=ScheduleJobCommand}"
-                        CommandParameter="{Binding  SelectedView.Jobs/}">
+                        CommandParameter="{Binding  SelectedJob}">
                         <MenuItem.Icon>
                             <Image
                                 Source="..\Resources\BuildNotificationIcon.ico"
@@ -150,7 +150,7 @@
                     <MenuItem
                         Header="_Go to jobs website"
                         Command="{Binding ShowJobsWebsite}"
-                        CommandParameter="{Binding  SelectedView.Jobs/}">
+                        CommandParameter="{Binding  SelectedJob}">
                         <MenuItem.Icon>
                             <Image
                                 Source="..\Resources\OnlineIcon.png"
@@ -160,7 +160,7 @@
                     <MenuItem
                         Header="_Link to current solution"
                         Command="{Binding LinkJobToCurrentSolution}"
-                        CommandParameter="{Binding  SelectedView.Jobs/}">
+                        CommandParameter="{Binding  SelectedJob}">
                         <MenuItem.Icon>
                             <Image
                                 Source="..\Resources\ConnectIcon.png"
@@ -187,7 +187,7 @@
 
                         <Rectangle
                             Margin="3,0"
-                            Fill="{Binding Color}"
+                            Fill="{Binding StatusColor}"
                             Width="16"
                             Height="16" />
                         <TextBlock
@@ -207,9 +207,9 @@
                             Grid.Column="3"
                             Margin="5,0"
                             Source="..\Resources\ClockIcon.png"
-                            ToolTip="{Binding QueuedWhy}"
+                            ToolTip="{Binding QueueItem.Why}"
                             Height="16"
-                            Visibility="{Binding Queued, Converter={StaticResource boolToVisConverter}}">
+                            Visibility="{Binding IsQueued, Converter={StaticResource boolToVisConverter}}">
                         </Image>
                     </Grid>
                 </DataTemplate>
@@ -221,7 +221,18 @@
             Foreground="{DynamicResource VsBrush.WindowText}"
             Padding="5"
             Grid.Row="4"
-            Grid.ColumnSpan="3"
+            Grid.ColumnSpan="2"
             Text="{Binding StatusMessage}" />
+
+        <Button
+            Content="log"
+            Grid.Row="4"
+            Grid.Column="2"
+            Margin="5,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Command="{Binding ShowOutputWindow}"
+            Style="{StaticResource HyperlinkLikeButton}" />
+
     </Grid>
 </UserControl>

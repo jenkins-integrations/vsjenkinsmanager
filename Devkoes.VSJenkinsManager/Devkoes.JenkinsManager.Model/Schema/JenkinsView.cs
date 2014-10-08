@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Devkoes.JenkinsManager.Model.Schema
 {
@@ -6,7 +7,10 @@ namespace Devkoes.JenkinsManager.Model.Schema
     {
         private IList<JenkinsJob> _jobs;
 
+        [JsonProperty("Name")]
         public string Name { get; set; }
+
+        [JsonProperty("Url")]
         public string Url { get; set; }
 
         public JenkinsView()
@@ -14,6 +18,7 @@ namespace Devkoes.JenkinsManager.Model.Schema
             _jobs = new List<JenkinsJob>();
         }
 
+        [JsonProperty("Jobs")]
         public IList<JenkinsJob> Jobs
         {
             get { return _jobs; }
