@@ -49,7 +49,7 @@
             Foreground="{DynamicResource VsBrush.WindowText}"
             Content="_Server"
             Target="{Binding ElementName=serverCmb}" />
-        
+
         <ComboBox
             x:Name="serverCmb"
             Grid.Column="1"
@@ -78,7 +78,7 @@
             Grid.Row="1"
             Content="_View"
             Target="{Binding ElementName=viewCmb}" />
-        
+
         <ComboBox
             x:Name="viewCmb"
             VerticalAlignment="Center"
@@ -113,7 +113,7 @@
             Content="Something went wrong loading the jobs, click to retry."
             Command="{Binding Reload}"
             Style="{StaticResource HyperlinkLikeButton}" />
-        
+
         <ListBox
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             Margin="0,5"
@@ -185,12 +185,19 @@
                                 Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Rectangle
-                            Margin="3,0"
-                            Fill="{Binding Color}"
-                            Width="16"
-                            Height="16" />
+                        <StackPanel Grid.RowSpan="2" Margin="3,0">
+                            <Rectangle Fill="{Binding Color}" Width="20" Height="16" />
+                            <StackPanel Height="4" Orientation="Horizontal" Margin="0,1,0,0">
+                                <Rectangle Width="3" Height="3" Fill="{Binding Color}" Margin="0,0,1,0"/>
+                                <Rectangle Width="3" Height="3" Fill="Firebrick" Margin="0,0,1,0"/>
+                                <Rectangle Width="3" Height="3" Fill="ForestGreen" Margin="0,0,1,0"/>
+                                <Rectangle Width="3" Height="3" Fill="{Binding Color}" Margin="0,0,1,0"/>
+                                <Rectangle Width="3" Height="3" Fill="ForestGreen" />
+                            </StackPanel>
+                        </StackPanel>
+
                         <TextBlock
+                            VerticalAlignment="Center"
                             Margin="3,0"
                             Text="{Binding Name}"
                             Grid.Column="1" />
