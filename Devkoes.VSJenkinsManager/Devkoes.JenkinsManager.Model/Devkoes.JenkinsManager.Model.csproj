@@ -36,6 +36,9 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,14 +54,15 @@
     <Compile Include="Contract\IVisualStudioSolutionEvents.cs" />
     <Compile Include="Contract\IVisualStudioSolutionInfo.cs" />
     <Compile Include="Contract\IVisualStudioWindowHandler.cs" />
+    <Compile Include="Schema\JenkinsBuild.cs" />
+    <Compile Include="Schema\JenkinsBuildresultConverter.cs" />
     <Compile Include="Schema\JenkinsOverview.cs" />
-    <Compile Include="Schema\JenkinsQueue.cs" />
+    <Compile Include="Schema\JenkinsQueueItem.cs" />
     <Compile Include="Schema\JenkinsServer.cs" />
     <Compile Include="Schema\JenkinsServerList.cs" />
     <Compile Include="Schema\JenkinsView.cs" />
     <Compile Include="Schema\JenkinsJob.cs" />
     <Compile Include="Schema\ObservableObject.cs" />
-    <Compile Include="Schema\JenkinsScheduledJob.cs" />
     <Compile Include="Schema\SolutionJenkinsJobLink.cs" />
     <Compile Include="Schema\SolutionJenkinsJobLinkList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

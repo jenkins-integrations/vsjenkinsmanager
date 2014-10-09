@@ -1,4 +1,6 @@
-﻿namespace Devkoes.JenkinsManager.Model.Schema
+﻿using System;
+using System.Xml.Serialization;
+namespace Devkoes.JenkinsManager.Model.Schema
 {
     public class JenkinsServer : ObservableObject
     {
@@ -58,5 +60,8 @@
                 }
             }
         }
+
+        [XmlIgnore]
+        public Version Version { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Devkoes.JenkinsManager.Model.Contract;
 using Devkoes.JenkinsManager.UI;
 using Devkoes.JenkinsManager.UI.Views;
+using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -31,10 +32,39 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
             }
             catch (Exception ex)
             {
-                ServicesContainer.OutputWindowLogger.LogOutput(
-                    "Showing settings panel failed:",
-                    ex.ToString());
+                Logger.Log("Showing settings panel failed:", ex);
             }
+        }
+
+        public void ShowOutputWindow()
+        {
+            try
+            {
+                ActivateOutputWindow();
+
+                ActivateJenkinsOutputPane();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Showing output panel failed:", ex);
+            }
+        }
+
+        private static void ActivateJenkinsOutputPane()
+        {
+            var outputWindowGuid = new Guid(OutputWindowLogger.OUTPUTWINDOW_ID);
+            IVsOutputWindowPane outputWindow;
+            IVsOutputWindow outWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+            outWindow.GetPane(ref outputWindowGuid, out outputWindow);
+            outputWindow.Activate();
+        }
+
+        private static void ActivateOutputWindow()
+        {
+            var currentDTE = VSJenkinsManagerPackage.Instance.GetService<DTE>();
+            Windows windows = currentDTE.Windows;
+            Window window = (Window)windows.Item(EnvDTE.Constants.vsWindowKindOutput);
+            window.Activate();
         }
     }
 }

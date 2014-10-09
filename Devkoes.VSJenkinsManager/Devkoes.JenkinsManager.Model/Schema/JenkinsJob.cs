@@ -1,49 +1,47 @@
-﻿
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Devkoes.JenkinsManager.Model.Schema
 {
     public class JenkinsJob : ObservableObject
     {
-        private bool _building;
         private bool _linkedToCurrentSolution;
-        private bool _queued;
-        private string _color;
 
+        [JsonProperty("InQueue")]
+        public bool IsQueued { get; set; }
+
+        [JsonProperty("Buildable")]
+        public bool IsEnabled { get; set; }
+
+        [JsonProperty("Builds")]
+        public IEnumerable<JenkinsBuild> Builds { get; set; }
+
+        [JsonProperty("QueueItem")]
+        public JenkinsQueueItem QueueItem { get; set; }
+
+        [JsonProperty("Name")]
         public string Name { get; set; }
+
+        [JsonProperty("Url")]
         public string Url { get; set; }
-        public string QueuedWhy { get; set; }
 
-        public bool Building
+        [JsonIgnore]
+        public JenkinsBuild LatestBuild
         {
-            get { return _building; }
-            set
+            get
             {
-                if (value != _building)
-                {
-                    _building = value;
-                    RaisePropertyChanged(() => Building);
-                }
+                return Builds == null ? null : Builds.FirstOrDefault();
             }
         }
 
-        public string Color
-        {
-            get { return _color; }
-            set
-            {
-                if (_color != value)
-                {
-                    _color = value;
-                    RaisePropertyChanged(() => Color);
-                }
-            }
-        }
-
+        [JsonIgnore]
         public bool LinkedToCurrentSolution
         {
             get { return _linkedToCurrentSolution; }
             set
             {
-                if (value != _linkedToCurrentSolution)
+                if (_linkedToCurrentSolution != value)
                 {
                     _linkedToCurrentSolution = value;
                     RaisePropertyChanged(() => LinkedToCurrentSolution);
@@ -51,16 +49,28 @@ namespace Devkoes.JenkinsManager.Model.Schema
             }
         }
 
-        public bool Queued
+        [JsonIgnore]
+        public string StatusColor
         {
-            get { return _queued; }
-            set
+            get
             {
-                if (value != _queued)
+                if (LatestBuild != null && LatestBuild.IsBuilding)
                 {
-                    _queued = value;
-                    RaisePropertyChanged(() => Queued);
+                    return "Yellow";
                 }
+                if (!IsEnabled || LatestBuild == null)
+                {
+                    return "Gray";
+                }
+                if (LatestBuild != null && LatestBuild.IsSuccessfull)
+                {
+                    return "ForestGreen";
+                }
+                if (LatestBuild != null && !LatestBuild.IsSuccessfull)
+                {
+                    return "Firebrick";
+                }
+                return "Transparent";
             }
         }
     }

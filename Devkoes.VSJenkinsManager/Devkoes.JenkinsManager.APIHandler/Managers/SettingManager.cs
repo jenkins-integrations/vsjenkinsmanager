@@ -23,6 +23,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             {
                 foreach (var s in Settings.Default.JenkinsServers)
                 {
+                    s.Version = JenkinsServerValidator.GetJenkinsVersion(s.Url);
                     _serversCopy.Add(s);
                 }
             }
@@ -115,6 +116,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             var newJenkinsServerList = new JenkinsServerList();
             newJenkinsServerList.AddRange(_serversCopy);
 
+            Settings.Default.JenkinsServers = newJenkinsServerList;
             Settings.Default.Save();
         }
     }
