@@ -171,6 +171,11 @@
                         Header="S_how log"
                         Command="{Binding ShowLatestLog}"
                         CommandParameter="{Binding SelectedJob}">
+                        <MenuItem.Icon>
+                            <Image
+                                Source="..\Resources\LogIcon.png"
+                                Height="16" />
+                        </MenuItem.Icon>
                     </MenuItem>
                 </ContextMenu>
             </ListBox.ContextMenu>
