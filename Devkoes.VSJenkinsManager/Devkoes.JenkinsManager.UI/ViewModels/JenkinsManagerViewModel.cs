@@ -32,6 +32,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         private bool _jenkinsServersEnabled;
         private bool _forceRefresh;
         private ObservableCollection<JenkinsJob> _jobs;
+        private IEnumerable<JenkinsView> _jenkinsViews;
 
         public RelayCommand ShowSettings { get; private set; }
         public RelayCommand Reload { get; private set; }
@@ -71,7 +72,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
             _refreshTimer.Start();
         }
-        
+
         private void HandleShowLatestLog(JenkinsJob job)
         {
             try
@@ -90,12 +91,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 Logger.Log(ex);
             }
         }
-        
+
         private void HandleShowOutputWindow()
         {
             ServicesContainer.VisualStudioWindowHandler.ShowOutputWindow();
         }
-        
+
 
         private void HandleShowSettings()
         {
@@ -279,8 +280,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private IEnumerable<JenkinsView> _jenkinsViews;
-
         public IEnumerable<JenkinsView> JenkinsViews
         {
             get { return _jenkinsViews; }
@@ -293,18 +292,25 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private async void RefreshViews()
         {
-            if (SelectedJenkinsServer == null)
+            try
             {
-                return;
+                if (SelectedJenkinsServer == null)
+                {
+                    return;
+                }
+
+                JenkinsServersEnabled = false;
+
+                JenkinsViews = await JenkinsDataLoader.GetViews(SelectedJenkinsServer);
+
+                SelectedView = JenkinsViews.FirstOrDefault();
+
+                ForceReload(true);
             }
-
-            JenkinsServersEnabled = false;
-
-            JenkinsViews = await JenkinsDataLoader.GetViews(SelectedJenkinsServer);
-
-            SelectedView = JenkinsViews.FirstOrDefault();
-
-            ForceReload(true);
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private void ForceReload(bool newServerSelected)
