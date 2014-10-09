@@ -211,12 +211,20 @@
                             </StackPanel>
                         </StackPanel>
 
+                        <StackPanel Grid.Column="1">
+                            
                         <TextBlock
                             VerticalAlignment="Center"
                             Margin="3,0"
-                            Text="{Binding Name}"
-                            Grid.Column="1" />
+                            Text="{Binding Name}" />
 
+                        <ProgressBar 
+                            Height="5"
+                            Margin="3"
+                            Visibility="{Binding LatestBuild.IsBuilding, Converter={StaticResource boolToVisConverter}}"
+                            Minimum="0" Maximum="100" Value="{Binding BuildProgress, Mode=OneWay}" />
+                        </StackPanel>
+                        
                         <Image
                             Grid.Column="2"
                             Margin="5,0"

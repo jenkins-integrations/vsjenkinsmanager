@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -71,6 +72,26 @@ namespace Devkoes.JenkinsManager.Model.Schema
                     return "Firebrick";
                 }
                 return "Transparent";
+            }
+        }
+
+        [JsonIgnore]
+        public short BuildProgress
+        {
+            get
+            {
+                double progress = 0;
+
+                if (LatestBuild != null)
+                {
+                    DateTime start = new DateTime(LatestBuild.Timestamp * 10000).AddYears(1969);
+
+                    var busyTime = (DateTime.UtcNow - start).TotalMilliseconds;
+
+                    progress = (100d / LatestBuild.EstimatedDuration) * busyTime;
+                }
+
+                return (short)Math.Max(0, Math.Min(progress, 100));
             }
         }
     }
