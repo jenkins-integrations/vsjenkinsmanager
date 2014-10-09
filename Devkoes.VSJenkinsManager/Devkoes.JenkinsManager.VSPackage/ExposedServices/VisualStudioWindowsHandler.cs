@@ -31,7 +31,9 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
             }
             catch (Exception ex)
             {
-                ServicesContainer.OutputWindowLogger.LogOutput("Showing settings panel failed:", ex);
+                ServicesContainer.OutputWindowLogger.LogOutput(
+                    "Showing settings panel failed:",
+                    ex.ToString());
             }
         }
     }
