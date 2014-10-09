@@ -168,7 +168,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
-                        Header="S_how log"
+                        Header="S_how latest log"
                         Command="{Binding ShowLatestLog}"
                         CommandParameter="{Binding SelectedJob}">
                         <MenuItem.Icon>
