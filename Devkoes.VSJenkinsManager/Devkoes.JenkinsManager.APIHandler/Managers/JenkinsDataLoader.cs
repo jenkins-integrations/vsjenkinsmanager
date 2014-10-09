@@ -12,7 +12,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
     public static class JenkinsDataLoader
     {
         private const string VIEW_QUERY = "api/json?pretty=true&tree=views[name,url]";
-        private const string JOBS_QUERY_WITH_RANGE = "api/json?pretty=true&tree=jobs[name,url,inQueue,buildable,builds[result,building,estimatedDuration,timestamp]{0},queueItem[why]]";
+        private const string JOBS_QUERY_WITH_RANGE = "api/json?pretty=true&tree=jobs[name,url,inQueue,buildable,builds[result,building,estimatedDuration,timestamp]{0,5},queueItem[why]]";
         private const string JOBS_QUERY = "api/json?pretty=true&tree=jobs[name,url,inQueue,buildable,builds[result,building,estimatedDuration,timestamp],queueItem[why]]";
 
         public static async Task<IEnumerable<JenkinsView>> GetViews(JenkinsServer server)

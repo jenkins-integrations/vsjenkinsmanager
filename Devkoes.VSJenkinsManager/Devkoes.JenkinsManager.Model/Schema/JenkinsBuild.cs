@@ -16,5 +16,14 @@ namespace Devkoes.JenkinsManager.Model.Schema
         [JsonProperty("Result")]
         [JsonConverter(typeof(JenkinsBuildResultConverter))]
         public bool IsSuccessfull { get; set; }
+
+        [JsonIgnore]
+        public string StatusColor
+        {
+            get
+            {
+                return IsSuccessfull ? "ForestGreen" : "Firebrick";
+            }
+        }
     }
 }
