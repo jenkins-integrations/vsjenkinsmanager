@@ -221,7 +221,7 @@
                         <ProgressBar 
                             Height="5"
                             Margin="3"
-                            Visibility="{Binding LatestBuild.IsBuilding, Converter={StaticResource boolToVisConverter}}"
+                            Visibility="{Binding LatestBuild.IsBuilding, FallbackValue=Collapsed, Converter={StaticResource boolToVisConverter}}"
                             Minimum="0" Maximum="100" Value="{Binding BuildProgress, Mode=OneWay}" />
                         </StackPanel>
                         
