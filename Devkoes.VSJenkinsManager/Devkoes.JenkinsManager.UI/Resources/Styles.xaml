@@ -57,138 +57,73 @@
         </Style.Triggers>
     </Style>
 
-        <!--ProgressBar Style-->
-        <Style TargetType="ProgressBar">
-            <Setter Property="Foreground"
-                Value="ForestGreen" />
-            <Setter Property="Background"
-                Value="Gray" />
-            <Setter Property="Maximum"
-                Value="100" />
-            <Setter Property="Height"
-                Value="10" />
-            <Setter Property="IsTabStop"
-                Value="False" />
-            <Setter Property="BorderBrush"
-                Value="Black" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ProgressBar">
-                        <Grid x:Name="Root">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Determinate" />
-                                    <VisualState x:Name="Indeterminate">
-                                        <Storyboard RepeatBehavior="Forever">
-                                            <ObjectAnimationUsingKeyFrames Duration="00:00:00"
-                                                                       Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                                       Storyboard.TargetName="IndeterminateRoot">
-                                                <DiscreteObjectKeyFrame KeyTime="00:00:00">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <Visibility>Visible</Visibility>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Duration="00:00:00"
-                                                                       Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                                       Storyboard.TargetName="DeterminateRoot">
-                                                <DiscreteObjectKeyFrame KeyTime="00:00:00">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <Visibility>Collapsed</Visibility>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="X"
-                                                                       Storyboard.TargetName="xTransform">
-                                                <SplineDoubleKeyFrame KeyTime="0"
-                                                                  Value="0" />
-                                                <SplineDoubleKeyFrame KeyTime="00:00:.35"
-                                                                  Value="20" />
-                                            </DoubleAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <Border x:Name="PART_Track"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                Background="{TemplateBinding Background}" />
-                            <Grid x:Name="ProgressBarRootGrid">
-                                <Grid x:Name="IndeterminateRoot"
-                                  Visibility="Collapsed">
-                                    <Rectangle x:Name="IndeterminateSolidFill"
-                                           Margin="{TemplateBinding BorderThickness}"
-                                           Opacity="1"
-                                           RenderTransformOrigin="0.5,0.5"
-                                           StrokeThickness="0"
-                                           Fill="{DynamicResource ProgressBrush}" />
-                                    <Rectangle x:Name="IndeterminateGradientFill"
-                                           Margin="{TemplateBinding BorderThickness}"
-                                           Opacity="0.7"
-                                           StrokeThickness="1">
-                                        <Rectangle.Fill>
-                                            <LinearGradientBrush EndPoint="0,1"
-                                                             MappingMode="Absolute"
-                                                             SpreadMethod="Repeat"
-                                                             StartPoint="20,1">
-                                                <LinearGradientBrush.Transform>
-                                                    <TransformGroup>
-                                                        <TranslateTransform X="0"
-                                                                        x:Name="xTransform" />
-                                                        <SkewTransform AngleX="-30" />
-                                                    </TransformGroup>
-                                                </LinearGradientBrush.Transform>
-                                                <GradientStop Color="ForestGreen"
-                                                          Offset="0" />
-                                            <GradientStop Color="ForestGreen"
-                                                          Offset="0.651" />
-                                            <GradientStop Color="ForestGreen"
-                                                          Offset="0.093" />
-                                            <GradientStop Color="ForestGreen"
-                                                          Offset="0.548" />
-                                            </LinearGradientBrush>
-                                        </Rectangle.Fill>
-                                    </Rectangle>
-                                </Grid>
-                                <Grid x:Name="DeterminateRoot"
-                                  Margin="1">
-                                    <Border x:Name="PART_Indicator"
-                                        Background="Black"
-                                        HorizontalAlignment="Left"
-                                        Margin="-1">
-                                    <Rectangle x:Name="GradientFill"
-                                               Opacity="0.7"
-                                               Visibility="Collapsed" Fill="ForestGreen">
-                                    </Rectangle>
-                                    </Border>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+    <!--ProgressBar Style-->
+    <Style x:Key="{x:Type ProgressBar}"
+       TargetType="{x:Type ProgressBar}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ProgressBar}">
+                    <Grid MinHeight="14"
+              MinWidth="200"
+              Background="Gray">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Determinate" />
+                                <VisualState x:Name="Indeterminate">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Duration="00:00:00"
+                                                 Storyboard.TargetName="PART_Indicator"
+                                                 Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="00:00:00">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <SolidColorBrush>Gray</SolidColorBrush>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
 
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="Orientation"
-                                 Value="Vertical">
-                                <Setter Property="LayoutTransform"
-                                    TargetName="Root">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="-90" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsIndeterminate"
-                                 Value="true">
-                                <Setter Property="Visibility"
-                                    TargetName="IndeterminateRoot"
-                                    Value="Visible" />
-                                <Setter Property="Visibility"
-                                    TargetName="DeterminateRoot"
-                                    Value="Collapsed" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="BorderThickness"
-                Value="1" />
-        </Style>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="PART_Track"
+                  CornerRadius="0"
+                  BorderThickness="1">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="Gray" />
+                            </Border.BorderBrush>
+                        </Border>
+                        <Border x:Name="PART_Indicator"
+                  CornerRadius="0"
+                  BorderThickness="0"
+                  HorizontalAlignment="Left"
+                  Background="ForestGreen"
+                  Margin="0,-1,0,1">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="Gray" />
+
+                            </Border.BorderBrush>
+                            <Grid ClipToBounds="True"
+                  x:Name="Animation">
+                                <Border x:Name="PART_GlowRect"
+                         Width="50"
+                         HorizontalAlignment="Left"
+                         Background="ForestGreen"
+                         Margin="-50,0,0,0" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="Gray" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="ForestGreen" />
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
