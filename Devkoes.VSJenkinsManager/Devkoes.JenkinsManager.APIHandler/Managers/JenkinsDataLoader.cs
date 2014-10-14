@@ -21,6 +21,11 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             Uri viewInfoUri = new Uri(serverUri, VIEW_QUERY);
             JenkinsOverview overview = await GetFromJSONData<JenkinsOverview>(server, viewInfoUri);
 
+            if (overview == null)
+            {
+                overview = new JenkinsOverview();
+            }
+
             foreach (var view in overview.Views)
             {
                 view.Url = FixViewUrl(view);
