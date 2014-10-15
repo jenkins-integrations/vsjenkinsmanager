@@ -73,18 +73,22 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             _refreshTimer.Start();
         }
 
-        private void HandleShowLatestLog(JenkinsJob job)
+        private async void HandleShowLatestLog(JenkinsJob job)
         {
+            if(job.LatestBuild == null)
+            {
+                StatusMessage = "No build available to show log from.";
+                return;
+            }
+
             try
             {
-                // TODO: move webclient stuff elsewhere
-                string fileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".txt";
-                WebClient wc = new WebClient();
-                string b = wc.DownloadString(job.Url + "/lastBuild/consoleText");
+                string fileName = await JenkinsJobManager.GetLatestLog(job.Url, SelectedJenkinsServer);
 
-                File.WriteAllText(fileName, b);
-
-                ServicesContainer.VisualStudioFileManager.OpenFile(fileName);
+                if (!string.IsNullOrWhiteSpace(fileName))
+                {
+                    ServicesContainer.VisualStudioFileManager.OpenFile(fileName);
+                }
             }
             catch (Exception ex)
             {
