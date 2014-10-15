@@ -31,7 +31,11 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             Settings.Default.Save();
         }
 
-        public static void SaveJobForSolution(string jobUri, string solutionPath, string jenkinsServerUri)
+        public static void SaveJobForSolution(
+            string jobUri, 
+            string solutionPath, 
+            string jenkinsViewName,
+            string jenkinsServerUri)
         {
             var existingSolutionJob = Settings.Default.SolutionJobs.FirstOrDefault((sj) => string.Equals(sj.SolutionPath, solutionPath, StringComparison.InvariantCultureIgnoreCase));
             if (existingSolutionJob != null)
@@ -43,13 +47,14 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             {
                 SolutionPath = solutionPath,
                 JobUrl = jobUri,
+                JenkinsViewName = jenkinsViewName,
                 JenkinsServerUrl = jenkinsServerUri
             });
 
             Settings.Default.Save();
         }
 
-        public static SolutionJenkinsJobLink GetJobUri(string solutionPath)
+        public static SolutionJenkinsJobLink GetJobLink(string solutionPath)
         {
             return Settings.Default.SolutionJobs.FirstOrDefault((sj) => string.Equals(sj.SolutionPath, solutionPath, StringComparison.InvariantCultureIgnoreCase));
         }
@@ -117,6 +122,18 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             newJenkinsServerList.AddRange(_serversCopy);
 
             Settings.Default.JenkinsServers = newJenkinsServerList;
+            Settings.Default.Save();
+        }
+
+        public static void UpdatePreferredView(string slnPath, string jenkinsViewName)
+        {
+            if(!ContainsSolutionPreference(slnPath))
+            {
+                return;
+            }
+
+            var jobLink = GetJobLink(slnPath);
+            jobLink.JenkinsViewName = jenkinsViewName;
             Settings.Default.Save();
         }
     }

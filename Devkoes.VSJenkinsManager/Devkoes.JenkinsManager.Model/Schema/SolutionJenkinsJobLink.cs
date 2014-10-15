@@ -5,6 +5,7 @@ namespace Devkoes.JenkinsManager.Model.Schema
     {
         public string SolutionPath { get; set; }
         public string JenkinsServerUrl { get; set; }
+        public string JenkinsViewName { get; set; }
         public string JobUrl { get; set; }
     }
 }

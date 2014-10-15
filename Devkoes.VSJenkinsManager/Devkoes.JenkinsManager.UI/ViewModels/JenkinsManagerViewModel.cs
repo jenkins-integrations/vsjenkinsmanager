@@ -131,10 +131,34 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                     _selectedView = value;
                     RaisePropertyChanged(() => SelectedView);
 
+                    SavePreferredView();
                     JenkinsServersEnabled = false;
                     ForceReload(true);
                 }
             }
+        }
+
+        private void SavePreferredView()
+        {
+            string slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
+            if (string.IsNullOrWhiteSpace(slnPath) || SelectedView == null)
+            {
+                return;
+            }
+
+            bool isSaved = SettingManager.ContainsSolutionPreference(slnPath);
+            if (!isSaved)
+            {
+                return;
+            }
+
+            var pref = SettingManager.GetJobLink(slnPath);
+            if (!string.Equals(SelectedJenkinsServer.Url, pref.JenkinsServerUrl, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return;
+            }
+
+            SettingManager.UpdatePreferredView(slnPath, SelectedView.Name);
         }
 
         private void HandleReload()
@@ -149,7 +173,49 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private void SolutionPathChanged(object sender, SolutionChangedEventArgs e)
         {
-            UpdateJobLinkedStatus(e.SolutionPath);
+            bool preferredViewSelected = TrySelectPreferredView(e);
+
+            if (!preferredViewSelected)
+            {
+                // If correct view was already selected, or view doesn't exists, manually update the link icon
+                UpdateJobLinkedStatus(e.SolutionPath);
+            }
+        }
+
+        private bool TrySelectPreferredView(SolutionChangedEventArgs e)
+        {
+            if (!SettingManager.ContainsSolutionPreference(e.SolutionPath))
+            {
+                return false;
+            }
+
+            var jobLink = SettingManager.GetJobLink(e.SolutionPath);
+            var jobLinkServer = JenkinsServers.FirstOrDefault((s) => string.Equals(s.Url, jobLink.JenkinsServerUrl, StringComparison.InvariantCultureIgnoreCase));
+
+            if (jobLinkServer == null)
+            {
+                // server has been removed
+                return false;
+            }
+
+            bool preferredViewSelected = false;
+            if (SelectedJenkinsServer == jobLinkServer)
+            {
+                // Correct server already selected, just fix the view
+                var preferredView = _jenkinsViews.FirstOrDefault((j) => string.Equals(j.Name, jobLink.JenkinsViewName));
+                if (preferredView != null)
+                {
+                    SelectedView = preferredView;
+                    preferredViewSelected = true;
+                }
+            }
+            else
+            {
+                SelectNewJenkinsServer(jobLinkServer, jobLink.JenkinsViewName);
+                preferredViewSelected = true;
+            }
+
+            return preferredViewSelected;
         }
 
         private void UpdateJobLinkedStatus(string slnPath = null)
@@ -161,7 +227,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                     slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
                 }
 
-                SolutionJenkinsJobLink sJob = SettingManager.GetJobUri(slnPath);
+                SolutionJenkinsJobLink sJob = SettingManager.GetJobLink(slnPath);
 
                 UIHelper.InvokeUI(() =>
                 {
@@ -190,7 +256,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                     return;
                 }
 
-                SettingManager.SaveJobForSolution(j.Url, slnPath, SelectedJenkinsServer.Url);
+                SettingManager.SaveJobForSolution(
+                    j.Url,
+                    slnPath,
+                    SelectedView.Name,
+                    SelectedJenkinsServer.Url);
 
                 UpdateJobLinkedStatus();
             }
@@ -274,10 +344,18 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             get { return _selectedJenkinsServer; }
             set
             {
-                _selectedJenkinsServer = value;
-                RaisePropertyChanged(() => SelectedJenkinsServer);
-                RefreshViews();
+                if (value != _selectedJenkinsServer)
+                {
+                    SelectNewJenkinsServer(value);
+                }
             }
+        }
+
+        private void SelectNewJenkinsServer(JenkinsServer value, string preferredViewName = null)
+        {
+            _selectedJenkinsServer = value;
+            RaisePropertyChanged(() => SelectedJenkinsServer);
+            RefreshViews(preferredViewName);
         }
 
         public IEnumerable<JenkinsView> JenkinsViews
@@ -290,7 +368,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private async void RefreshViews()
+        private async void RefreshViews(string preferredViewName)
         {
             try
             {
@@ -303,7 +381,9 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
                 JenkinsViews = await JenkinsDataLoader.GetViews(SelectedJenkinsServer);
 
-                SelectedView = JenkinsViews.FirstOrDefault();
+                var preferredView = JenkinsViews.FirstOrDefault((v) => string.Equals(v.Name, preferredViewName));
+
+                SelectedView = preferredView ?? JenkinsViews.FirstOrDefault();
 
                 ForceReload(true);
             }
@@ -313,9 +393,9 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private void ForceReload(bool newServerSelected)
+        private void ForceReload(bool disableJenkinsOptions)
         {
-            if (newServerSelected)
+            if (disableJenkinsOptions)
             {
                 JenkinsServersEnabled = false;
             }

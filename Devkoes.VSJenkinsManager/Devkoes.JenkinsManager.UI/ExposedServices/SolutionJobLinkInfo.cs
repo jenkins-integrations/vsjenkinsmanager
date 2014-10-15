@@ -9,7 +9,7 @@ namespace Devkoes.JenkinsManager.UI.ExposedServices
     {
         public async void StartJenkinsBuildForSolution(string slnPath)
         {
-            SolutionJenkinsJobLink sJob = SettingManager.GetJobUri(slnPath);
+            SolutionJenkinsJobLink sJob = SettingManager.GetJobLink(slnPath);
             await ViewModelController.JenkinsManagerViewModel.ScheduleJob(sJob.JobUrl, sJob.JenkinsServerUrl);
         }
 
