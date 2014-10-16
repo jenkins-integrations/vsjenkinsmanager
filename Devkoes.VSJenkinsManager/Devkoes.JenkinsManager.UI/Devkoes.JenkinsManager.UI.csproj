@@ -87,6 +87,7 @@
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="ExposedServices\SolutionJobLinkInfo.cs" />
     <Compile Include="Resources\VsColors.cs" />
+    <Compile Include="ValidationRules\JenkinsServerVersionValidationRule.cs" />
     <Compile Include="ViewModels\BasicUserOptionsContentViewModel.cs" />
     <Compile Include="ViewModels\JenkinsManagerViewModel.cs" />
     <Compile Include="ViewModels\ViewModelController.cs" />

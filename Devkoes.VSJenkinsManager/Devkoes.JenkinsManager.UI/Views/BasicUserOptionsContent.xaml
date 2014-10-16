@@ -3,9 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vr="clr-namespace:Devkoes.JenkinsManager.UI.ValidationRules"
              mc:Ignorable="d" 
              Loaded="UserControl_Loaded"
              d:DesignHeight="400" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ControlTemplate x:Key="validationTemplate">
+            <DockPanel>
+                <Rectangle Fill="Red" Width="10" Height="10" 
+                           Margin="5,0"
+                           ToolTip="{Binding Path=/ErrorContent}" />
+                <AdornedElementPlaceholder/>
+            </DockPanel>
+        </ControlTemplate>
+        <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -72,7 +91,17 @@
                     <Label Margin="3" Content="API _token" Grid.Row="4" />
 
                     <TextBox Margin="3" Text="{Binding EditJenkinsServer.Name, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
-                    <TextBox Margin="3" Text="{Binding EditJenkinsServer.Url}" Grid.Column="1" Grid.Row="1"/>
+                    <TextBox Margin="3" Grid.Column="1" Grid.Row="1" Name="addEditUrlInput"
+                             Validation.ErrorTemplate="{StaticResource validationTemplate}"
+                             Style="{StaticResource textBoxInError}">
+                        <TextBox.Text>
+                            <Binding Path="EditJenkinsServer.Url">
+                                <Binding.ValidationRules>
+                                    <vr:JenkinsServerVersionValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="3" HorizontalAlignment="Right">
                         <TextBlock Foreground="Red" FontSize="10" Text="Minimum required jenkins version: " />
                         <TextBlock Foreground="Red" FontSize="10" Text="{Binding RequiredVersion}" />
@@ -81,7 +110,21 @@
                     <TextBox Margin="3" Text="{Binding EditJenkinsServer.ApiToken}" Grid.Column="1" Grid.Row="4"/>
                 </Grid>
 
-                <Button Margin="3" Content="A_pply" Command="{Binding ApplyChanges}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" />
+                <Button Margin="3" Content="A_pply" Command="{Binding ApplyChanges}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Path=(Validation.HasError), ElementName=addEditUrlInput}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </Grid>
         </GroupBox>
 
