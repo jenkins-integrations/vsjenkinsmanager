@@ -74,6 +74,9 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Schema\SolutionChangedEventArgs.cs" />
+    <Compile Include="Schema\ValidatableObject.cs" />
+    <Compile Include="Schema\ValidationResult.cs" />
+    <Compile Include="Schema\ValidationResultType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />

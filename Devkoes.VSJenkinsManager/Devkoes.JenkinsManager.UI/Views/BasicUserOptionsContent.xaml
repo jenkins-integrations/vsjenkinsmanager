@@ -4,27 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vr="clr-namespace:Devkoes.JenkinsManager.UI.ValidationRules"
+             xmlns:schema="clr-namespace:Devkoes.JenkinsManager.Model.Schema;assembly=Devkoes.JenkinsManager.Model"
              mc:Ignorable="d" 
              Loaded="UserControl_Loaded"
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
-        <ControlTemplate x:Key="validationTemplate">
-            <DockPanel>
-                <Rectangle Fill="Red" Width="10" Height="10" 
-                           Margin="5,0"
-                           ToolTip="{Binding Path=/ErrorContent}" />
-                <AdornedElementPlaceholder/>
-            </DockPanel>
-        </ControlTemplate>
-        <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="true">
-                    <Setter Property="ToolTip"
-                            Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="..\Resources\Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -54,7 +46,7 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                
+
                                 <TextBlock Text="{Binding Name}" />
                                 <TextBlock Text="{Binding Url}" Grid.Row="1" FontSize="10" />
                             </Grid>
@@ -90,18 +82,19 @@
                     <Label Margin="3" Content="User_name" Grid.Row="3" />
                     <Label Margin="3" Content="API _token" Grid.Row="4" />
 
-                    <TextBox Margin="3" Text="{Binding EditJenkinsServer.Name, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
-                    <TextBox Margin="3" Grid.Column="1" Grid.Row="1" Name="addEditUrlInput"
-                             Validation.ErrorTemplate="{StaticResource validationTemplate}"
-                             Style="{StaticResource textBoxInError}">
-                        <TextBox.Text>
-                            <Binding Path="EditJenkinsServer.Url">
-                                <Binding.ValidationRules>
-                                    <vr:JenkinsServerVersionValidationRule />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
+                    <TextBox
+                        Margin="3" 
+                        Text="{Binding EditJenkinsServer.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+                        Grid.Column="1"
+                        Validation.ErrorTemplate="{StaticResource validationTemplate}"  />
+
+
+
+                    <TextBox 
+                        Margin="3" Grid.Column="1" Grid.Row="1"
+                        Name="addEditUrlInput"
+                        Text="{Binding EditJenkinsServer.Url}" />
+
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="3" HorizontalAlignment="Right">
                         <TextBlock Foreground="Red" FontSize="10" Text="Minimum required jenkins version: " />
                         <TextBlock Foreground="Red" FontSize="10" Text="{Binding RequiredVersion}" />
