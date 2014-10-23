@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Devkoes.JenkinsManager.Model.Schema
 {
@@ -12,6 +13,7 @@ namespace Devkoes.JenkinsManager.Model.Schema
     {
         private Dictionary<string, IEnumerable<ValidationResult>> _propertyValidationResults;
         private Dictionary<string, List<Func<T, IEnumerable<ValidationResult>>>> _propertyValidationRules;
+        private Dictionary<string, List<Func<T, Task<IEnumerable<ValidationResult>>>>> _asyncPropertyValidationRules;
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
@@ -19,11 +21,12 @@ namespace Devkoes.JenkinsManager.Model.Schema
         {
             _propertyValidationResults = new Dictionary<string, IEnumerable<ValidationResult>>();
             _propertyValidationRules = new Dictionary<string, List<Func<T, IEnumerable<ValidationResult>>>>();
+            _asyncPropertyValidationRules = new Dictionary<string, List<Func<T, Task<IEnumerable<ValidationResult>>>>>();
 
             PropertyChanged += ValidatableObject_PropertyChanged;
         }
 
-        private void ValidatableObject_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async void ValidatableObject_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var vResults = new List<ValidationResult>();
             if (_propertyValidationRules.ContainsKey(e.PropertyName))
@@ -39,8 +42,34 @@ namespace Devkoes.JenkinsManager.Model.Schema
                 }
             }
 
+            if (_asyncPropertyValidationRules.ContainsKey(e.PropertyName))
+            {
+                foreach (var vr in _asyncPropertyValidationRules[e.PropertyName])
+                {
+                    var r = await vr((T)this);
+                    if (r != null)
+                    {
+                        vResults.AddRange(r);
+
+                    }
+                }
+            }
+
             _propertyValidationResults[e.PropertyName] = vResults;
             RaiseErrorChanged(e.PropertyName);
+        }
+
+        public void RegisterAsyncValidationRule<R>(
+            Expression<Func<T, R>> propertyExpression,
+            Func<T, Task<IEnumerable<ValidationResult>>> validationRule)
+        {
+            string propertyName = GetPropertyName(propertyExpression);
+            if (!_asyncPropertyValidationRules.ContainsKey(propertyName))
+            {
+                _asyncPropertyValidationRules.Add(propertyName, new List<Func<T, Task<IEnumerable<ValidationResult>>>>());
+            }
+
+            _asyncPropertyValidationRules[propertyName].Add(validationRule);
         }
 
         public void RegisterValidationRule<R>(Expression<Func<T, R>> propertyExpression, Func<T, IEnumerable<ValidationResult>> validationRule)
@@ -66,7 +95,7 @@ namespace Devkoes.JenkinsManager.Model.Schema
         {
             if (_propertyValidationResults.ContainsKey(propertyName))
             {
-                return _propertyValidationResults[propertyName] ;
+                return _propertyValidationResults[propertyName];
             }
 
             return null;

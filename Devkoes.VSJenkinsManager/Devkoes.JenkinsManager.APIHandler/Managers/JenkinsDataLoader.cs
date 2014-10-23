@@ -50,7 +50,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         {
             Uri viewUri = new Uri(view.Url);
 
-            var jobsQuery = JenkinsServerValidator.RangeSpecifierSupported(server) ? JOBS_QUERY_WITH_RANGE : JOBS_QUERY;
+            var jobsQuery = JenkinsServerValidator.RangeSpecifierSupported(server.Url) ? JOBS_QUERY_WITH_RANGE : JOBS_QUERY;
 
             Uri jobsInfoUri = new Uri(viewUri, jobsQuery);
             JenkinsView viewWithJobData = await GetFromJSONData<JenkinsView>(server, jobsInfoUri);

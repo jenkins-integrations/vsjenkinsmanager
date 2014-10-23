@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 namespace Devkoes.JenkinsManager.Model.Schema
 {
-    public class JenkinsServer : ObservableObject
+    public class JenkinsServer : ValidatableObject<JenkinsServer>
     {
         private string _name;
         private string _userName;

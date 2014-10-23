@@ -1,5 +1,6 @@
 ﻿using Devkoes.JenkinsManager.APIHandler.Managers;
 using Devkoes.JenkinsManager.Model.Schema;
+using Devkoes.JenkinsManager.UI.ValidationRules;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
@@ -21,12 +22,30 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         public BasicUserOptionsContentViewModel()
         {
             _editJenkinsServer = new JenkinsServer();
+
             AddServer = new RelayCommand(HandleAddJenkinsServer);
             RemoveServer = new RelayCommand(HandleRemoveJenkinsServer);
             ApplyChanges = new RelayCommand(HandleApplyChanges);
 
             JenkinsServers = SettingManager.GetServers();
             SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
+
+            InitializeValidationRules();
+        }
+
+        private void InitializeValidationRules()
+        {
+            _editJenkinsServer.RegisterValidationRule(
+                (c) => c.Url,
+                (j) => PropertyRequiredValidationRule.Validate("Url", j.Url));
+
+            _editJenkinsServer.RegisterValidationRule(
+                (c) => c.Name,
+                (j) => PropertyRequiredValidationRule.Validate("Name", j.Name));
+
+            _editJenkinsServer.RegisterAsyncValidationRule(
+                (c) => c.Url,
+                JenkinsServerVersionValidationRule.Validate);
         }
 
         public string RequiredVersion

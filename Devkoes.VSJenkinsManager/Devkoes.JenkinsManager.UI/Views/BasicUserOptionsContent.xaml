@@ -84,23 +84,28 @@
 
                     <TextBox
                         Margin="3" 
-                        Text="{Binding EditJenkinsServer.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" 
+                        Text="{Binding EditJenkinsServer.Name, ValidatesOnNotifyDataErrors=True}" 
                         Grid.Column="1"
                         Validation.ErrorTemplate="{StaticResource validationTemplate}"  />
-
-
 
                     <TextBox 
                         Margin="3" Grid.Column="1" Grid.Row="1"
                         Name="addEditUrlInput"
-                        Text="{Binding EditJenkinsServer.Url}" />
+                        Text="{Binding EditJenkinsServer.Url, ValidatesOnNotifyDataErrors=True}"
+                        Validation.ErrorTemplate="{StaticResource validationTemplate}" />
 
-                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="3" HorizontalAlignment="Right">
-                        <TextBlock Foreground="Red" FontSize="10" Text="Minimum required jenkins version: " />
-                        <TextBlock Foreground="Red" FontSize="10" Text="{Binding RequiredVersion}" />
-                    </StackPanel>
-                    <TextBox Margin="3" Text="{Binding EditJenkinsServer.UserName}" Grid.Column="1" Grid.Row="3"/>
-                    <TextBox Margin="3" Text="{Binding EditJenkinsServer.ApiToken}" Grid.Column="1" Grid.Row="4"/>
+                    <TextBox 
+                        Margin="3" 
+                        Text="{Binding EditJenkinsServer.UserName, ValidatesOnNotifyDataErrors=True}" 
+                        Validation.ErrorTemplate="{StaticResource validationTemplate}"
+                        Grid.Column="1" 
+                        Grid.Row="3"/>
+                    
+                    <TextBox 
+                        Margin="3" 
+                        Text="{Binding EditJenkinsServer.ApiToken, ValidatesOnNotifyDataErrors=True}" 
+                        Grid.Column="1" Grid.Row="4"
+                        Validation.ErrorTemplate="{StaticResource validationTemplate}" />
                 </Grid>
 
                 <Button Margin="3" Content="A_pply" Command="{Binding ApplyChanges}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom">

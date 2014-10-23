@@ -1,5 +1,4 @@
-﻿using Devkoes.JenkinsManager.Model.Schema;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 
@@ -58,9 +57,11 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             return version >= MINIMUM_VERSION;
         }
 
-        public static bool RangeSpecifierSupported(JenkinsServer jenkinsServer)
+        public static bool RangeSpecifierSupported(string jenkinsServerUrl)
         {
-            return jenkinsServer.Version >= RANGE_SPECIFIER_VERSION;
+            var version = GetJenkinsVersion(jenkinsServerUrl);
+
+            return version >= RANGE_SPECIFIER_VERSION;
         }
     }
 }
