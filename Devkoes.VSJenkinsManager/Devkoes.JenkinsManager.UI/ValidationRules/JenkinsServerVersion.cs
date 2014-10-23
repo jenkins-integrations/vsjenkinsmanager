@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Devkoes.JenkinsManager.UI.ValidationRules
 {
-    public static class JenkinsServerVersionValidationRule
+    public static class JenkinsServerVersion
     {
         public static Task<IEnumerable<ValidationResult>> Validate(JenkinsServer server)
         {

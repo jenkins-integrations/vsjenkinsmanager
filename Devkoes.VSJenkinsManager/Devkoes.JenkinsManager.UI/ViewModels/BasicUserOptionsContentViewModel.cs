@@ -37,11 +37,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         {
             _editJenkinsServer.RegisterValidationRule(
                 (c) => c.Url,
-                (j) => PropertyRequiredValidationRule.Validate("Url", j.Url));
+                (j) => PropertyRequired.Validate("Url", j.Url));
 
             _editJenkinsServer.RegisterValidationRule(
                 (c) => c.Name,
-                (j) => PropertyRequiredValidationRule.Validate("Name", j.Name));
+                (j) => PropertyRequired.Validate("Name", j.Name));
 
             _editJenkinsServer.RegisterValidationRule(
                 (c) => c.ApiToken,
@@ -53,7 +53,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
             _editJenkinsServer.RegisterAsyncValidationRule(
                 (c) => c.Url,
-                JenkinsServerVersionValidationRule.Validate);
+                JenkinsServerVersion.Validate);
         }
 
         public string RequiredVersion

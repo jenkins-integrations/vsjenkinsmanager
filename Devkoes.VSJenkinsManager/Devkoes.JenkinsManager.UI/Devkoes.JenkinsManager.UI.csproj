@@ -89,9 +89,10 @@
     <Compile Include="ExposedServices\SolutionJobLinkInfo.cs" />
     <Compile Include="Resources\VsColors.cs" />
     <Compile Include="ValidationRules\JenkinsServerApiTokenRequired.cs" />
-    <Compile Include="ValidationRules\JenkinsServerVersionValidationRule.cs" />
+    <Compile Include="ValidationRules\JenkinsServerUniqueName.cs" />
+    <Compile Include="ValidationRules\JenkinsServerVersion.cs" />
     <Compile Include="ValidationRules\JenkinsServerResetApiToken.cs" />
-    <Compile Include="ValidationRules\PropertyRequiredValidationRule.cs" />
+    <Compile Include="ValidationRules\PropertyRequired.cs" />
     <Compile Include="ViewModels\BasicUserOptionsContentViewModel.cs" />
     <Compile Include="ViewModels\JenkinsManagerViewModel.cs" />
     <Compile Include="ViewModels\ViewModelController.cs" />

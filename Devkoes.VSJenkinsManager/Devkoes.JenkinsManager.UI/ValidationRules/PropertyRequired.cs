@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Devkoes.JenkinsManager.UI.ValidationRules
 {
-    public static class PropertyRequiredValidationRule
+    public static class PropertyRequired
     {
         public static IEnumerable<ValidationResult> Validate(string propertyName, string propertyValue)
         {

@@ -32,8 +32,8 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         }
 
         public static void SaveJobForSolution(
-            string jobUri, 
-            string solutionPath, 
+            string jobUri,
+            string solutionPath,
             string jenkinsViewName,
             string jenkinsServerUri)
         {
@@ -127,7 +127,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
 
         public static void UpdatePreferredView(string slnPath, string jenkinsViewName)
         {
-            if(!ContainsSolutionPreference(slnPath))
+            if (!ContainsSolutionPreference(slnPath))
             {
                 return;
             }
