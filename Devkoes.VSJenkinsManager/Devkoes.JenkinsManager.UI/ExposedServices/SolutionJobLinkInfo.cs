@@ -9,13 +9,13 @@ namespace Devkoes.JenkinsManager.UI.ExposedServices
     {
         public async void StartJenkinsBuildForSolution(string slnPath)
         {
-            SolutionJenkinsJobLink sJob = SettingManager.GetJobLink(slnPath);
+            SolutionJenkinsJobLink sJob = ApiHandlerSettingsManager.GetJobLink(slnPath);
             await ViewModelController.JenkinsManagerViewModel.ScheduleJob(sJob.JobUrl, sJob.JenkinsServerUrl);
         }
 
         public bool IsSolutionLinked(string solutionPath)
         {
-            return SettingManager.ContainsSolutionPreference(solutionPath);
+            return ApiHandlerSettingsManager.ContainsSolutionPreference(solutionPath);
         }
     }
 }

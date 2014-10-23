@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace Devkoes.JenkinsManager.APIHandler.Managers
 {
-    public static class SettingManager
+    public static class ApiHandlerSettingsManager
     {
         private static ObservableCollection<JenkinsServer> _serversCopy;
 
-        static SettingManager()
+        static ApiHandlerSettingsManager()
         {
             _serversCopy = new ObservableCollection<JenkinsServer>();
 

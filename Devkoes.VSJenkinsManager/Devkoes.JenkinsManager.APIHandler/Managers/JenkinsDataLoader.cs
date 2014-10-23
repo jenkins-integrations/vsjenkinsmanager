@@ -60,7 +60,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
 
         public static WebClient CreateJenkinsWebClient(string jenkinsServerUrl)
         {
-            JenkinsServer server = SettingManager.GetJenkinsServer(jenkinsServerUrl);
+            JenkinsServer server = ApiHandlerSettingsManager.GetJenkinsServer(jenkinsServerUrl);
 
             return CreateJenkinsWebClient(server);
         }
@@ -84,7 +84,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
 
         public async static Task<T> GetFromJSONData<T>(string jenkinsServerUrl, Uri jsonDataUri) where T : class
         {
-            return await GetFromJSONData<T>(SettingManager.GetJenkinsServer(jenkinsServerUrl), jsonDataUri);
+            return await GetFromJSONData<T>(ApiHandlerSettingsManager.GetJenkinsServer(jenkinsServerUrl), jsonDataUri);
         }
 
         public async static Task<T> GetFromJSONData<T>(JenkinsServer server, Uri jsonDataUri) where T : class

@@ -7,7 +7,7 @@ namespace Devkoes.JenkinsManager.UI
     {
         public static void Log(string message)
         {
-            if (SettingManager.DebugEnabled)
+            if (ApiHandlerSettingsManager.DebugEnabled)
             {
                 ServicesContainer.OutputWindowLogger.LogOutput(message);
             }
@@ -15,7 +15,7 @@ namespace Devkoes.JenkinsManager.UI
 
         public static void Log(string format, params object[] args)
         {
-            if (SettingManager.DebugEnabled)
+            if (ApiHandlerSettingsManager.DebugEnabled)
             {
                 ServicesContainer.OutputWindowLogger.LogOutput(format, args);
             }
@@ -23,7 +23,7 @@ namespace Devkoes.JenkinsManager.UI
 
         public static void Log(Exception ex)
         {
-            if (SettingManager.DebugEnabled)
+            if (ApiHandlerSettingsManager.DebugEnabled)
             {
                 ServicesContainer.OutputWindowLogger.LogOutput(ex);
             }

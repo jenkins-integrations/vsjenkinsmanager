@@ -27,7 +27,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             RemoveServer = new RelayCommand(HandleRemoveJenkinsServer);
             ApplyChanges = new RelayCommand(HandleApplyChanges);
 
-            JenkinsServers = SettingManager.GetServers();
+            JenkinsServers = ApiHandlerSettingsManager.GetServers();
             SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
 
             InitializeValidationRules();
@@ -71,19 +71,19 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 return;
             }
 
-            SettingManager.RemoveServer(SelectedJenkinsServer);
+            ApiHandlerSettingsManager.RemoveServer(SelectedJenkinsServer);
         }
 
         private void HandleApplyChanges()
         {
-            SettingManager.UpdateServer(SelectedJenkinsServer, EditJenkinsServer);
+            ApiHandlerSettingsManager.UpdateServer(SelectedJenkinsServer, EditJenkinsServer);
         }
 
         private void HandleAddJenkinsServer()
         {
             var newJenkinsServer = new JenkinsServer() { Name = "New server", Url = "http://" };
 
-            SettingManager.AddServer(newJenkinsServer);
+            ApiHandlerSettingsManager.AddServer(newJenkinsServer);
 
             SelectedJenkinsServer = newJenkinsServer;
 
@@ -92,12 +92,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         public bool DebugEnabled
         {
-            get { return SettingManager.DebugEnabled; }
+            get { return ApiHandlerSettingsManager.DebugEnabled; }
             set
             {
-                if (SettingManager.DebugEnabled != value)
+                if (ApiHandlerSettingsManager.DebugEnabled != value)
                 {
-                    SettingManager.DebugEnabled = value;
+                    ApiHandlerSettingsManager.DebugEnabled = value;
                     RaisePropertyChanged(() => DebugEnabled);
                 }
             }

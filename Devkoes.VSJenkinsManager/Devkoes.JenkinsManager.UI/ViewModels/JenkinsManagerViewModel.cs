@@ -67,7 +67,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             _refreshTimer.Elapsed += RefreshJobsTimerCallback;
             _refreshTimer.AutoReset = false;
 
-            JenkinsServers = SettingManager.GetServers();
+            JenkinsServers = ApiHandlerSettingsManager.GetServers();
             SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
 
             _refreshTimer.Start();
@@ -150,19 +150,19 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 return;
             }
 
-            bool isSaved = SettingManager.ContainsSolutionPreference(slnPath);
+            bool isSaved = ApiHandlerSettingsManager.ContainsSolutionPreference(slnPath);
             if (!isSaved)
             {
                 return;
             }
 
-            var pref = SettingManager.GetJobLink(slnPath);
+            var pref = ApiHandlerSettingsManager.GetJobLink(slnPath);
             if (!string.Equals(SelectedJenkinsServer.Url, pref.JenkinsServerUrl, StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
             }
 
-            SettingManager.UpdatePreferredView(slnPath, SelectedView.Name);
+            ApiHandlerSettingsManager.UpdatePreferredView(slnPath, SelectedView.Name);
         }
 
         private void HandleReload()
@@ -188,12 +188,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private bool TrySelectPreferredView(SolutionChangedEventArgs e)
         {
-            if (!SettingManager.ContainsSolutionPreference(e.SolutionPath))
+            if (!ApiHandlerSettingsManager.ContainsSolutionPreference(e.SolutionPath))
             {
                 return false;
             }
 
-            var jobLink = SettingManager.GetJobLink(e.SolutionPath);
+            var jobLink = ApiHandlerSettingsManager.GetJobLink(e.SolutionPath);
             var jobLinkServer = JenkinsServers.FirstOrDefault((s) => string.Equals(s.Url, jobLink.JenkinsServerUrl, StringComparison.InvariantCultureIgnoreCase));
 
             if (jobLinkServer == null)
@@ -231,7 +231,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                     slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
                 }
 
-                SolutionJenkinsJobLink sJob = SettingManager.GetJobLink(slnPath);
+                SolutionJenkinsJobLink sJob = ApiHandlerSettingsManager.GetJobLink(slnPath);
 
                 UIHelper.InvokeUI(() =>
                 {
@@ -260,7 +260,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                     return;
                 }
 
-                SettingManager.SaveJobForSolution(
+                ApiHandlerSettingsManager.SaveJobForSolution(
                     j.Url,
                     slnPath,
                     SelectedView.Name,
