@@ -28,35 +28,71 @@ namespace Devkoes.JenkinsManager.Model.Schema
 
         private async void ValidatableObject_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var vResults = new List<ValidationResult>();
-            if (_propertyValidationRules.ContainsKey(e.PropertyName))
-            {
-                foreach (var vr in _propertyValidationRules[e.PropertyName])
-                {
-                    var r = vr((T)this);
-                    if (r != null)
-                    {
-                        vResults.AddRange(r);
+            await RefreshValidationResults(e.PropertyName);
+        }
 
+        private async Task RefreshValidationResults(string propertyName)
+        {
+            var resetPropertyNames = new List<string>();
+            var validationResults = new List<ValidationResult>();
+
+            if (_propertyValidationRules.ContainsKey(propertyName))
+            {
+                foreach (var validationRule in _propertyValidationRules[propertyName])
+                {
+                    var validationRuleResults = validationRule((T)this);
+                    if (validationRuleResults != null && validationRuleResults.Any())
+                    {
+                        foreach (var validationRuleResult in validationRuleResults.Distinct())
+                        {
+                            var resetValidationResult = validationRuleResult as ResetValidationResult;
+                            if (resetValidationResult != null)
+                            {
+                                resetPropertyNames.Add(resetValidationResult.PropertyName);
+                            }
+                            else
+                            {
+                                validationResults.Add(validationRuleResult);
+                            }
+                        }
                     }
                 }
             }
 
-            if (_asyncPropertyValidationRules.ContainsKey(e.PropertyName))
+            if (_asyncPropertyValidationRules.ContainsKey(propertyName))
             {
-                foreach (var vr in _asyncPropertyValidationRules[e.PropertyName])
+                foreach (var validationRule in _asyncPropertyValidationRules[propertyName])
                 {
-                    var r = await vr((T)this);
-                    if (r != null)
+                    var validationRuleResults = await validationRule((T)this);
+                    if (validationRuleResults != null && validationRuleResults.Any())
                     {
-                        vResults.AddRange(r);
-
+                        foreach (var validationRuleResult in validationRuleResults.Distinct())
+                        {
+                            var resetValidationResult = validationRuleResult as ResetValidationResult;
+                            if (resetValidationResult != null)
+                            {
+                                resetPropertyNames.Add(resetValidationResult.PropertyName);
+                            }
+                            else
+                            {
+                                validationResults.Add(validationRuleResult);
+                            }
+                        }
                     }
                 }
             }
 
-            _propertyValidationResults[e.PropertyName] = vResults;
-            RaiseErrorChanged(e.PropertyName);
+            _propertyValidationResults[propertyName] = validationResults;
+
+            RaiseErrorChanged(propertyName);
+
+            foreach (var resetProperty in resetPropertyNames)
+            {
+                if (!string.Equals(resetProperty, propertyName))
+                {
+                    await RefreshValidationResults(resetProperty);
+                }
+            }
         }
 
         public void RegisterAsyncValidationRule<R>(

@@ -67,6 +67,7 @@
     <Compile Include="Schema\JenkinsView.cs" />
     <Compile Include="Schema\JenkinsJob.cs" />
     <Compile Include="Schema\ObservableObject.cs" />
+    <Compile Include="Schema\ResetValidationResult.cs" />
     <Compile Include="Schema\SolutionJenkinsJobLink.cs" />
     <Compile Include="Schema\SolutionJenkinsJobLinkList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -43,6 +43,14 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 (c) => c.Name,
                 (j) => PropertyRequiredValidationRule.Validate("Name", j.Name));
 
+            _editJenkinsServer.RegisterValidationRule(
+                (c) => c.ApiToken,
+                JenkinsServerApiTokenRequired.Validate);
+
+            _editJenkinsServer.RegisterValidationRule(
+                (c) => c.UserName,
+                JenkinsServerResetApiToken.Validate);
+
             _editJenkinsServer.RegisterAsyncValidationRule(
                 (c) => c.Url,
                 JenkinsServerVersionValidationRule.Validate);
