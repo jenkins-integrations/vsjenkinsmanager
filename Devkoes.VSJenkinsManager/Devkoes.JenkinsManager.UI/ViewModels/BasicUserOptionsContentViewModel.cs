@@ -51,6 +51,10 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 (c) => c.UserName,
                 JenkinsServerResetApiToken.Validate);
 
+            _editJenkinsServer.RegisterValidationRule(
+                (c) => c.Name,
+                JenkinsServerUniqueName.Validate);
+
             _editJenkinsServer.RegisterAsyncValidationRule(
                 (c) => c.Url,
                 JenkinsServerVersion.Validate);

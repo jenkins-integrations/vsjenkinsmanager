@@ -12,12 +12,7 @@ namespace Devkoes.JenkinsManager.UI.Views
         {
             InitializeComponent();
 
-            DataContext = new BasicUserOptionsContentViewModel();
-        }
-
-        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            //System.Windows.Forms.Integration.ElementHost.EnableModelessKeyboardInterop(System.Windows.Window.GetWindow(this));
+            DataContext = ViewModelController.BasicUserOptionsContentViewModel;
         }
     }
 }

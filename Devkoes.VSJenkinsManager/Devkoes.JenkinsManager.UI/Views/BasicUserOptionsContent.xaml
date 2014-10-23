@@ -6,7 +6,6 @@
              xmlns:vr="clr-namespace:Devkoes.JenkinsManager.UI.ValidationRules"
              xmlns:schema="clr-namespace:Devkoes.JenkinsManager.Model.Schema;assembly=Devkoes.JenkinsManager.Model"
              mc:Ignorable="d" 
-             Loaded="UserControl_Loaded"
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -109,19 +108,6 @@
                 </Grid>
 
                 <Button Margin="3" Content="A_pply" Command="{Binding ApplyChanges}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="IsEnabled" Value="False"/>
-                            <Style.Triggers>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding Path=(Validation.HasError), ElementName=addEditUrlInput}" Value="False"/>
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="IsEnabled" Value="True"/>
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
                 </Button>
             </Grid>
         </GroupBox>
