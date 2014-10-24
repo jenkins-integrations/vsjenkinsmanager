@@ -11,6 +11,8 @@ namespace Devkoes.JenkinsManager.Model.Schema
 {
     public class ValidatableObject<T> : ObservableObject, INotifyDataErrorInfo where T : ValidatableObject<T>
     {
+        private bool _isValidating;
+
         private Dictionary<string, IEnumerable<ValidationResult>> _propertyValidationResults;
         private Dictionary<string, List<Func<T, IEnumerable<ValidationResult>>>> _propertyValidationRules;
         private Dictionary<string, List<Func<T, Task<IEnumerable<ValidationResult>>>>> _asyncPropertyValidationRules;
@@ -28,37 +30,61 @@ namespace Devkoes.JenkinsManager.Model.Schema
 
         private async void ValidatableObject_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            await RefreshValidationResults(e.PropertyName);
-        }
-
-        private async Task RefreshValidationResults(string propertyName)
-        {
-            var resetPropertyNames = new List<string>();
-            var validationResults = new List<ValidationResult>();
-
-            if (_propertyValidationRules.ContainsKey(propertyName))
+            if (string.Equals(e.PropertyName, "IsValidating"))
             {
-                foreach (var validationRule in _propertyValidationRules[propertyName])
-                {
-                    var validationRuleResults = validationRule((T)this);
-                    if (validationRuleResults != null && validationRuleResults.Any())
-                    {
-                        foreach (var validationRuleResult in validationRuleResults.Distinct())
-                        {
-                            var resetValidationResult = validationRuleResult as ResetValidationResult;
-                            if (resetValidationResult != null)
-                            {
-                                resetPropertyNames.Add(resetValidationResult.PropertyName);
-                            }
-                            else
-                            {
-                                validationResults.Add(validationRuleResult);
-                            }
-                        }
-                    }
-                }
+                return;
             }
 
+            try
+            {
+                IsValidating = true;
+
+                await RefreshValidationResults(e.PropertyName, new[] { e.PropertyName });
+            }
+            catch
+            {
+            }
+            finally
+            {
+                IsValidating = false;
+            }
+        }
+
+        public bool IsValidating
+        {
+            get { return _isValidating; }
+            set
+            {
+                if (_isValidating != value)
+                {
+                    _isValidating = value;
+                    RaisePropertyChanged(() => IsValidating);
+                }
+            }
+        }
+
+
+        private async Task RefreshValidationResults(string propertyName, IEnumerable<string> alreadyRefreshedPropertyNames)
+        {
+            var shouldRefreshPropertyNames = new List<string>();
+            var validationResults = new List<ValidationResult>();
+
+            ExecuteValidationRules(propertyName, shouldRefreshPropertyNames, validationResults);
+
+            await ExecuteAsyncValidationRules(propertyName, shouldRefreshPropertyNames, validationResults);
+
+            _propertyValidationResults[propertyName] = validationResults;
+
+            RaiseErrorChanged(propertyName);
+
+            await RefreshSideAffectedProperties(alreadyRefreshedPropertyNames, shouldRefreshPropertyNames);
+        }
+
+        private async Task ExecuteAsyncValidationRules(
+            string propertyName,
+            List<string> shouldRefreshPropertyNames,
+            List<ValidationResult> validationResults)
+        {
             if (_asyncPropertyValidationRules.ContainsKey(propertyName))
             {
                 foreach (var validationRule in _asyncPropertyValidationRules[propertyName])
@@ -71,7 +97,7 @@ namespace Devkoes.JenkinsManager.Model.Schema
                             var resetValidationResult = validationRuleResult as ResetValidationResult;
                             if (resetValidationResult != null)
                             {
-                                resetPropertyNames.Add(resetValidationResult.PropertyName);
+                                shouldRefreshPropertyNames.Add(resetValidationResult.PropertyName);
                             }
                             else
                             {
@@ -81,16 +107,52 @@ namespace Devkoes.JenkinsManager.Model.Schema
                     }
                 }
             }
+        }
 
-            _propertyValidationResults[propertyName] = validationResults;
-
-            RaiseErrorChanged(propertyName);
-
-            foreach (var resetProperty in resetPropertyNames)
+        private void ExecuteValidationRules(
+            string propertyName,
+            List<string> shouldRefreshPropertyNames,
+            List<ValidationResult> validationResults)
+        {
+            if (_propertyValidationRules.ContainsKey(propertyName))
             {
-                if (!string.Equals(resetProperty, propertyName))
+                foreach (var validationRule in _propertyValidationRules[propertyName])
                 {
-                    await RefreshValidationResults(resetProperty);
+                    var validationRuleResults = validationRule((T)this);
+                    if (validationRuleResults != null && validationRuleResults.Any())
+                    {
+                        foreach (var validationRuleResult in validationRuleResults.Distinct())
+                        {
+                            var resetValidationResult = validationRuleResult as ResetValidationResult;
+                            if (resetValidationResult != null)
+                            {
+                                shouldRefreshPropertyNames.Add(resetValidationResult.PropertyName);
+                            }
+                            else
+                            {
+                                validationResults.Add(validationRuleResult);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private async Task RefreshSideAffectedProperties(
+            IEnumerable<string> alreadyRefreshedPropertyNames,
+            IEnumerable<string> shouldRefreshPropertyNames)
+        {
+            // prevent recursive property updates
+            // Eg: Username can trigger ApiToken to refresh, but in it's turn, ApiToken can't update Username again.
+            //     So in one update call, each property can only be refreshed once.
+            var allResettedPropertyNames = new List<string>(shouldRefreshPropertyNames);
+            allResettedPropertyNames.AddRange(alreadyRefreshedPropertyNames);
+
+            foreach (var resetProperty in shouldRefreshPropertyNames)
+            {
+                if (!alreadyRefreshedPropertyNames.Contains(resetProperty))
+                {
+                    await RefreshValidationResults(resetProperty, allResettedPropertyNames);
                 }
             }
         }
@@ -140,6 +202,17 @@ namespace Devkoes.JenkinsManager.Model.Schema
         public bool HasErrors
         {
             get { return _propertyValidationResults.Any((p) => p.Value.Any()); }
+        }
+
+        public bool IsValid
+        {
+            get
+            {
+                return
+                    !_propertyValidationResults.Any() ||
+                    _propertyValidationResults.All((p) => !p.Value.Any()) ||
+                    !_propertyValidationResults.Any((p) => p.Value.Any((q) => q.ValidationResultType == ValidationResultType.Error));
+            }
         }
 
         protected string GetPropertyName<R>(Expression<Func<T, R>> propertyExpression)

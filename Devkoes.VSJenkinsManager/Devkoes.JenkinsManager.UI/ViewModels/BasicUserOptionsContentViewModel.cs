@@ -25,7 +25,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
             AddServer = new RelayCommand(HandleAddJenkinsServer);
             RemoveServer = new RelayCommand(HandleRemoveJenkinsServer);
-            ApplyChanges = new RelayCommand(HandleApplyChanges);
+            ApplyChanges = new RelayCommand(HandleApplyChanges, CanExecuteApplyChanges);
 
             JenkinsServers = ApiHandlerSettingsManager.GetServers();
             SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
@@ -33,8 +33,21 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             InitializeValidationRules();
         }
 
+        private bool CanExecuteApplyChanges()
+        {
+            return _editJenkinsServer.IsValid && !_editJenkinsServer.IsValidating;
+        }
+
         private void InitializeValidationRules()
         {
+            _editJenkinsServer.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == "IsValidating")
+                {
+                    ApplyChanges.RaiseCanExecuteChanged();
+                }
+            };
+
             _editJenkinsServer.RegisterValidationRule(
                 (c) => c.Url,
                 (j) => PropertyRequired.Validate("Url", j.Url));
