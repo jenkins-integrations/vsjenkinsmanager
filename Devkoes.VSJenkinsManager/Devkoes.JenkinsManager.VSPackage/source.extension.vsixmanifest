@@ -11,7 +11,12 @@
     <Description xml:space="preserve">View and start your Jenkins jobs from within your precious IDE.
 
 Latest changes (0.5):
- - </Description>
+ - Show build history
+ - Progress bar visuals improved
+ - Progress of build is shown
+ - Log output directly visible in visual studio
+ - Preferred view restored when opening a solution
+ - Moved settings to the tools-&gt;settings menu</Description>
     <MoreInfo>https://github.com/tomkuijsten/vsjenkinsmanager</MoreInfo>
     <License>license.txt</License>
     <ReleaseNotes>releaseNotes.txt</ReleaseNotes>
