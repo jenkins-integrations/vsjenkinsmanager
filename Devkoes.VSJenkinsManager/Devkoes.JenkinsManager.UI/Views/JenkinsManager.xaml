@@ -138,12 +138,46 @@
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem
-                        Header="_Start/Schedule Job"
-                        Command="{Binding Path=ScheduleJobCommand}"
-                        CommandParameter="{Binding SelectedJob}">
+                        Header="_Build now"
+                        Command="{Binding Path=BuildJobCommand}"
+                        CommandParameter="{Binding SelectedJob}"
+                        Visibility="{Binding SelectedJob.LatestBuild.IsBuilding, Converter={StaticResource boolToCollapsedConverter}}">
                         <MenuItem.Icon>
                             <Image
-                                Source="..\Resources\BuildNotificationIcon.ico"
+                                Source="..\Resources\BuildIcon.png"
+                                Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        Header="_Cancel build"
+                        Command="{Binding Path=CancelBuildCommand}"
+                        CommandParameter="{Binding SelectedJob}"
+                        Visibility="{Binding SelectedJob.LatestBuild.IsBuilding, Converter={StaticResource boolToVisConverter}}">
+                        <MenuItem.Icon>
+                            <Image
+                                Source="..\Resources\CancelBuildIcon.png"
+                                Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        Header="_Schedule new build"
+                        Command="{Binding Path=ScheduleBuildCommand}"
+                        CommandParameter="{Binding SelectedJob}"
+                        Visibility="{Binding SelectedJob.IsQueued, Converter={StaticResource boolToCollapsedConverter}}">
+                        <MenuItem.Icon>
+                            <Image
+                                Source="..\Resources\QueueIcon.png"
+                                Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        Header="_Remove from queue"
+                        Command="{Binding Path=DequeueJobCommand}"
+                        CommandParameter="{Binding SelectedJob}"
+                        Visibility="{Binding SelectedJob.IsQueued, Converter={StaticResource boolToVisConverter}}">
+                        <MenuItem.Icon>
+                            <Image
+                                Source="..\Resources\DequeueIcon.png"
                                 Height="16" />
                         </MenuItem.Icon>
                     </MenuItem>
@@ -236,7 +270,7 @@
                         <Image
                             Grid.Column="3"
                             Margin="5,0"
-                            Source="..\Resources\ClockIcon.png"
+                            Source="..\Resources\QueueIcon.png"
                             ToolTip="{Binding QueueItem.Why}"
                             Height="16"
                             Visibility="{Binding IsQueued, Converter={StaticResource boolToVisConverter}}">

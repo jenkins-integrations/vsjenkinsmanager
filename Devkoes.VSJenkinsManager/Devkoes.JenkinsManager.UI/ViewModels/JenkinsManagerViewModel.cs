@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -37,7 +36,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         public RelayCommand ShowSettings { get; private set; }
         public RelayCommand Reload { get; private set; }
 
-        public RelayCommand<JenkinsJob> ScheduleJobCommand { get; private set; }
+        public RelayCommand<JenkinsJob> BuildJobCommand { get; private set; }
+        public RelayCommand<JenkinsJob> ScheduleBuildCommand { get; private set; }
+        public RelayCommand<JenkinsJob> CancelBuildCommand { get; private set; }
+        public RelayCommand<JenkinsJob> DequeueJobCommand { get; private set; }
+
         public RelayCommand<JenkinsJob> ShowJobsWebsite { get; private set; }
         public RelayCommand<JenkinsJob> LinkJobToCurrentSolution { get; private set; }
         public RelayCommand<JenkinsJob> ShowLatestLog { get; private set; }
@@ -54,7 +57,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             Reload = new RelayCommand(HandleReload);
             ShowSettings = new RelayCommand(HandleShowSettings);
 
-            ScheduleJobCommand = new RelayCommand<JenkinsJob>(ScheduleJob, CanDoJobAction);
+            BuildJobCommand = new RelayCommand<JenkinsJob>(BuildJob, CanDoJobAction);
+            ScheduleBuildCommand = new RelayCommand<JenkinsJob>(ScheduleJob, CanDoJobAction);
+            CancelBuildCommand = new RelayCommand<JenkinsJob>(CancelBuild, CanDoJobAction);
+            DequeueJobCommand = new RelayCommand<JenkinsJob>(DequeueBuild, CanDoJobAction);
+
             ShowJobsWebsite = new RelayCommand<JenkinsJob>(ShowWebsite, CanDoJobAction);
             ShowLatestLog = new RelayCommand<JenkinsJob>(HandleShowLatestLog, CanDoJobAction);
             LinkJobToCurrentSolution = new RelayCommand<JenkinsJob>(LinkJobToSolution, CanDoJobAction);
@@ -75,7 +82,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private async void HandleShowLatestLog(JenkinsJob job)
         {
-            if(job.LatestBuild == null)
+            if (job.LatestBuild == null)
             {
                 StatusMessage = "No build available to show log from.";
                 return;
@@ -286,11 +293,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        private async void ScheduleJob(JenkinsJob j)
+        private async void BuildJob(JenkinsJob j)
         {
             try
             {
-                await ScheduleJob(j.Url, SelectedJenkinsServer.Url);
+                await BuildJob(j.Url, SelectedJenkinsServer.Url);
                 ForceReload(false);
             }
             catch (Exception ex)
@@ -299,11 +306,12 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        public async Task ScheduleJob(string jobUrl, string solutionUrl)
+        private async void ScheduleJob(JenkinsJob j)
         {
             try
             {
-                await JenkinsJobManager.ScheduleJob(jobUrl, solutionUrl);
+                await JenkinsJobManager.ScheduleJob(j.Url, SelectedJenkinsServer.Url);
+                ForceReload(false);
             }
             catch (WebException ex)
             {
@@ -317,6 +325,87 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 else
                 {
                     StatusMessage = string.Format(Resources.WebExceptionMessage, "Schedule job", ex.Status);
+                }
+            }
+        }
+
+        private async void CancelBuild(JenkinsJob j)
+        {
+            try
+            {
+                await JenkinsJobManager.CancelBuild(j, SelectedJenkinsServer.Url);
+                ForceReload(false);
+            }
+            catch (WebException ex)
+            {
+                Logger.Log(ex);
+
+                var resp = ex.Response as HttpWebResponse;
+                if (resp != null)
+                {
+                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Cancel job", resp.StatusDescription);
+                }
+                else
+                {
+                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Cancel job", ex.Status);
+                }
+            }
+        }
+
+        private async void DequeueBuild(JenkinsJob j)
+        {
+            if (j.QueueItem == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await JenkinsJobManager.DequeueJob(j.QueueItem, SelectedJenkinsServer.Url);
+                ForceReload(false);
+            }
+            catch (WebException ex)
+            {
+                var resp = ex.Response as HttpWebResponse;
+                if (resp != null)
+                {
+                    if (resp.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        // Known bug (https://issues.jenkins-ci.org/browse/JENKINS-21311), dequeue actually worked but
+                        // returns a 404 result.
+                        ForceReload(false);
+                        return;
+                    }
+
+                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Dequeue job", resp.StatusDescription);
+                }
+                else
+                {
+                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Dequeue job", ex.Status);
+                }
+
+                Logger.Log(ex);
+            }
+        }
+
+        public async Task BuildJob(string jobUrl, string solutionUrl)
+        {
+            try
+            {
+                await JenkinsJobManager.BuildJob(jobUrl, solutionUrl);
+            }
+            catch (WebException ex)
+            {
+                Logger.Log(ex);
+
+                var resp = ex.Response as HttpWebResponse;
+                if (resp != null)
+                {
+                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Build job", resp.StatusDescription);
+                }
+                else
+                {
+                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Build job", ex.Status);
                 }
             }
         }
@@ -335,7 +424,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 {
                     _selectedJob = value;
                     RaisePropertyChanged(() => SelectedJob);
-                    ScheduleJobCommand.RaiseCanExecuteChanged();
+                    BuildJobCommand.RaiseCanExecuteChanged();
                     ShowJobsWebsite.RaiseCanExecuteChanged();
                     LinkJobToCurrentSolution.RaiseCanExecuteChanged();
                     ShowLatestLog.RaiseCanExecuteChanged();
