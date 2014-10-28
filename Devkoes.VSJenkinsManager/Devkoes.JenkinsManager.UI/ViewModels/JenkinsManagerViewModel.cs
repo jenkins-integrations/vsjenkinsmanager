@@ -580,23 +580,41 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 return false;
             }
 
-            string prevSelectedJob = SelectedJob == null ? null : SelectedJob.Name;
+            var prevSelectedJob = SelectedJob;
+
+            var jobsToAdd = refreshedJobs.Except(Jobs);
+            var jobsToUpdate = refreshedJobs.Intersect(Jobs);
+            var jobsToRemove = Jobs.Except(refreshedJobs).ToArray();
 
             UIHelper.InvokeUI(() =>
                 {
-                    Jobs.Clear();
-                    foreach (var j in refreshedJobs)
+                    foreach (var j in jobsToAdd)
                     {
                         Jobs.Add(j);
-
-                        if (string.Equals(j.Name, prevSelectedJob))
-                        {
-                            SelectedJob = j;
-                        }
                     }
+                    foreach (var j in jobsToUpdate)
+                    {
+                        var refreshedJobOriginal = Jobs.Single((ej) => object.Equals(ej, j));
+                        MergeUpdatedJenkinsJob(j, refreshedJobOriginal);
+                    }
+                    foreach (var j in jobsToRemove)
+                    {
+                        Jobs.Remove(j);
+                    }
+
+                    SelectedJob = Jobs.FirstOrDefault((oj) => object.Equals(oj, prevSelectedJob));
                 });
 
             return true;
+        }
+
+        private void MergeUpdatedJenkinsJob(JenkinsJob refreshed, JenkinsJob original)
+        {
+            original.Builds = refreshed.Builds;
+            original.IsEnabled = refreshed.IsEnabled;
+            original.IsQueued = refreshed.IsQueued;
+            original.Name = refreshed.Name;
+            original.QueueItem = refreshed.QueueItem;
         }
 
         public bool LoadingFailed

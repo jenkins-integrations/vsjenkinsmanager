@@ -95,7 +95,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             {
                 Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(jsonDataUri);
 
-                if (await Task.WhenAny(jsonRawDataTask, Task.Delay(5000)) == jsonRawDataTask)
+                if (await Task.WhenAny(jsonRawDataTask, Task.Delay(30000)) == jsonRawDataTask)
                 {
                     deserialisedJsonObject = JsonConvert.DeserializeObject<T>(jsonRawDataTask.Result);
                 }
