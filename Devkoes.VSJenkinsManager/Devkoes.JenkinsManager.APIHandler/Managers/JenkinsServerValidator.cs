@@ -16,6 +16,8 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         /// </summary>
         private static readonly Dictionary<string, Version> _validJenkinsVersionCache = new Dictionary<string, Version>();
 
+        private const string JENKINS_VERSION_HEADER_KEY = "X-Jenkins";
+
         public static readonly Version MINIMUM_VERSION = new Version("1.367");
         public static readonly Version RANGE_SPECIFIER_VERSION = new Version("1.568");
 
@@ -26,36 +28,17 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
                 return _validJenkinsVersionCache[jenkinsServerUrl];
             }
 
-            Version jenkinsVersion = null;
-            try
+            WebHeaderCollection headers = GetHeaders(jenkinsServerUrl);
+
+            if (headers == null)
             {
-                var req = WebRequest.Create(jenkinsServerUrl);
-                req.Timeout = 1000;
-                req.Method = "HEAD";
-                var response = req.GetResponse();
-
-                var versionString = response.Headers["X-Jenkins"];
-
-                Version.TryParse(versionString, out jenkinsVersion);
-
-                if (jenkinsVersion != null)
-                {
-                    _validJenkinsVersionCache[jenkinsServerUrl] = jenkinsVersion;
-                }
+                // request failed, don't cache and return empty version
+                return new Version();
             }
-            catch (WebException ex)
-            {
-                // 403 Forbidden  
-                if (ex.Response.Headers.AllKeys.Contains("X-Jenkins"))
-                {
-                    var versionString = ex.Response.Headers["X-Jenkins"];
 
-                    Version.TryParse(versionString, out jenkinsVersion);
-                }
-            }
-            catch { }
+            Version jenkinsVersion = GetJenkinsVersionFromHeaders(headers);
 
-            jenkinsVersion = jenkinsVersion ?? new Version();
+            _validJenkinsVersionCache[jenkinsServerUrl] = jenkinsVersion;
 
             return jenkinsVersion;
         }
@@ -79,6 +62,44 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             var version = GetJenkinsVersion(jenkinsServerUrl);
 
             return version >= RANGE_SPECIFIER_VERSION;
+        }
+
+        private static Version GetJenkinsVersionFromHeaders(WebHeaderCollection headers)
+        {
+            Version jenkinsVersion = null;
+            if (headers.AllKeys.Contains(JENKINS_VERSION_HEADER_KEY))
+            {
+                var versionString = headers[JENKINS_VERSION_HEADER_KEY];
+                Version.TryParse(versionString, out jenkinsVersion);
+            }
+
+            return jenkinsVersion ?? new Version();
+        }
+
+        private static WebHeaderCollection GetHeaders(string url)
+        {
+            WebHeaderCollection headersFromRequestUrl = null;
+            try
+            {
+                var req = WebRequest.Create(url);
+                req.Timeout = 1000;
+                req.Method = "HEAD";
+                var response = req.GetResponse();
+
+                headersFromRequestUrl = response.Headers;
+            }
+            catch (WebException ex)
+            {
+                // A WebException could occur when authorization is needed (403 forbidden)
+                // We can still return the headers if a response is available
+                if (ex.Response != null)
+                {
+                    headersFromRequestUrl = ex.Response.Headers;
+                }
+            }
+            catch { }
+
+            return headersFromRequestUrl;
         }
     }
 }
