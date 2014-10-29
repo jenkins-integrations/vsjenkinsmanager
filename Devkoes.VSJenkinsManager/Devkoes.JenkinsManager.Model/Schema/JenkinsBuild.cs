@@ -25,7 +25,16 @@ namespace Devkoes.JenkinsManager.Model.Schema
         {
             get
             {
-                return IsSuccessfull ? "ForestGreen" : "Firebrick";
+                if (IsBuilding)
+                {
+                    return "Yellow";
+                }
+                else if (IsSuccessfull)
+                {
+                    return "ForestGreen";
+                }
+
+                return "Firebrick";
             }
         }
     }
