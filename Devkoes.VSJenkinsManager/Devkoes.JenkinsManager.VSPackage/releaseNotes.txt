@@ -3,6 +3,8 @@ A visual studio package to manage Jenkins
 
 https://github.com/tomkuijsten/vsjenkinsmanager
 
+Version 1.0:
+
 Version 0.5:
  - Show build history
  - Progress bar visuals improved
