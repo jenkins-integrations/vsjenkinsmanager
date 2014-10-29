@@ -11,6 +11,8 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
 {
     public static class JenkinsDataLoader
     {
+        private const short MAX_JOB_BUILDS = 5;
+
         private const string VIEW_QUERY = "api/json?pretty=true&tree=views[name,url]";
         private const string JOBS_QUERY_WITH_RANGE = "api/json?pretty=true&tree=jobs[name,url,inQueue,buildable,builds[number,result,building,estimatedDuration,timestamp]{0,5},queueItem[why,id]]";
         private const string JOBS_QUERY = "api/json?pretty=true&tree=jobs[name,url,inQueue,buildable,builds[number,result,building,estimatedDuration,timestamp],queueItem[why,id]]";
@@ -50,12 +52,31 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         {
             Uri viewUri = new Uri(view.Url);
 
-            var jobsQuery = JenkinsServerValidator.RangeSpecifierSupported(server.Url) ? JOBS_QUERY_WITH_RANGE : JOBS_QUERY;
+            var rangeSpecifierSupported = JenkinsServerValidator.RangeSpecifierSupported(server.Url);
+            var jobsQuery = rangeSpecifierSupported ? JOBS_QUERY_WITH_RANGE : JOBS_QUERY;
 
             Uri jobsInfoUri = new Uri(viewUri, jobsQuery);
             JenkinsView viewWithJobData = await GetFromJSONData<JenkinsView>(server, jobsInfoUri);
 
-            return viewWithJobData == null ? Enumerable.Empty<JenkinsJob>() : viewWithJobData.Jobs;
+            var result = viewWithJobData == null ? Enumerable.Empty<JenkinsJob>() : viewWithJobData.Jobs;
+
+            if (!rangeSpecifierSupported)
+            {
+                RestrictNumberOfJobBuilds(result);
+            }
+
+            return result;
+        }
+
+        private static void RestrictNumberOfJobBuilds(IEnumerable<JenkinsJob> jobs)
+        {
+            foreach (var job in jobs)
+            {
+                if (job.Builds != null && job.Builds.Count() > MAX_JOB_BUILDS)
+                {
+                    job.Builds = job.Builds.Take(5).ToArray();
+                }
+            }
         }
 
         public static WebClient CreateJenkinsWebClient(string jenkinsServerUrl)

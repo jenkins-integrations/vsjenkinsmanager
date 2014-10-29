@@ -231,18 +231,20 @@
 
                         <StackPanel Grid.RowSpan="2" Margin="3,0">
                             <Rectangle Fill="{Binding StatusColor}" Width="20" Height="16" />
-                            <StackPanel Height="4" Orientation="Horizontal" Margin="0,1,0,0">
-                                <Rectangle Width="3" Height="3" 
-                                           Fill="{Binding StatusColor}" Margin="0,0,1,0"/>
-                                <Rectangle Width="3" Height="3" 
-                                           Fill="{Binding Builds[1].StatusColor}" Margin="0,0,1,0"/>
-                                <Rectangle Width="3" Height="3" 
-                                           Fill="{Binding Builds[2].StatusColor}" Margin="0,0,1,0"/>
-                                <Rectangle Width="3" Height="3" 
-                                           Fill="{Binding Builds[3].StatusColor}" Margin="0,0,1,0"/>
-                                <Rectangle Width="3" Height="3" 
-                                           Fill="{Binding Builds[4].StatusColor}" />
-                            </StackPanel>
+                            <ItemsControl ItemsSource="{Binding Builds}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Height="4" Orientation="Horizontal" Margin="0,1,0,0" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Rectangle Width="3" Height="3" 
+                                           Fill="{Binding StatusColor}" Margin="0,0,1,0" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
 
                         <StackPanel Grid.Column="1">
