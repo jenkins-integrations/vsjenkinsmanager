@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace Devkoes.JenkinsManager.APIHandler.Managers
@@ -33,6 +34,16 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
                 var versionString = response.Headers["X-Jenkins"];
 
                 Version.TryParse(versionString, out jenkinsVersion);
+            }
+            catch (WebException ex)
+            {
+                // 403 Forbidden  
+                if (ex.Response.Headers.AllKeys.Contains("X-Jenkins"))
+                {
+                    var versionString = ex.Response.Headers["X-Jenkins"];
+
+                    Version.TryParse(versionString, out jenkinsVersion);
+                }
             }
             catch { }
 
