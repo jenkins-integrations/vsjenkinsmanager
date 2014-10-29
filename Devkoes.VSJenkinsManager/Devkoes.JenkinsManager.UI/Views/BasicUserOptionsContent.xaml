@@ -15,122 +15,124 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
 
-        <GroupBox Header="Jenkins servers" Padding="5" Margin="0,5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="125"/>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="100" />
-                </Grid.ColumnDefinitions>
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-                <ListBox 
+            <GroupBox Header="Jenkins servers" Padding="5" Margin="0,5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="125"/>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="100" />
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox 
                     VerticalAlignment="Stretch"
                     Margin="3" 
                     SelectedItem="{Binding SelectedJenkinsServer}"
                     ItemsSource="{Binding JenkinsServers}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="3">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="3">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
 
-                                <TextBlock Text="{Binding Name}" />
-                                <TextBlock Text="{Binding Url}" Grid.Row="1" FontSize="10" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                                    <TextBlock Text="{Binding Name}" />
+                                    <TextBlock Text="{Binding Url}" Grid.Row="1" FontSize="10" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
-                <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                    <Button Margin="3" Content="_Add" Command="{Binding AddServer}" />
-                    <Button Margin="3" Grid.Row="1" Command="{Binding RemoveServer}" Content="_Remove" />
-                </Grid>
+                        <Button Margin="3" Content="_Add" Command="{Binding AddServer}" />
+                        <Button Margin="3" Grid.Row="1" Command="{Binding RemoveServer}" Content="_Remove" />
+                    </Grid>
 
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                    <Label Margin="3" Content="_Name*" />
-                    <Label Margin="3" Content="_Url*" Grid.Row="1" />
-                    <Label Margin="3" Content="User_name" Grid.Row="3" />
-                    <Label Margin="3" Content="API _token" Grid.Row="4" />
+                        <Label Margin="3" Content="_Name*" />
+                        <Label Margin="3" Content="_Url*" Grid.Row="1" />
+                        <Label Margin="3" Content="User_name" Grid.Row="3" />
+                        <Label Margin="3" Content="API _token" Grid.Row="4" />
 
-                    <TextBox
+                        <TextBox
                         Margin="3" 
                         Text="{Binding EditJenkinsServer.Name, ValidatesOnNotifyDataErrors=True}" 
                         Grid.Column="1"
                         Validation.ErrorTemplate="{StaticResource validationTemplate}"  />
 
-                    <TextBox 
+                        <TextBox 
                         Margin="3" Grid.Column="1" Grid.Row="1"
                         Name="addEditUrlInput"
                         Text="{Binding EditJenkinsServer.Url, ValidatesOnNotifyDataErrors=True}"
                         Validation.ErrorTemplate="{StaticResource validationTemplate}" />
 
-                    <TextBox 
+                        <TextBox 
                         Margin="3" 
                         Text="{Binding EditJenkinsServer.UserName, ValidatesOnNotifyDataErrors=True}" 
                         Validation.ErrorTemplate="{StaticResource validationTemplate}"
                         Grid.Column="1" 
                         Grid.Row="3"/>
-                    
-                    <TextBox 
+
+                        <TextBox 
                         Margin="3" 
                         Text="{Binding EditJenkinsServer.ApiToken, ValidatesOnNotifyDataErrors=True}" 
                         Grid.Column="1" Grid.Row="4"
                         Validation.ErrorTemplate="{StaticResource validationTemplate}" />
+                    </Grid>
+
+                    <Button Margin="3" Content="A_pply" Command="{Binding ApplyChanges}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom">
+                    </Button>
                 </Grid>
+            </GroupBox>
 
-                <Button Margin="3" Content="A_pply" Command="{Binding ApplyChanges}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom">
-                </Button>
-            </Grid>
-        </GroupBox>
+            <GroupBox Grid.Row="1"  Header="Debug options" Padding="5" Margin="0,5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-        <GroupBox Grid.Row="1"  Header="Debug options" Padding="5" Margin="0,5">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <TextBlock
+                    <TextBlock
                     VerticalAlignment="Center"
                     Text="Enable debug output" />
-                <CheckBox
+                    <CheckBox
                     Grid.Column="2"
                     VerticalAlignment="Center"
                     IsChecked="{Binding DebugEnabled}" />
-            </Grid>
-        </GroupBox>
-    </Grid>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </ScrollViewer>
 </UserControl>
