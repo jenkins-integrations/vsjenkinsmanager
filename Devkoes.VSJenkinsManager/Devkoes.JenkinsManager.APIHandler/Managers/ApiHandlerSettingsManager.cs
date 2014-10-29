@@ -84,6 +84,9 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         {
             _serversCopy.Remove(server);
             SaveJenkinsServers();
+
+            Settings.Default.SolutionJobs.RemoveAll((s) => string.Equals(server.Url, s.JenkinsServerUrl));
+            Settings.Default.Save();
         }
 
         public static bool DebugEnabled
