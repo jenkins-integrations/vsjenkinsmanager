@@ -11,7 +11,10 @@
 
     <local:BooleanToHiddenConverter
         x:Key="boolToHiddenConverter" />
-    
+
+    <local:BooleanToCollapsedConverter
+        x:Key="boolToCollapsedConverter" />
+
     <Color x:Key="errorColor">Red</Color>
     <Color x:Key="warningColor">Orange</Color>
     

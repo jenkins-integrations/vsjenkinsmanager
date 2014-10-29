@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="Comparers\JobComparer.cs" />
     <Compile Include="Converters\BooleanInverterConverter.cs" />
+    <Compile Include="Converters\BooleanToCollapsedConverter.cs" />
     <Compile Include="Converters\BooleanToHiddenConverter.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ServicesContainer.cs" />
@@ -172,19 +173,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\BuildNotificationIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\OnlineIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ConnectIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ClockIcon.png" />
+    <Resource Include="Resources\LogIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\LogIcon.png" />
+    <Resource Include="Resources\BuildIcon.png" />
+    <Resource Include="Resources\CancelBuildIcon.png" />
+    <Resource Include="Resources\DequeueIcon.png" />
+    <Resource Include="Resources\QueueIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

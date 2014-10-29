@@ -10,7 +10,7 @@ namespace Devkoes.JenkinsManager.UI.ExposedServices
         public async void StartJenkinsBuildForSolution(string slnPath)
         {
             SolutionJenkinsJobLink sJob = ApiHandlerSettingsManager.GetJobLink(slnPath);
-            await ViewModelController.JenkinsManagerViewModel.ScheduleJob(sJob.JobUrl, sJob.JenkinsServerUrl);
+            await ViewModelController.JenkinsManagerViewModel.BuildJob(sJob.JobUrl, sJob.JenkinsServerUrl);
         }
 
         public bool IsSolutionLinked(string solutionPath)

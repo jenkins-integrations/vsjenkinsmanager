@@ -4,6 +4,9 @@ namespace Devkoes.JenkinsManager.Model.Schema
 {
     public class JenkinsBuild
     {
+        [JsonProperty("number")]
+        public int Number { get; set; }
+
         [JsonProperty("Building")]
         public bool IsBuilding { get; set; }
 

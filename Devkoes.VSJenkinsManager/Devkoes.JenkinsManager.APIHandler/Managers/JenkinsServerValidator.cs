@@ -11,16 +11,19 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
     /// </summary>
     public static class JenkinsServerValidator
     {
-        private static readonly Dictionary<string, Version> _jenkinsServerVersions = new Dictionary<string, Version>();
+        /// <summary>
+        /// Cache with versions of valid Jenkins servers
+        /// </summary>
+        private static readonly Dictionary<string, Version> _validJenkinsVersionCache = new Dictionary<string, Version>();
 
         public static readonly Version MINIMUM_VERSION = new Version("1.367");
         public static readonly Version RANGE_SPECIFIER_VERSION = new Version("1.568");
 
         public static Version GetJenkinsVersion(string jenkinsServerUrl)
         {
-            if (_jenkinsServerVersions.ContainsKey(jenkinsServerUrl))
+            if (_validJenkinsVersionCache.ContainsKey(jenkinsServerUrl))
             {
-                return _jenkinsServerVersions[jenkinsServerUrl];
+                return _validJenkinsVersionCache[jenkinsServerUrl];
             }
 
             Version jenkinsVersion = null;
@@ -34,6 +37,11 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
                 var versionString = response.Headers["X-Jenkins"];
 
                 Version.TryParse(versionString, out jenkinsVersion);
+
+                if (jenkinsVersion != null)
+                {
+                    _validJenkinsVersionCache[jenkinsServerUrl] = jenkinsVersion;
+                }
             }
             catch (WebException ex)
             {
@@ -48,8 +56,6 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             catch { }
 
             jenkinsVersion = jenkinsVersion ?? new Version();
-
-            _jenkinsServerVersions[jenkinsServerUrl] = jenkinsVersion;
 
             return jenkinsVersion;
         }

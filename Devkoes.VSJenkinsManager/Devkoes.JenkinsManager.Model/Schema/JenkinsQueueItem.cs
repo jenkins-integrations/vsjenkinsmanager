@@ -4,7 +4,10 @@ namespace Devkoes.JenkinsManager.Model.Schema
 {
     public class JenkinsQueueItem
     {
-        [JsonProperty("Why")]
+        [JsonProperty("why")]
         public string Why { get; set; }
+
+        [JsonProperty("id")]
+        public string ID { get; set; }
     }
 }
