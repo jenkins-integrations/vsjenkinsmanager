@@ -23,10 +23,17 @@ namespace Devkoes.JenkinsManager.UI
 
         public static void Log(Exception ex)
         {
+            LogInfo(ex.Message);
+
             if (ApiHandlerSettingsManager.DebugEnabled)
             {
                 ServicesContainer.OutputWindowLogger.LogOutput(ex);
             }
+        }
+
+        internal static void LogInfo(string message)
+        {
+            ServicesContainer.OutputWindowLogger.LogOutput(message);
         }
     }
 }

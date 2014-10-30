@@ -41,8 +41,6 @@
                 Height="Auto" />
             <RowDefinition
                 Height="*" />
-            <RowDefinition
-                Height="Auto" />
         </Grid.RowDefinitions>
 
         <Label
@@ -95,6 +93,16 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+
+        <Button
+            Content="log"
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="5,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Command="{Binding ShowOutputWindow}"
+            Style="{StaticResource HyperlinkLikeButton}" />
 
         <ProgressBar
             Grid.Row="2"
@@ -281,24 +289,5 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
-        <TextBlock
-            Background="{DynamicResource VsBrush.Window}"
-            Foreground="{DynamicResource VsBrush.WindowText}"
-            Padding="5"
-            Grid.Row="4"
-            Grid.ColumnSpan="2"
-            Text="{Binding StatusMessage}" />
-
-        <Button
-            Content="log"
-            Grid.Row="4"
-            Grid.Column="2"
-            Margin="5,0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Center"
-            Command="{Binding ShowOutputWindow}"
-            Style="{StaticResource HyperlinkLikeButton}" />
-
     </Grid>
 </UserControl>

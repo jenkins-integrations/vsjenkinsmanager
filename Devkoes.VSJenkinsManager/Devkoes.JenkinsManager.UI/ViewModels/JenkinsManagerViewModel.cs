@@ -20,7 +20,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
     {
         private int _refreshInterval = 5000;
         private JenkinsServer _selectedJenkinsServer;
-        private string _statusMessage;
         private JenkinsJob _selectedJob;
         private Timer _refreshTimer;
         private bool _loadingJobsBusy;
@@ -84,7 +83,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         {
             if (job.LatestBuild == null)
             {
-                StatusMessage = "No build available to show log from.";
+                Logger.LogInfo("No build available to show log from.");
                 return;
             }
 
@@ -263,7 +262,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 string slnPath = ServicesContainer.VisualStudioSolutionInfo.SolutionPath;
                 if (string.IsNullOrEmpty(slnPath))
                 {
-                    StatusMessage = Resources.SolutionNotLoaded;
+                    Logger.LogInfo(Resources.SolutionNotLoaded);
                     return;
                 }
 
@@ -320,11 +319,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 var resp = ex.Response as HttpWebResponse;
                 if (resp != null)
                 {
-                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Schedule job", resp.StatusDescription);
+                    Logger.LogInfo(string.Format(Resources.WebExceptionMessage, "Schedule job", resp.StatusDescription));
                 }
                 else
                 {
-                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Schedule job", ex.Status);
+                    Logger.LogInfo(string.Format(Resources.WebExceptionMessage, "Schedule job", ex.Status));
                 }
             }
         }
@@ -343,11 +342,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 var resp = ex.Response as HttpWebResponse;
                 if (resp != null)
                 {
-                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Cancel job", resp.StatusDescription);
+                    Logger.LogInfo(string.Format(Resources.WebExceptionMessage, "Cancel job", resp.StatusDescription));
                 }
                 else
                 {
-                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Cancel job", ex.Status);
+                    Logger.LogInfo(string.Format(Resources.WebExceptionMessage, "Cancel job", ex.Status));
                 }
             }
         }
@@ -377,11 +376,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                         return;
                     }
 
-                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Dequeue job", resp.StatusDescription);
+                    Logger.LogInfo(string.Format(Resources.WebExceptionMessage, "Dequeue job", resp.StatusDescription));
                 }
                 else
                 {
-                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Dequeue job", ex.Status);
+                    Logger.LogInfo(string.Format(Resources.WebExceptionMessage, "Dequeue job", ex.Status));
                 }
 
                 Logger.Log(ex);
@@ -401,11 +400,11 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 var resp = ex.Response as HttpWebResponse;
                 if (resp != null)
                 {
-                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Build job", resp.StatusDescription);
+                    Logger.LogInfo(string.Format(Resources.WebExceptionMessage, "Build job", resp.StatusDescription));
                 }
                 else
                 {
-                    StatusMessage = string.Format(Resources.WebExceptionMessage, "Build job", ex.Status);
+                    Logger.LogInfo(string.Format(Resources.WebExceptionMessage, "Build job", ex.Status));
                 }
             }
         }
@@ -509,16 +508,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             }
         }
 
-        public string StatusMessage
-        {
-            get { return _statusMessage; }
-            set
-            {
-                _statusMessage = value;
-                RaisePropertyChanged(() => StatusMessage);
-            }
-        }
-
         private async Task LoadJenkinsJobs()
         {
             try
@@ -548,11 +537,9 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                 }
 
                 LoadingFailed = false;
-                StatusMessage = null;
             }
             catch (Exception ex)
             {
-                StatusMessage = ex.Message;
                 Logger.Log(ex);
                 LoadingFailed = true;
                 _refreshTimer.Stop();
