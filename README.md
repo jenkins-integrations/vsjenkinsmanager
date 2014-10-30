@@ -6,7 +6,7 @@ Thanks for the suggestions and fixes, I hope it's a useable extension for you al
 
 For now, if you find any bug, I'll be glad to fix it. If none exists (right...) I'll move on to a new hobby project.
 
-Cheers
+Cheers!
 
 ================
 
