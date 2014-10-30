@@ -84,6 +84,7 @@
     <Compile Include="Converters\BooleanInverterConverter.cs" />
     <Compile Include="Converters\BooleanToCollapsedConverter.cs" />
     <Compile Include="Converters\BooleanToHiddenConverter.cs" />
+    <Compile Include="Converters\SomethingToTrueConverter.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ServicesContainer.cs" />
     <Compile Include="Helpers\UIHelper.cs" />

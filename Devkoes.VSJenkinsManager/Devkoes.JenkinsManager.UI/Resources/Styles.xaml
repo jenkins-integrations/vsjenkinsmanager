@@ -15,6 +15,9 @@
     <local:BooleanToCollapsedConverter
         x:Key="boolToCollapsedConverter" />
 
+    <local:SomethingToTrueConverter
+        x:Key="somethingToTrueConverter" />
+
     <Color x:Key="errorColor">Red</Color>
     <Color x:Key="warningColor">Orange</Color>
     

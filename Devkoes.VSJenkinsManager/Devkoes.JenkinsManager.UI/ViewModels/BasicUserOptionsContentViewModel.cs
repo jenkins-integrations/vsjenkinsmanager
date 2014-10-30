@@ -35,7 +35,10 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private bool CanExecuteApplyChanges()
         {
-            return _editJenkinsServer.IsValid && !_editJenkinsServer.IsValidating;
+            return
+                SelectedJenkinsServer != null &&
+                _editJenkinsServer.IsValid &&
+                !_editJenkinsServer.IsValidating;
         }
 
         private void InitializeValidationRules()
@@ -130,6 +133,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
                     _selectedJenkinsServer = value;
                     UpdateEditJenkinsServer();
                     RaisePropertyChanged(() => SelectedJenkinsServer);
+                    ApplyChanges.RaiseCanExecuteChanged();
                 }
             }
         }
