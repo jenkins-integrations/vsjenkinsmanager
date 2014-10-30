@@ -1,5 +1,14 @@
 Jenkins Manager for Visual Studio
 ================
+It's been a fun ride, I've learn a lot about git and I got a fine visual studio extension as well :)
+
+Thanks for the suggestions and fixes, I hope it's a useable extension for you all.
+
+For now, if you find any bug, I'll be glad to fix it. If none exists (right...) I'll move on to a new hobby project.
+
+Cheers!
+
+================
 
 ![Screenshot](https://github.com/tomkuijsten/vsjenkinsmanager/blob/master/Devkoes.VSJenkinsManager/Devkoes.JenkinsManager.VSPackage/Resources/screenshot1.jpg)
 
