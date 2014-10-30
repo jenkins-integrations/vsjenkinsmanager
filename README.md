@@ -7,9 +7,23 @@ Jenkins Manager for Visual Studio
 
 A [visual studio package](http://visualstudiogallery.msdn.microsoft.com/3471d451-c1f1-4273-b305-acf81e4f8b32) to manage Jenkins:
 
-Planned highlights for 0.5:
- - [ ] Progress on running builds
- - [ ] Restore selected server and view for solution
+Release 1.0:
+ - Cancel executing build / cancel scheduled build
+ - Start build / schedule build seperated
+ - Settings page is now scrollable
+ - Input fields are disabled when no server is selected
+ - Performance improvements (refresh data instead of replacing)
+ - Status bar removed (info available in output window)
+ - Small fix for build history (executing was always red)
+ - Preferences are removed when server is removed
+
+Release 0.5:
+ - [x] Show build history
+ - [x] Progress bar visuals improved
+ - [x] Progress of build is shown
+ - [x] Log output directly visible in visual studio
+ - [x] Preferred view restored when opening a solution
+ - [x] Moved settings to the tools->settings menu
 
 Release 0.4:
  - [x] Bug fix for view caching problem (wrong views for server)
