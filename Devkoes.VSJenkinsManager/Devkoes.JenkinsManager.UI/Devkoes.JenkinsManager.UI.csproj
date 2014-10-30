@@ -105,10 +105,6 @@
     </Compile>
     <Compile Include="WatermarkTextbox\WatermarkAdorner.cs" />
     <Compile Include="WatermarkTextbox\WatermarkService.cs" />
-    <Compile Include="Win32FormWpfInterop\NativeMethods.cs" />
-    <Compile Include="Win32FormWpfInterop\UIElementDialogPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Page Include="Resources\ComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
