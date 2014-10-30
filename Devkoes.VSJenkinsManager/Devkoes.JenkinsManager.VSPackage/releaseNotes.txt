@@ -4,6 +4,14 @@ A visual studio package to manage Jenkins
 https://github.com/tomkuijsten/vsjenkinsmanager
 
 Version 1.0:
+ - Cancel executing build / cancel scheduled build
+ - Start build / schedule build seperated
+ - Settings page is now scrollable
+ - Input fields are disabled when no server is selected
+ - Performance improvements (refresh data instead of replacing)
+ - Status bar removed (info available in output window)
+ - Small fix for build history (executing was always red)
+ - Preferences are removed when server is removed
 
 Version 0.5:
  - Show build history

@@ -10,7 +10,15 @@
     <DisplayName>Jenkins Manager</DisplayName>
     <Description xml:space="preserve">View and start your Jenkins jobs from within your precious IDE.
 
-Latest changes (1.0):</Description>
+Version 1.0:
+ - Cancel executing build / cancel scheduled build
+ - Start build / schedule build seperated
+ - Settings page is now scrollable
+ - Input fields are disabled when no server is selected
+ - Performance improvements (refresh data instead of replacing)
+ - Status bar removed (info available in output window)
+ - Small fix for build history (executing was always red)
+ - Preferences are removed when server is removed</Description>
     <MoreInfo>https://github.com/tomkuijsten/vsjenkinsmanager</MoreInfo>
     <License>license.txt</License>
     <ReleaseNotes>releaseNotes.txt</ReleaseNotes>
