@@ -49,10 +49,32 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         public JenkinsManagerViewModel()
         {
+            InitializeInstanceMembers();
+
+            InitializeCommands();
+
+            ServicesContainer.VisualStudioSolutionEvents.SolutionChanged += SolutionPathChanged;
+
+            JenkinsServers = ApiHandlerSettingsManager.GetServers();
+            SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
+
+            _refreshTimer.Start();
+        }
+
+        private void InitializeInstanceMembers()
+        {
             _jobs = new ObservableCollection<JenkinsJob>();
             _jenkinsServersEnabled = true;
             _jobComparer = new JobComparer();
+            _loadingJobsBusyLock = new object();
 
+            _refreshTimer = new Timer(_refreshInterval);
+            _refreshTimer.Elapsed += RefreshJobsTimerCallback;
+            _refreshTimer.AutoReset = false;
+        }
+
+        private void InitializeCommands()
+        {
             Reload = new RelayCommand(HandleReload);
             ShowSettings = new RelayCommand(HandleShowSettings);
 
@@ -65,18 +87,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             ShowLatestLog = new RelayCommand<JenkinsJob>(HandleShowLatestLog, CanDoJobAction);
             LinkJobToCurrentSolution = new RelayCommand<JenkinsJob>(LinkJobToSolution, CanDoJobAction);
             ShowOutputWindow = new RelayCommand(HandleShowOutputWindow);
-            _loadingJobsBusyLock = new object();
-
-            ServicesContainer.VisualStudioSolutionEvents.SolutionChanged += SolutionPathChanged;
-
-            _refreshTimer = new Timer(_refreshInterval);
-            _refreshTimer.Elapsed += RefreshJobsTimerCallback;
-            _refreshTimer.AutoReset = false;
-
-            JenkinsServers = ApiHandlerSettingsManager.GetServers();
-            SelectedJenkinsServer = JenkinsServers.FirstOrDefault();
-
-            _refreshTimer.Start();
         }
 
         private async void HandleShowLatestLog(JenkinsJob job)
