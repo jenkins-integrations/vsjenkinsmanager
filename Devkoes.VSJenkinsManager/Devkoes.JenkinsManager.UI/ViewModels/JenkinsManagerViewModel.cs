@@ -117,7 +117,6 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             ServicesContainer.VisualStudioWindowHandler.ShowOutputWindow();
         }
 
-
         private void HandleShowSettings()
         {
             ServicesContainer.VisualStudioWindowHandler.ShowSettingsWindow();
@@ -183,7 +182,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private void HandleReload()
         {
-            ForceReload(false);
+            ForceReload(true);
         }
 
         private async void RefreshJobsTimerCallback(object sender, ElapsedEventArgs e)
@@ -497,6 +496,8 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
 
         private void ForceReload(bool disableJenkinsOptions)
         {
+            LoadingFailed = false;
+
             if (disableJenkinsOptions)
             {
                 JenkinsServersEnabled = false;
@@ -552,7 +553,9 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             {
                 Logger.Log(ex);
                 LoadingFailed = true;
+                UIHelper.InvokeUI(() => Jobs.Clear());
                 _refreshTimer.Stop();
+                JenkinsServersEnabled = true;
             }
             finally
             {
