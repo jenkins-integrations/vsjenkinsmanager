@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Devkoes.JenkinsManager.APIHandler.Managers
 {
@@ -64,13 +65,29 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             return version >= RANGE_SPECIFIER_VERSION;
         }
 
+        /// <remarks>
+        /// Current variations I found in the format of the version header:
+        ///  - 1.0.0.0
+        ///  - 1.0
+        ///  - 1.0.0
+        ///  - 1.0.14-final.4
+        /// </remarks>
         private static Version GetJenkinsVersionFromHeaders(WebHeaderCollection headers)
         {
             Version jenkinsVersion = null;
             if (headers.AllKeys.Contains(JENKINS_VERSION_HEADER_KEY))
             {
                 var versionString = headers[JENKINS_VERSION_HEADER_KEY];
-                Version.TryParse(versionString, out jenkinsVersion);
+                // Most headers are .NET version compatible and can be parsed like this
+                if (!Version.TryParse(versionString, out jenkinsVersion))
+                {
+                    // However, some headers are formatted like 3.1.15-final.0
+                    var versionMatch = Regex.Match(versionString, "[0-9]+\\.[0-9]+");
+                    if (versionMatch.Success)
+                    {
+                        Version.TryParse(versionMatch.Value, out jenkinsVersion);
+                    }
+                }
             }
 
             return jenkinsVersion ?? new Version();
