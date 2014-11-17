@@ -42,7 +42,8 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             // all builds, not just the ones for that view).
             if (!view.Url.ToUpperInvariant().Contains("/VIEW/"))
             {
-                view.Url = new Uri(new Uri(new Uri(view.Url), "/view/"), view.Name + "/").AbsoluteUri;
+                string viewUrlPart = string.Concat("view/", view.Name, "/");
+                view.Url = new Uri(new Uri(view.Url), viewUrlPart).AbsoluteUri;
             }
 
             return view.Url;
