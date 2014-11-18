@@ -30,18 +30,25 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
 
             foreach (var view in overview.Views)
             {
-                view.Url = FixViewUrl(view);
+                view.Url = FixPrimaryViewUrl(view);
             }
 
             return overview.Views;
         }
 
-        private static string FixViewUrl(JenkinsView view)
+        private static string FixPrimaryViewUrl(JenkinsView view)
         {
             // Fix JSON problem which contains wrong url for primary view (is always the base url which contains
             // all builds, not just the ones for that view).
             if (!view.Url.ToUpperInvariant().Contains("/VIEW/"))
             {
+                // We use Uri class to join url parts, we need a slash as last char. The
+                // base url would be used if we didn't fix this, instead of the full url.
+                if (view.Url.Last() != '/')
+                {
+                    view.Url += '/';
+                }
+
                 string viewUrlPart = string.Concat("view/", view.Name, "/");
                 view.Url = new Uri(new Uri(view.Url), viewUrlPart).AbsoluteUri;
             }
