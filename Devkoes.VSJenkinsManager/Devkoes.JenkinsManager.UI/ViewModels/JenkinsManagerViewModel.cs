@@ -1,10 +1,9 @@
-﻿using Devkoes.JenkinsManager.APIHandler.Managers;
+﻿using Devkoes.Core.MVVM;
+using Devkoes.JenkinsManager.APIHandler.Managers;
 using Devkoes.JenkinsManager.Model.Schema;
 using Devkoes.JenkinsManager.UI.Comparers;
 using Devkoes.JenkinsManager.UI.Helpers;
 using Devkoes.JenkinsManager.UI.Properties;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

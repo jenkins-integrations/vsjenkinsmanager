@@ -1,8 +1,7 @@
-﻿using Devkoes.JenkinsManager.APIHandler.Managers;
+﻿using Devkoes.Core.MVVM;
+using Devkoes.JenkinsManager.APIHandler.Managers;
 using Devkoes.JenkinsManager.Model.Schema;
 using Devkoes.JenkinsManager.UI.ValidationRules;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
 using System.Linq;
 

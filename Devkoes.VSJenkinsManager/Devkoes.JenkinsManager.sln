@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsManager.VSPackage", "Devkoes.JenkinsManager.VSPackage\Devkoes.JenkinsManager.VSPackage.csproj", "{61BC97DD-79B6-4121-9D4C-0F2CE293DCA5}"
 EndProject
@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsManager.Model", "Devkoes.JenkinsManager.Model\Devkoes.JenkinsManager.Model.csproj", "{B2585A00-B072-4A19-88FF-CA3156E1B44B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.Core", "Devkoes.Core\Devkoes.Core.csproj", "{7E4BC0CC-B48E-47BE-8DC4-07954A9E371E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{B2585A00-B072-4A19-88FF-CA3156E1B44B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2585A00-B072-4A19-88FF-CA3156E1B44B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2585A00-B072-4A19-88FF-CA3156E1B44B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E4BC0CC-B48E-47BE-8DC4-07954A9E371E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E4BC0CC-B48E-47BE-8DC4-07954A9E371E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E4BC0CC-B48E-47BE-8DC4-07954A9E371E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E4BC0CC-B48E-47BE-8DC4-07954A9E371E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
