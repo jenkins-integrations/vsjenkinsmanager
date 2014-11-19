@@ -237,7 +237,7 @@
                                 Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.RowSpan="2" Margin="3,0" ToolTip="Status of (max) last 5 builds">
+                        <StackPanel Grid.RowSpan="2" Margin="3,0" ToolTip="Status of last 5 builds">
                             <Rectangle Fill="{Binding StatusColor}" Width="20" Height="16" />
                             <ItemsControl ItemsSource="{Binding Builds}">
                                 <ItemsControl.ItemsPanel>
