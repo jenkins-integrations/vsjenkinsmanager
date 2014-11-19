@@ -22,7 +22,7 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
 
                 outWindow.GetPane(ref outputWindowGuid, out _outputWindow);
 
-                _outputWindow.OutputString("Jenkins Manager loaded");
+                LogOutput("Jenkins Manager loaded");
             }
             catch (Exception)
             {
@@ -35,18 +35,14 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
         {
             try
             {
-                _outputWindow.OutputString(message);
+                _outputWindow.OutputString(string.Concat(message, Environment.NewLine));
             }
             catch { }
         }
 
         public void LogOutput(string format, params object[] args)
         {
-            try
-            {
-                _outputWindow.OutputString(string.Format(format, args));
-            }
-            catch { }
+            LogOutput(string.Format(format, args));
         }
 
         public void LogOutput(Exception ex)
@@ -56,11 +52,7 @@ namespace Devkoes.JenkinsManager.VSPackage.ExposedServices
                 return;
             }
 
-            try
-            {
-                _outputWindow.OutputString(ex.ToString());
-            }
-            catch { }
+            LogOutput(ex.ToString());
         }
 
         public void LogOutput(string message, Exception ex)
