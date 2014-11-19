@@ -98,12 +98,16 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             WebHeaderCollection headersFromRequestUrl = null;
             try
             {
-                var req = WebRequest.Create(url);
-                req.Timeout = 1000;
-                req.Method = "HEAD";
-                var response = req.GetResponse();
+                Uri requestUri;
+                if (Uri.TryCreate(url, UriKind.Absolute, out requestUri))
+                {
+                    var req = WebRequest.Create(requestUri);
+                    req.Timeout = 1000;
+                    req.Method = "HEAD";
+                    var response = req.GetResponse();
 
-                headersFromRequestUrl = response.Headers;
+                    headersFromRequestUrl = response.Headers;
+                }
             }
             catch (WebException ex)
             {
