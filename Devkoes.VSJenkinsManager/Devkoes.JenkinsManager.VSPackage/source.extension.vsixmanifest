@@ -4,7 +4,7 @@
                  xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="252d354d-9787-42b0-b5cc-6b14e08f160f"
-              Version="1.0"
+              Version="1.0.0.2"
               Language="en-US"
               Publisher="Tom Kuijsten" />
     <DisplayName>Jenkins Manager</DisplayName>
