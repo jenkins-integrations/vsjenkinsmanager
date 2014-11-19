@@ -274,6 +274,7 @@
                             Margin="5,0"
                             Source="..\Resources\ConnectIcon.png"
                             Height="16"
+                            ToolTip="The current solution is linked to this job. You can start this job using the context menu in the solution explorer."
                             Visibility="{Binding LinkedToCurrentSolution, Converter={StaticResource boolToVisConverter}}">
                         </Image>
 
