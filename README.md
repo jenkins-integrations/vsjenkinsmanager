@@ -16,6 +16,10 @@ Cheers!
 
 A [visual studio package](http://visualstudiogallery.msdn.microsoft.com/3471d451-c1f1-4273-b305-acf81e4f8b32) to manage Jenkins:
 
+Release 1.0.0.2:
+ - [x] Couple of bugs fixed which occured when side-installed with some other extensions
+ - [x] Jenkins url can contain paths deeper then a base uri now (eg www.server.com/alm/jenkins)
+
 Release 1.0:
  - [x] Cancel executing build / cancel scheduled build
  - [x] Start build / schedule build seperated
