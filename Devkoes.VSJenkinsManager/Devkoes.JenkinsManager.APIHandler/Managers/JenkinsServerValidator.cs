@@ -102,6 +102,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
                 if (Uri.TryCreate(url, UriKind.Absolute, out requestUri))
                 {
                     var req = WebRequest.Create(requestUri);
+	                req.UseDefaultCredentials = true;
                     req.Timeout = 1000;
                     req.Method = "HEAD";
                     var response = req.GetResponse();
