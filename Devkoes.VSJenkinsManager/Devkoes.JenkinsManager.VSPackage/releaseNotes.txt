@@ -3,6 +3,12 @@ A visual studio package to manage Jenkins
 
 https://github.com/tomkuijsten/vsjenkinsmanager
 
+Version 1.0.3:
+ - Added support for VS 2012 and 2015
+
+Version 1.0.1-1.0.2:
+ - Small bug fixes
+
 Version 1.0:
  - Cancel executing build / cancel scheduled build
  - Start build / schedule build seperated

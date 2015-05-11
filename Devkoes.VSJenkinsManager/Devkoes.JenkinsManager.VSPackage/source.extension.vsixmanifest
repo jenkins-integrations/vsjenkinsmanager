@@ -4,11 +4,14 @@
                  xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="252d354d-9787-42b0-b5cc-6b14e08f160f"
-              Version="1.0.0.2"
+              Version="1.0.0.3"
               Language="en-US"
               Publisher="Tom Kuijsten" />
     <DisplayName>Jenkins Manager</DisplayName>
     <Description xml:space="preserve">View and start your Jenkins jobs from within your precious IDE.
+
+Version 1.0.3:
+- Added support for VS 2012 and 2015
 
 Version 1.0:
  - Cancel executing build / cancel scheduled build
@@ -21,24 +24,21 @@ Version 1.0:
  - Preferences are removed when server is removed</Description>
     <MoreInfo>https://github.com/tomkuijsten/vsjenkinsmanager</MoreInfo>
     <License>license.txt</License>
+    <GettingStartedGuide>https://github.com/tomkuijsten/vsjenkinsmanager/wiki</GettingStartedGuide>
     <ReleaseNotes>releaseNotes.txt</ReleaseNotes>
     <Icon>JIcon.png</Icon>
     <PreviewImage>Resources\screenshot1.jpg</PreviewImage>
     <Tags>Jenkins Jobs Manage Build CI</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro"
-                        Version="[12.0]" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0,]" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP"
                 DisplayName="Microsoft .NET Framework"
                 d:Source="Manual"
                 Version="[4.5,)" />
-    <Dependency Id="Microsoft.VisualStudio.MPF.12.0"
-                DisplayName="Visual Studio MPF 12.0"
-                d:Source="Installed"
-                Version="[12.0]" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="[11.0,12.0)" />
   </Dependencies>
   <Assets>
     <Asset Type="Microsoft.VisualStudio.VsPackage"
