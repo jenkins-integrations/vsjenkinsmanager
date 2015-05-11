@@ -1,5 +1,7 @@
 Jenkins Manager for Visual Studio
 ================
+Tip: I added a [wiki](https://github.com/tomkuijsten/vsjenkinsmanager/wiki) with some howto's and more info as requested.
+***
 It's been a fun ride, I've learn a lot about git and I got a fine visual studio extension as well :)
 
 Thanks for the suggestions and fixes, I hope it's a useable extension for you all.
