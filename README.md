@@ -1,5 +1,7 @@
 Jenkins Manager for Visual Studio
 ================
+Tip: I added a [wiki](https://github.com/tomkuijsten/vsjenkinsmanager/wiki) with some howto's and more info as requested.
+***
 It's been a fun ride, I've learn a lot about git and I got a fine visual studio extension as well :)
 
 Thanks for the suggestions and fixes, I hope it's a useable extension for you all.
@@ -16,7 +18,10 @@ Cheers!
 
 A [visual studio package](http://visualstudiogallery.msdn.microsoft.com/3471d451-c1f1-4273-b305-acf81e4f8b32) to manage Jenkins:
 
-Release 1.0.0.2:
+Release 1.0.0.3:
+ - [x] Added support for VS 2012 and 2015
+
+Release 1.0.0.1-1.0.0.2:
  - [x] Couple of bugs fixed which occured when side-installed with some other extensions
  - [x] Jenkins url can contain paths deeper then a base uri now (eg www.server.com/alm/jenkins)
 
