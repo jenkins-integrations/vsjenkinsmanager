@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.12.0"
+    xmlns:vs="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.11.0"
     xmlns:util="clr-namespace:Devkoes.JenkinsManager.UI"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -30,7 +30,7 @@
             Value="{StaticResource ButtonFocusVisual}" />
         <Setter
             Property="Background"
-            Value="{DynamicResource {x:Static vs:VsBrushes.ComboBoxPopupBackgroundGradientKey}}" />
+            Value="{DynamicResource vs:VsBrush.ComboBoxPopupBackgroundGradient}" />
         <Setter
             Property="Foreground"
             Value="{DynamicResource {x:Static util:VsColors.CommandBarTextActiveBrushKey}}" />

@@ -3,6 +3,9 @@ A visual studio package to manage Jenkins
 
 https://github.com/tomkuijsten/vsjenkinsmanager
 
+Version 1.0.5:
+ - Fixed reference problem with VS2012
+
 Version 1.0.4:
  - Added windows authentication support (kudos @ nilleb)
 
