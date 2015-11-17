@@ -17,7 +17,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         /// </summary>
         private static readonly Dictionary<string, Version> _validJenkinsVersionCache = new Dictionary<string, Version>();
 
-        private const string JENKINS_VERSION_HEADER_KEY = "X-Jenkins";
+        internal const string JENKINS_VERSION_HEADER_KEY = "X-Jenkins";
 
         public static readonly Version MINIMUM_VERSION = new Version("1.367");
         public static readonly Version RANGE_SPECIFIER_VERSION = new Version("1.568");
@@ -72,7 +72,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         ///  - 1.0.0
         ///  - 1.0.14-final.4
         /// </remarks>
-        private static Version GetJenkinsVersionFromHeaders(WebHeaderCollection headers)
+        internal static Version GetJenkinsVersionFromHeaders(WebHeaderCollection headers)
         {
             Version jenkinsVersion = null;
             if (headers.AllKeys.Contains(JENKINS_VERSION_HEADER_KEY))
@@ -93,7 +93,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             return jenkinsVersion ?? new Version();
         }
 
-        private static WebHeaderCollection GetHeaders(string url)
+        internal static WebHeaderCollection GetHeaders(string url)
         {
             WebHeaderCollection headersFromRequestUrl = null;
             try
@@ -102,7 +102,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
                 if (Uri.TryCreate(url, UriKind.Absolute, out requestUri))
                 {
                     var req = WebRequest.Create(requestUri);
-	                req.UseDefaultCredentials = true;
+                    req.UseDefaultCredentials = true;
                     req.Timeout = 1000;
                     req.Method = "HEAD";
                     var response = req.GetResponse();

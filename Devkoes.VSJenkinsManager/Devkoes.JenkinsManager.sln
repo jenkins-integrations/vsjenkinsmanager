@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsManager.Mode
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.Core", "Devkoes.Core\Devkoes.Core.csproj", "{7E4BC0CC-B48E-47BE-8DC4-07954A9E371E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devkoes.JenkinsManager.APIHandler.UnitTest", "Devkoes.JenkinsManager.APIHandler.UnitTest\Devkoes.JenkinsManager.APIHandler.UnitTest.csproj", "{EDDA7516-D58B-44A7-89F5-2EA80F8FF278}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{7E4BC0CC-B48E-47BE-8DC4-07954A9E371E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E4BC0CC-B48E-47BE-8DC4-07954A9E371E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E4BC0CC-B48E-47BE-8DC4-07954A9E371E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDDA7516-D58B-44A7-89F5-2EA80F8FF278}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDDA7516-D58B-44A7-89F5-2EA80F8FF278}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDDA7516-D58B-44A7-89F5-2EA80F8FF278}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDDA7516-D58B-44A7-89F5-2EA80F8FF278}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
