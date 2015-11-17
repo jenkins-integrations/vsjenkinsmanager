@@ -105,7 +105,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
 
             var req = WebRequest.Create(requestUri);
             req.UseDefaultCredentials = true;
-            req.Timeout = 1000;
+            req.Timeout = 3000;
             req.Method = "HEAD";
 
             try
