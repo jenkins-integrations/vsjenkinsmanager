@@ -96,17 +96,22 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         internal static WebHeaderCollection GetHeaders(string url)
         {
             WebHeaderCollection headersFromRequestUrl = null;
+
+            Uri requestUri;
+            if (!Uri.TryCreate(url, UriKind.Absolute, out requestUri))
+            {
+                return headersFromRequestUrl;
+            }
+
+            var req = WebRequest.Create(requestUri);
+            req.UseDefaultCredentials = true;
+            req.Timeout = 1000;
+            req.Method = "HEAD";
+
             try
             {
-                Uri requestUri;
-                if (Uri.TryCreate(url, UriKind.Absolute, out requestUri))
+                using (var response = req.GetResponse())
                 {
-                    var req = WebRequest.Create(requestUri);
-                    req.UseDefaultCredentials = true;
-                    req.Timeout = 1000;
-                    req.Method = "HEAD";
-                    var response = req.GetResponse();
-
                     headersFromRequestUrl = response.Headers;
                 }
             }
