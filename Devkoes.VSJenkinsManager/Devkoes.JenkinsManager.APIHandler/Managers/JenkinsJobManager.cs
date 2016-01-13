@@ -99,7 +99,6 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             var serverUri = new Uri(job.Url);
             if (job.LatestBuild != null && job.LatestBuild.IsBuilding)
             {
-                // http://vmsobuild03:8080/job/Bronkhorst.BHTInstruments6%20Development/870/stop
                 return new Uri(serverUri, job.LatestBuild.Number + "/stop");
             }
 
