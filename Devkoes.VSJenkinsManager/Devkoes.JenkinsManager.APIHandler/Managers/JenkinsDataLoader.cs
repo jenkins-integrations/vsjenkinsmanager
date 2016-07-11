@@ -97,9 +97,9 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         public static WebClient CreateJenkinsWebClient(JenkinsServer server)
         {
             WebClient client = new WebClient();
-			client.UseDefaultCredentials = true;
+            client.UseDefaultCredentials = true;
 
-			if (server != null && !string.IsNullOrWhiteSpace(server.UserName))
+            if (server != null && !string.IsNullOrWhiteSpace(server.UserName))
             {
                 // WebClient.Credentials can not be used, because those credentials will only be send to the server
                 // when the server responds with a challenge from the server. Jenkins won't send this challenge as documented
@@ -124,6 +124,7 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
 
             using (WebClient wc = CreateJenkinsWebClient(server))
             {
+                wc.Encoding = Encoding.UTF8;
                 Task<string> jsonRawDataTask = wc.DownloadStringTaskAsync(jsonDataUri);
 
                 if (await Task.WhenAny(jsonRawDataTask, Task.Delay(30000)) == jsonRawDataTask)
