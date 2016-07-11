@@ -1,6 +1,6 @@
 ###Jenkins Manager for Visual Studio
 
-####I'm not working on this repo anymore. If you want to continue with this repo, create an issue.
+####I'm not working on this repo anymore. If you want to continue with this repo, clone it, or contact me at devkoes@outlook.com to transfer ownership.
 
 Tip: I added a [wiki](https://github.com/tomkuijsten/vsjenkinsmanager/wiki) with some howto's and more info as requested.
 ***
@@ -8,7 +8,7 @@ It's been a fun ride, I've learn a lot about git and I got a fine visual studio 
 
 Thanks for the suggestions and fixes, I hope it's a useable extension for you all.
 
-For now, if you find any bug, I'll be glad to fix it. If none exists (right...) I'll move on to a new hobby project.
+We replaced Jenkins in favor of TFS and I'm not working on this extension anymore.
 
 Cheers!
 
