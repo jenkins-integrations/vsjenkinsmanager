@@ -14,8 +14,9 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         private const short MAX_JOB_BUILDS = 5;
 
         private const string VIEW_QUERY = "api/json?pretty=true&tree=views[name,url]";
-        private const string JOBS_QUERY_WITH_RANGE = "api/json?pretty=true&tree=jobs[name,url,inQueue,buildable,builds[number,result,building,estimatedDuration,timestamp]{0,5},queueItem[why,id]]";
-        private const string JOBS_QUERY = "api/json?pretty=true&tree=jobs[name,url,inQueue,buildable,builds[number,result,building,estimatedDuration,timestamp],queueItem[why,id]]";
+        private const string JOBS_QUERY_BASE = "api/json?pretty=true&tree=jobs[name,url,inQueue,buildable,queueItem[why,id],property[parameterDefinitions[name,defaultParameterValue[value]]],builds[number,result,building,estimatedDuration,timestamp]";
+        private const string JOBS_QUERY_WITH_RANGE = JOBS_QUERY_BASE + "{0,5}]";
+        private const string JOBS_QUERY = JOBS_QUERY_BASE + "]";
 
         public static async Task<IEnumerable<JenkinsView>> GetViews(JenkinsServer server)
         {

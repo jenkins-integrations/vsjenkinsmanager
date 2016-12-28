@@ -13,6 +13,7 @@ namespace Devkoes.JenkinsManager.Model.Schema
         private bool _isQueued;
         private JenkinsQueueItem _queueItem;
         private string _name;
+        private IEnumerable<JenkinsProperty> _property;
 
         [JsonProperty("InQueue")]
         public bool IsQueued
@@ -94,6 +95,21 @@ namespace Devkoes.JenkinsManager.Model.Schema
         [JsonProperty("Url")]
         public string Url { get; set; }
 
+        [JsonProperty("Property")]
+        public IEnumerable<JenkinsProperty> Property
+        {
+            get { return _property; }
+            set
+            {
+                if (value != _property)
+                {
+                    _property = value;
+                    RaisePropertyChanged(() => Property);
+                    RaisePropertyChanged(() => HasParameters);
+                }
+            }
+        }
+
         [JsonIgnore]
         public JenkinsBuild LatestBuild
         {
@@ -160,6 +176,12 @@ namespace Devkoes.JenkinsManager.Model.Schema
 
                 return (short)Math.Max(0, Math.Min(progress, 100));
             }
+        }
+
+        [JsonIgnore]
+        public bool HasParameters
+        {
+            get { return Property != null && Property.Any(p => p?.ParameterDefinitions != null && p.ParameterDefinitions.Any()); }
         }
 
         public override bool Equals(object obj)

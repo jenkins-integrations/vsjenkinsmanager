@@ -38,6 +38,7 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
         public RelayCommand<JenkinsJob> ScheduleBuildCommand { get; private set; }
         public RelayCommand<JenkinsJob> CancelBuildCommand { get; private set; }
         public RelayCommand<JenkinsJob> DequeueJobCommand { get; private set; }
+        public RelayCommand<JenkinsJob> BuildJobWithDefaultParametersCommand { get; private set; }
 
         public RelayCommand<JenkinsJob> ShowJobsWebsite { get; private set; }
         public RelayCommand<JenkinsJob> LinkJobToCurrentSolution { get; private set; }
@@ -81,6 +82,8 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             ScheduleBuildCommand = new RelayCommand<JenkinsJob>(ScheduleJob, CanDoJobAction);
             CancelBuildCommand = new RelayCommand<JenkinsJob>(CancelBuild, CanDoJobAction);
             DequeueJobCommand = new RelayCommand<JenkinsJob>(DequeueBuild, CanDoJobAction);
+            BuildJobWithDefaultParametersCommand = new RelayCommand<JenkinsJob>(BuildJobWithDefaultParameters, CanDoJobAction);
+
 
             ShowJobsWebsite = new RelayCommand<JenkinsJob>(ShowWebsite, CanDoJobAction);
             ShowLatestLog = new RelayCommand<JenkinsJob>(HandleShowLatestLog, CanDoJobAction);
@@ -305,6 +308,19 @@ namespace Devkoes.JenkinsManager.UI.ViewModels
             try
             {
                 await BuildJob(j.Url, SelectedJenkinsServer.Url);
+                ForceReload(false);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        private async void BuildJobWithDefaultParameters(JenkinsJob job)
+        {
+            try
+            {
+                await JenkinsJobManager.BuildJobWithDefaultParameters(job, SelectedJenkinsServer.Url);
                 ForceReload(false);
             }
             catch (Exception ex)

@@ -60,7 +60,10 @@
     <Compile Include="Contract\IVisualStudioWindowHandler.cs" />
     <Compile Include="Schema\JenkinsBuild.cs" />
     <Compile Include="Schema\JenkinsBuildresultConverter.cs" />
+    <Compile Include="Schema\JenkinsDefaultParameterValue.cs" />
     <Compile Include="Schema\JenkinsOverview.cs" />
+    <Compile Include="Schema\JenkinsParameterDefinition.cs" />
+    <Compile Include="Schema\JenkinsProperty.cs" />
     <Compile Include="Schema\JenkinsQueueItem.cs" />
     <Compile Include="Schema\JenkinsServer.cs" />
     <Compile Include="Schema\JenkinsServerList.cs" />
