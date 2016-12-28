@@ -156,6 +156,15 @@
                                 Height="16" />
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem 
+                        Header="Build with _Parameters" 
+                        Command="{Binding Path=BuildJobWithDefaultParametersCommand}" 
+                        CommandParameter="{Binding SelectedJob}"
+                        IsEnabled="{Binding SelectedJob.HasParameters}">
+                        <MenuItem.Icon>
+                            <Image Source="..\Resources\BuildWithParameters.png" Height="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem
                         Header="_Cancel build"
                         Command="{Binding Path=CancelBuildCommand}"

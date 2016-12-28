@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -47,6 +48,25 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
             {
                 Uri buildUri = CreateBuildUri(jobUrl);
                 byte[] response = await client.UploadValuesTaskAsync(buildUri, new NameValueCollection());
+            }
+        }
+
+        public static async Task BuildJobWithDefaultParameters(JenkinsJob job, string jenkinsServerUrl)
+        {
+            using (var client = JenkinsDataLoader.CreateJenkinsWebClient(jenkinsServerUrl))
+            {
+                Uri buildUri = CreateBuildWithParametersUri(job.Url);
+                var parametersNameValueCollection = new NameValueCollection();
+                job.Property.Aggregate(parametersNameValueCollection, (collection, property) =>
+                {
+                    if (property.ParameterDefinitions != null && property.ParameterDefinitions.Any())
+                    {
+                        property.ParameterDefinitions.ToList().ForEach(pd => collection.Add(pd.Name, pd.DefaultParameterValue.Value));
+                    }
+                    return collection;
+                });
+                parametersNameValueCollection.Add("delay", "0sec");
+                byte[] response = await client.UploadValuesTaskAsync(buildUri, parametersNameValueCollection);
             }
         }
 
@@ -109,6 +129,12 @@ namespace Devkoes.JenkinsManager.APIHandler.Managers
         {
             var jobUri = new Uri(jobUrl);
             return new Uri(jobUri, "lastBuild/consoleText");
+        }
+
+        private static Uri CreateBuildWithParametersUri(string jobUrl)
+        {
+            var joubUri = new Uri(jobUrl);
+            return new Uri(joubUri, "buildWithParameters");
         }
     }
 }
